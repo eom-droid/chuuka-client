@@ -1,0 +1,30 @@
+{
+  "name": "chuuka-land",
+  "private": true,
+  "version": "0.1.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host --port 14004 --mode development",
+    "build": "vue-tsc --noEmit && vite build --mode production",
+    "serve": "vite preview --host --port 14014"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "firebase": "^9.8.1",
+    "mitt": "^3.0.0",
+    "moment": "^2.29.1",
+    "mosha-vue-toastify": "^1.0.23",
+    "path": "^0.12.7",
+    "vue": "^3.2.37",
+    "vue-router": "^4.0.16"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.1.0",
+    "autoprefixer": "^10.4.10",
+    "postcss": "^8.4.16",
+    "tailwindcss": "^3.1.8",
+    "typescript": "^4.6.4",
+    "vite": "^3.1.0",
+    "vue-tsc": "^0.40.4"
+  }
+}

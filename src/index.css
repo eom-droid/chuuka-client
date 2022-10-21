@@ -1,0 +1,297 @@
+/* ./src/index.css */
+/* NOTE v1.0.0 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* wave 컴포넌트 */
+.w-input {
+  @apply block w-full shadow-sm;
+  @apply rounded-2xl;
+  @apply border-0 w-focus;
+  @apply bg-light-content-bg dark:bg-dark-content-bg dark:text-dark-white;
+  @apply dark:placeholder-gray-400;
+}
+.w-input-tgray {
+  @apply block w-full shadow-sm;
+  @apply rounded-2xl;
+  @apply border-0 w-focus;
+  @apply bg-tgray-200 dark:bg-dark-content-bg dark:text-dark-white;
+  @apply dark:placeholder-gray-400;
+}
+.w-input-underline {
+  @apply block w-full px-0.5;
+  @apply border-0 border-b-2 border-gray-300 dark:border-gray-500;
+  @apply focus:ring-0 focus:border-black dark:focus:border-gray-100;
+  @apply bg-light-bg dark:bg-dark-bg;
+  @apply dark:placeholder-gray-400;
+}
+.w-input-default {
+  @apply block w-full shadow-sm;
+  @apply rounded-2xl;
+  @apply border-0 w-focus;
+  @apply dark:text-dark-white;
+  @apply dark:placeholder-gray-400;
+}
+.w-select {
+  @apply block w-full shadow-sm;
+  @apply rounded-2xl;
+  @apply border-0 w-focus;
+  @apply bg-light-content-bg dark:bg-dark-content-bg dark:text-dark-white;
+}
+.w-select-underline {
+  @apply block w-full px-0.5;
+  @apply border-0 border-b-2 border-gray-300 dark:border-gray-500;
+  @apply focus:ring-0 focus:border-black dark:focus:border-gray-100;
+  @apply bg-light-bg dark:bg-dark-bg;
+}
+.w-textarea {
+  font-family: "Hahmlet", Avenir, Helvetica, Arial, sans-serif;
+  @apply block w-full shadow-sm resize-none;
+  @apply rounded-2xl border-0 w-focus;
+  @apply bg-light-content-bg dark:bg-dark-content-bg dark:text-dark-white;
+}
+.w-textarea-underline {
+  font-family: "Hahmlet", Avenir, Helvetica, Arial, sans-serif;
+  @apply block w-full px-0.5;
+  @apply border-0 border-b-2 border-gray-300 dark:border-gray-500;
+  @apply focus:ring-0 focus:border-black dark:focus:border-gray-100;
+  @apply bg-light-bg dark:bg-dark-bg;
+}
+.w-input-checkbox {
+  @apply border-gray-300;
+  @apply text-color-main dark:text-color-dark-main w-6 h-6 shadow-sm;
+  @apply focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50;
+}
+.w-title {
+  @apply font-bold text-3xl mt-2 mb-4 tracking-wide;
+  font-family: "Noto Sans KR";
+}
+.w-title-content {
+  @apply font-semibold text-2xl;
+}
+.w-label {
+  @apply text-left pl-2 mt-2 font-semibold;
+}
+.w-logo {
+  font-family: "Noto Sans KR";
+}
+.w-grid-block-cusByTae {
+  @apply grid rounded-2xl p-4 shadow-sm;
+}
+.w-grid-block {
+  @apply grid rounded-2xl p-4 shadow-sm;
+  @apply bg-light-content-bg dark:bg-dark-content-bg;
+}
+.w-flex-block {
+  @apply flex flex-wrap justify-center items-center;
+  @apply rounded-2xl p-4 shadow-sm;
+  @apply bg-light-content-bg dark:bg-dark-content-bg;
+}
+
+/* wave 버튼 */
+.w-btn-main {
+  @apply w-btn bg-color-main dark:bg-color-dark-main text-white font-semibold;
+}
+.w-btn-sub {
+  @apply w-btn bg-color-sub dark:bg-color-dark-sub text-color-main font-semibold;
+}
+.w-btn-disabled {
+  @apply w-btn bg-tgray-200 dark:bg-color-dark-sub text-tgray-500 dark:text-tgray-300 font-semibold;
+}
+.w-btn-frozen {
+  @apply w-btn bg-wave-frozen dark:bg-wave-frozen text-white font-semibold;
+}
+.w-btn-legendary {
+  @apply w-btn bg-gradient-rank-legendary;
+  @apply text-white font-bold;
+}
+.w-btn-epic {
+  @apply w-btn bg-gradient-rank-epic;
+  @apply text-white font-bold;
+}
+.w-btn-rare {
+  @apply w-btn bg-gradient-rank-rare;
+  @apply text-white font-bold;
+}
+.w-btn-common {
+  @apply w-btn bg-gradient-rank-common;
+  @apply text-white font-bold;
+}
+.w-btn-black-white {
+  @apply w-btn bg-black;
+  @apply text-white font-semibold;
+}
+
+/* 컴포넌트 구성요소 */
+.w-btn {
+  @apply text-center shadow-sm py-2 px-4 rounded-2xl transition duration-300;
+}
+.w-btn-hover {
+  @apply hover:bg-dark-white hover:text-black dark:hover:bg-gray-700 dark:hover:text-dark-white;
+}
+.w-btn-pop {
+  @apply transition duration-300 ease-in-out transform hover:scale-110;
+}
+.w-focus {
+  @apply focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50;
+}
+.w-border {
+  @apply border-gray-300 dark:border-gray-400;
+}
+
+/* 등급별 색상 */
+.rank-legendary {
+  @apply text-yellow-500 dark:text-yellow-300 font-bold;
+}
+.rank-epic {
+  @apply text-purple-500 dark:text-purple-300 font-bold;
+}
+.rank-rare {
+  @apply text-blue-500 dark:text-blue-300 font-bold;
+}
+.rank-common {
+  @apply font-bold;
+}
+.rank-red {
+  @apply text-red-500 dark:text-red-300 font-bold;
+}
+.rank-gray {
+  @apply text-gray-400 font-bold;
+}
+
+/* 등급별 링색상 */
+.ring-rank-legendary {
+  @apply ring-yellow-500 dark:ring-yellow-500;
+}
+.ring-rank-epic {
+  @apply ring-purple-500 dark:ring-purple-500;
+}
+.ring-rank-rare {
+  @apply ring-blue-500 dark:ring-blue-500;
+}
+.ring-rank-common {
+  @apply ring-gray-500 dark:ring-gray-500;
+}
+
+/* 등급별 그라데이션 */
+.bg-gradient-rank-legendary {
+  @apply bg-gradient-to-br;
+  @apply from-amber-200 via-amber-400 to-orange-500;
+  @apply dark:from-amber-400 dark:via-amber-600 dark:to-orange-700;
+}
+.bg-gradient-rank-epic {
+  @apply bg-gradient-to-br;
+  @apply from-red-300 to-purple-500;
+  @apply dark:from-red-500 dark:to-purple-700;
+}
+.bg-gradient-rank-rare {
+  @apply bg-gradient-to-br;
+  @apply from-green-300 to-blue-500;
+  @apply dark:from-green-500 dark:to-blue-700;
+}
+.bg-gradient-rank-common {
+  @apply bg-gradient-to-br;
+  @apply from-indigo-200 to-gray-500;
+  @apply dark:from-indigo-500 dark:to-gray-700;
+}
+
+/* 페이지 여백 조절 */
+/* 기존 md:px-0 제거 */
+.w-page-sm {
+  @apply max-w-md px-2;
+}
+.w-page-md {
+  @apply max-w-2xl px-2 md:px-0;
+}
+.w-page-lg {
+  @apply max-w-4xl px-2 md:px-0;
+}
+.w-page-xl {
+  @apply max-w-6xl px-2 md:px-0;
+}
+.w-page-flex {
+  @apply max-w-2xl px-2 md:px-0;
+  @apply xl:max-w-4xl;
+}
+
+/* 애니메이션 */
+.anime-pop {
+  @apply transition duration-300 ease-in-out transform hover:-translate-y-0.5 hover:scale-125;
+}
+.animate-css {
+  --animate-duration: 1s;
+}
+
+/* body */
+body {
+  @apply bg-white text-light-font; /* 라이트모드 */
+  @apply dark:bg-dark-bg dark:text-dark-font; /* 다크모드 */
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+}
+
+main {
+  margin: auto;
+}
+
+hr {
+  @apply dark:border-gray-400;
+}
+
+/* 기본 */
+#app {
+  font-family: "Noto Sans KR", Avenir, Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent; /* for removing the highlight */
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+body {
+  -ms-overflow-style: none;
+}
+pre {
+  font-family: "Hahmlet", Avenir, Helvetica, Arial, sans-serif;
+}
+
+/* Base Styles */
+/* LINK https://tailwindcss.com/docs/preflight#buttons-have-a-default-outline */
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
