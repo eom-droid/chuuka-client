@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { throttle, range } from "lodash";
 import {
   getAllStoreLandingInfo,
   IStoreLanding,
-  getStoreLandingInfoByLoc,
+  getStoreLandingInfoByField,
 } from "@/api/m1/store";
 import {
   defineComponent,
@@ -35,26 +36,28 @@ onMounted(() => {
 
   document
     .getElementById("scrollEle")
-    ?.addEventListener("scroll", async (event) => {
-      var scrollTop = document.getElementById("scrollEle")?.scrollTop;
-      var scrollHeight = document.getElementById("scrollEle")?.scrollHeight; // added
-      var offsetHeight = document.getElementById("scrollEle")?.offsetHeight;
-
-      if (
-        scrollTop === undefined ||
-        scrollHeight === undefined ||
-        offsetHeight === undefined
-      )
-        return;
-      savedScrollHeight.value = scrollTop;
-      // console.log(scrollHeight - scrollTop - offsetHeight);
-      if (!isRunning.value && scrollHeight - scrollTop - offsetHeight < 150) {
-        isRunning.value = true;
-        await getNextDoc();
-        isRunning.value = false;
-      }
-    });
+    ?.addEventListener("scroll", throttle(calcScrollAndGetDocs, 200));
 });
+
+async function calcScrollAndGetDocs() {
+  var scrollTop = document.getElementById("scrollEle")?.scrollTop;
+  var scrollHeight = document.getElementById("scrollEle")?.scrollHeight; // added
+  var offsetHeight = document.getElementById("scrollEle")?.offsetHeight;
+
+  if (
+    scrollTop === undefined ||
+    scrollHeight === undefined ||
+    offsetHeight === undefined
+  )
+    return;
+  savedScrollHeight.value = scrollTop;
+  // console.log(scrollHeight - scrollTop - offsetHeight);
+  if (!isRunning.value && scrollHeight - scrollTop - offsetHeight < 150) {
+    isRunning.value = true;
+    await getNextDoc();
+    isRunning.value = false;
+  }
+}
 onActivated(() => {
   if (document.getElementById("scrollEle") != null) {
     //@ts-ignore
@@ -94,8 +97,9 @@ async function initAllStore() {
       location.value
     );
   } else {
-    tempResult = await getStoreLandingInfoByLoc(
+    tempResult = await getStoreLandingInfoByField(
       lastVisible.value,
+      "location",
       location.value
     );
   }
@@ -139,8 +143,9 @@ function onClickEachStore(store: IStoreLanding) {
 }
 async function getNextDoc() {
   if (!isEnd.value) {
-    let tempResult = await getStoreLandingInfoByLoc(
+    let tempResult = await getStoreLandingInfoByField(
       lastVisible.value,
+      "location",
       location.value
     );
     tempResult.docs.map((ele, index) => {

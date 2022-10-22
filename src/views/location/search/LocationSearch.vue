@@ -42,7 +42,7 @@ function onclickLocation(location: string) {
 
 <template>
   <main class="overflow-x-hidden px-2">
-    <div class="mt-7 customWidth">
+    <div class="mt-4 customWidth">
       <div class="flex">
         <img
           src="@/assets/img/icon/backword.svg"

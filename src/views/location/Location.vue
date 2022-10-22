@@ -33,7 +33,11 @@ function init() {
 }
 
 function onClickBack() {
-  router.go(-1);
+  if (history.state.back === null) {
+    router.push("/");
+  } else {
+    router.go(-1);
+  }
 }
 function initLoc() {
   if (history.state.location != undefined) {
@@ -91,7 +95,7 @@ function sortCity(argObj: any) {
 
 <template>
   <main class="customWidth px-2">
-    <div class="mt-7 relative customHeight">
+    <div class="mt-4 relative customHeight">
       <div class="">
         <div class="flex">
           <!-- 라우터 무한루프 문제 해결 필요 -->

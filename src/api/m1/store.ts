@@ -127,33 +127,57 @@ export async function getAllStoreLandingInfo(
   return tempInfos;
 }
 
-export async function getStoreLandingInfoByLoc(
+export async function getStoreLandingInfoByField(
   document: QueryDocumentSnapshot<DocumentData> | null,
-  location: string
+  key: string,
+  value: string
 ): Promise<QuerySnapshot<DocumentData>> {
   let q;
 
   if (document != null) {
     q = query(
       collection(firestore, firebaseDevPath + "store-landing"),
-      orderBy("location"),
+      orderBy(key),
       startAfter(document),
       limit(30),
-      endAt(location + "\uf8ff")
+      endAt(value + "\uf8ff")
     );
   } else {
     q = query(
       collection(firestore, firebaseDevPath + "store-landing"),
-      orderBy("location"),
-      startAt(location),
+      orderBy(key),
+      startAt(value),
       limit(30),
-      endAt(location + "\uf8ff")
+      endAt(value + "\uf8ff")
     );
   }
 
   const tempInfos = await getDocs(q);
 
   return tempInfos;
+}
+export async function searchStoreLandingInfo(
+  key: string,
+  value: string
+): Promise<IStoreLanding[]> {
+  let q;
+  let result = [] as IStoreLanding[];
+  q = query(
+    collection(firestore, firebaseDevPath + "store-landing"),
+    orderBy(key),
+    startAt(value),
+    endAt(value + "\uf8ff")
+  );
+
+  const tempInfos = await getDocs(q);
+  tempInfos.docs.map((ele) => {
+    let data = ele.data();
+    let temp = data as IStoreLanding;
+    temp.id = ele.id;
+    result.push(temp);
+  });
+
+  return result;
 }
 
 export async function getStoreLandingInfo(
