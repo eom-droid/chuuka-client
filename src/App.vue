@@ -16,10 +16,10 @@ import { router } from "./router/router";
         <p class="mt-2">모든 날들을</p>
 
         <div class="flex mt-6">
-          <img src="@/assets/logoWithFirework.svg" class="w-3/4" /><span
-            class="my-auto ml-2"
-            >해!</span
-          >
+          <img
+            src="@/assets/img/logo/logo_firework_white.svg"
+            class="w-3/4"
+          /><span class="my-auto ml-2">해!</span>
         </div>
       </div>
       <!-- footer -->
@@ -47,9 +47,9 @@ import { router } from "./router/router";
 
     <router-view
       v-slot="{ Component }"
-      class="cusShadow w-page-sm overflow-auto bg-white h-100v"
+      class="cusShadow w-page-sm bg-white h-100v"
     >
-      <keep-alive include="Home,Location" :max="10">
+      <keep-alive include="StoreList,Location" :max="10">
         <component :is="Component" />
       </keep-alive>
     </router-view>

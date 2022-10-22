@@ -41,18 +41,18 @@ function onclickLocation(location: string) {
 </script>
 
 <template>
-  <main class="overflow-x-hidden">
+  <main class="overflow-x-hidden px-2">
     <div class="mt-7 customWidth">
       <div class="flex">
         <img
-          src="@/assets/back.svg"
+          src="@/assets/img/icon/backword.svg"
           class="fixed w-6 hover:cursor-pointer"
           @click="onClickBack()"
         />
         <div
           class="flex border border-gray-400 -mt-0.5 ml-9 w-10/12 bg-white rounded-md"
         >
-          <img src="@/assets/search_btn.svg" class="w-5" />
+          <img src="@/assets/img/icon/search.svg" class="w-5" />
           <input
             class="ml-2 w-full focus:outline-none text-base py-0.5 placeholder:text-xs rounded-md"
             placeholder="주소(구까지)를 입력해주세요 (ex.서울 중랑구)"

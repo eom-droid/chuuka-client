@@ -1,12 +1,12 @@
 {
-  "name": "chuuka-land",
+  "name": "chuuka",
   "private": true,
   "version": "0.1.1",
   "type": "module",
   "scripts": {
-    "dev": "vite --host --port 14004 --mode development",
+    "dev": "vite --host --port 14001 --mode development",
     "build": "vue-tsc --noEmit && vite build --mode production",
-    "serve": "vite preview --host --port 14014"
+    "serve": "vite preview --host --port 14011"
   },
   "dependencies": {
     "axios": "^0.27.2",

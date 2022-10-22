@@ -42,7 +42,7 @@ function initLoc() {
   }
 }
 function onClickSubmit(location: string) {
-  router.push({ path: "/", state: { location } });
+  router.push({ path: "/storeList", state: { location } });
 }
 
 function onClickSetLocation() {
@@ -90,14 +90,14 @@ function sortCity(argObj: any) {
 </script>
 
 <template>
-  <main class="paddingZero customWidth">
-    <div class="mt-7 relative customHeight mx-2">
+  <main class="customWidth px-2">
+    <div class="mt-7 relative customHeight">
       <div class="">
         <div class="flex">
           <!-- 라우터 무한루프 문제 해결 필요 -->
 
           <img
-            src="@/assets/back.svg"
+            src="@/assets/img/icon/backword.svg"
             class="fixed w-6 hover:cursor-pointer"
             @click="onClickBack()"
           />
@@ -107,7 +107,7 @@ function sortCity(argObj: any) {
 
         <div class="">
           <label class="mt-5 ml-2 flex">
-            <img src="@/assets/earth_icon.svg" class="w-5" />
+            <img src="@/assets/img/icon/earth.svg" class="w-5" />
             <p class="ml-3 text-base">지역 전체</p>
             <input
               type="radio"
@@ -117,7 +117,7 @@ function sortCity(argObj: any) {
             />
           </label>
           <label class="mt-5 ml-2 flex" v-show="location != ''">
-            <img src="@/assets/location.svg" class="w-5" />
+            <img src="@/assets/img/icon/location.svg" class="w-5" />
             <p class="ml-3 text-base">{{ location }}</p>
             <input
               type="radio"
@@ -165,9 +165,5 @@ function sortCity(argObj: any) {
   .customWidth {
     width: 448px;
   }
-}
-
-.paddingZero {
-  padding: 0px;
 }
 </style>

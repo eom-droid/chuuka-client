@@ -199,7 +199,7 @@
 /* 페이지 여백 조절 */
 /* 기존 md:px-0 제거 */
 .w-page-sm {
-  @apply max-w-md px-2;
+  @apply max-w-md;
 }
 .w-page-md {
   @apply max-w-2xl px-2 md:px-0;

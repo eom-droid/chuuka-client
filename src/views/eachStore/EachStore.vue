@@ -100,11 +100,11 @@ function onClickHome() {
 </script>
 
 <template>
-  <main class="paddingZero">
+  <main class="">
     <div v-if="store.id != undefined" class="">
       <div class="customWidth">
         <img
-          src="@/assets/back.svg"
+          src="@/assets/img/icon/backword.svg"
           class="fixed w-7 hover:cursor-pointer rounded-full bg-slate-200 p-1 ml-3 mt-4"
           @click="onClickBack()"
         />
@@ -117,7 +117,7 @@ function onClickHome() {
         />
         <img
           v-else
-          src="@/assets/chuuka.png"
+          src="@/assets/img/default/chuuka.png"
           class="w-full object-cover h-25v"
           @error="getImgUrl"
         />
@@ -128,7 +128,6 @@ function onClickHome() {
           <!-- <div class="my-auto flex"> -->
           <div class="my-auto">
             <span class="text-xl font-bold">{{ store.name }}</span>
-            <!-- <img src="@/assets/instagram.svg" class="w-5" /> -->
           </div>
 
           <a
@@ -148,7 +147,7 @@ function onClickHome() {
         </div>
 
         <div class="flex text-base mt-1">
-          <img src="@/assets/location.svg" class="w-4 mx-0.5" />
+          <img src="@/assets/img/icon/location.svg" class="w-4 mx-0.5" />
           <span class="text-sm ml-2 mt-1 text-left text-tgray-500">{{
             store.location
           }}</span>
@@ -222,7 +221,7 @@ function onClickHome() {
       </div>
     </div>
     <div v-else>
-      <img src="@/assets/loadingIcon.gif" v-show="loading" />
+      <img src="@/assets/gif/loadingIcon.gif" v-show="loading" />
       <div v-show="!loading">
         <span class="mt-4 text-lg font-bold logo">CHUUKA</span>
         <div class="mt-20">해당 가게가 없습니다.</div>
@@ -266,9 +265,6 @@ function onClickHome() {
 
 .btnFont {
   font-family: "Noto Sans KR", Avenir;
-}
-.paddingZero {
-  padding: 0px;
 }
 
 @media (max-width: 448px) {
