@@ -53,7 +53,11 @@ import NavigationBar from "@/components/NavigationBar.vue";
       <div class="px-4 text-left">
         <div class="subTitle flex justify-between">
           <p class="">이런 케이크는 어때요?</p>
-          <p class="underline text-sm text-tgray-500 font-bold">더보기</p>
+          <router-link
+            to="/explore"
+            class="underline text-sm text-tgray-500 font-bold"
+            >더보기</router-link
+          >
         </div>
         <div class="grid grid-cols-3 gap-4 mt-4">
           <img

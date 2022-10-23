@@ -37,6 +37,12 @@ export const routes = [
     component: () => import("@/views/search/Search.vue"),
     meta: { keepAlive: false },
   },
+  {
+    path: "/explore",
+    name: "explore",
+    component: () => import("@/views/explore/Explore.vue"),
+    meta: { keepAlive: true },
+  },
 ];
 
 export const router = createRouter({

@@ -30,6 +30,13 @@ onMounted(() => {
   init();
 });
 async function init() {
+  // 라우팅 되는거 고민하기
+  // 1. lsit에서 들어오는거
+  // 2. 바로 url로 들어오는거 고민좀
+  let temp = window.localStorage.getItem("aa");
+  if (temp != null) {
+    console.log(JSON.parse(temp));
+  }
   if (history.state.store != undefined) {
     isDirectToStore.value = false;
     store.value = history.state.store as IStoreLanding;
@@ -135,7 +142,7 @@ function onClickHome() {
             :href="'https://www.instagram.com/' + store.sns.instagram"
             target="_blank"
           >
-            <img src="@/assets/instagram.svg" class="w-5" />
+            <img src="@/assets/img/icon/instagram.svg" class="w-5" />
             <div>
               <span
                 class="instagram text-lg ml-1.5"

@@ -31,7 +31,6 @@ const { proxy } = getCurrentInstance();
 const emitter = proxy.$emitter;
 
 onMounted(() => {
-  console.log("onMouted");
   init();
 
   document
@@ -136,8 +135,9 @@ function onlickLocation(location: string) {
 }
 
 function onClickEachStore(store: IStoreLanding) {
+  window.localStorage.setItem("aa", JSON.stringify(store));
   router.push({
-    path: "/store/" + store.id,
+    path: "/storeList/" + store.id,
     state: { store: JSON.parse(JSON.stringify(store)) },
   });
 }

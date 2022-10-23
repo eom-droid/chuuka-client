@@ -49,7 +49,7 @@ import { router } from "./router/router";
       v-slot="{ Component }"
       class="cusShadow w-page-sm bg-white h-100v"
     >
-      <keep-alive include="StoreList,Location" :max="10">
+      <keep-alive include="StoreList,Location,Explore" :max="10">
         <component :is="Component" />
       </keep-alive>
     </router-view>
