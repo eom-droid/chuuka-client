@@ -41,11 +41,11 @@ function onclickLocation(location: string) {
           @click="onClickBack()"
         />
         <div
-          class="flex border border-gray-400 -mt-0.5 ml-9 w-10/12 bg-white rounded-md"
+          class="flex border border-gray-400 -mt-1 ml-9 inputWidth bg-white rounded-md"
         >
-          <img src="@/assets/img/icon/search.svg" class="w-5" />
+          <img src="@/assets/img/icon/search.svg" class="w-5 ml-2" />
           <input
-            class="ml-2 w-full focus:outline-none text-base py-0.5 placeholder:text-xs rounded-md"
+            class="ml-2 w-full focus:outline-none text-base py-0.5 placeholder:text-xs rounded-md h-8"
             placeholder="주소(구까지)를 입력해주세요 (ex.서울 중랑구)"
             :value="keyword"
             @input="changeKeyword"
@@ -59,7 +59,7 @@ function onclickLocation(location: string) {
         <button
           v-for="(result, index) in searchArray"
           :key="index"
-          class="text-left w-full text-base font-semibold pt-2"
+          class="text-left w-full text-base pt-2"
           @click="onclickLocation(result)"
         >
           {{ result }}
@@ -80,5 +80,8 @@ function onclickLocation(location: string) {
   .customWidth {
     width: 448px;
   }
+}
+.inputWidth {
+  width: 86%;
 }
 </style>

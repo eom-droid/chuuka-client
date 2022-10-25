@@ -171,7 +171,7 @@ function locationBlur(tempLoc: string) {
       /></a>
       <button
         @click="onlickLocation(location)"
-        class="flex text-base w-full border border-tgray-400 rounded-md px-2 py-1 mt-3"
+        class="flex text-base w-full border border-tgray-400 rounded-md px-2 py-1 mt-3 h-8"
       >
         <img src="@/assets/img/icon/location.svg" class="w-3 my-auto" />
         <div class="ml-3">{{ location }}</div>

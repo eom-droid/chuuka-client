@@ -73,7 +73,6 @@ export async function updateProduct(storeId: string, product: IProduct) {
   const id = product.id;
   product.modDtime = nowDTime;
   product = removeId(product);
-  console.log(product);
   await updateDoc(
     doc(firestore, firebaseDevPath + "store/" + storeId + "/product", id),
     {

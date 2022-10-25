@@ -57,7 +57,7 @@ function onClickUrl(urlKey: IUrl) {
   if (urlKey != undefined) {
     window.open(urlKey.url, "_blank");
   } else {
-    console.log("이상해용");
+    // console.log("이상해용");
   }
 }
 function changeNewLine(args: string) {
@@ -97,7 +97,6 @@ function onClickInnerRoute(to: number) {
 }
 async function initProduct() {
   productList.value = await getAllProduct(store.value.id);
-  console.log(productList.value);
   isDesignBtnClicked.value = true;
 }
 </script>
