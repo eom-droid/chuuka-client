@@ -17,8 +17,12 @@ import {
 import defaultImg from "@/assets/chuuka.png";
 import { router } from "@/router/router";
 import { toastInfo } from "@/utils/toast";
+import { IProduct, getAllProduct } from "@/api/m1/product";
 
 const store = ref({} as IStoreLanding);
+const productList = ref([] as IProduct[]);
+const isDesignBtnClicked = ref(false);
+const innerRoute = ref(0);
 
 //@ts-ignore
 const { proxy } = getCurrentInstance();
@@ -33,13 +37,10 @@ async function init() {
   // 라우팅 되는거 고민하기
   // 1. lsit에서 들어오는거
   // 2. 바로 url로 들어오는거 고민좀
-  let temp = window.localStorage.getItem("aa");
-  if (temp != null) {
-    console.log(JSON.parse(temp));
-  }
-  if (history.state.store != undefined) {
+  let tempStoreInfo = window.localStorage.getItem("tempStoreInfo");
+  if (tempStoreInfo != null) {
     isDirectToStore.value = false;
-    store.value = history.state.store as IStoreLanding;
+    store.value = JSON.parse(tempStoreInfo) as IStoreLanding;
     changeNewLine(store.value.introduction);
   } else {
     isDirectToStore.value = true;
@@ -103,6 +104,19 @@ function onClickMap() {
 }
 function onClickHome() {
   router.push({ path: "/" });
+}
+
+function onClickInnerRoute(to: number) {
+  if (innerRoute.value === to) return;
+  innerRoute.value = to;
+  if (!isDesignBtnClicked.value) {
+    initProduct();
+  }
+}
+async function initProduct() {
+  productList.value = await getAllProduct(store.value.id);
+  console.log(productList.value);
+  isDesignBtnClicked.value = true;
 }
 </script>
 
@@ -217,13 +231,45 @@ function onClickHome() {
 
       <div class="bg-tgray-100 h-2"></div>
       <div class="">
-        <div
-          class="border-b-color-main border-b-2 text-sm font-medium shadow-md py-2.5"
-        >
-          가게 소개
+        <div class="text-sm font-medium shadow-md flex">
+          <button
+            class="w-full h-full py-2.5"
+            :class="innerRoute === 0 ? 'border-b-color-main border-b-2' : ''"
+            @click="onClickInnerRoute(0)"
+          >
+            가게 소개
+          </button>
+          <button
+            class="w-full h-full py-2.5"
+            :class="innerRoute === 0 ? '' : 'border-b-color-main border-b-2'"
+            @click="onClickInnerRoute(1)"
+          >
+            디자인
+          </button>
         </div>
-        <div class="text-left mt-3 mx-3 text-sm">
-          <div class="whitespace-pre-line">{{ store.introduction }}</div>
+
+        <div class="">
+          <!-- 띄어쓰기 적용하는 것 -->
+          <div
+            class="text-left mt-3 mx-3 text-sm whitespace-pre-line"
+            v-show="innerRoute === 0"
+          >
+            {{ store.introduction }}
+          </div>
+          <div v-show="innerRoute != 0" class="mt-3 mx-3">
+            <img
+              src="@/assets/gif/loadingIcon.gif"
+              v-if="!isDesignBtnClicked"
+            />
+            <div v-else class="grid grid-cols-3 gap-3">
+              <div v-for="(product, index) in productList" :key="index">
+                <img :src="product.photos[0].link" />
+              </div>
+            </div>
+            <div class="mt-5 text-tgray-500" v-if="productList.length <= 0">
+              샘플 디자인이 없습니다.
+            </div>
+          </div>
         </div>
       </div>
     </div>

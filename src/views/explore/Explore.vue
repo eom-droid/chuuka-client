@@ -48,10 +48,16 @@ function onlickLocation(location: string) {
 
 <template>
   <main class="customWidth">
-    <div class="">
+    <div class="flex">
+      <img
+        src="@/assets/img/icon/backword.svg"
+        class="fixed w-6 hover:cursor-pointer mt-4 ml-2"
+        @click="onClickBack()"
+      />
+
       <button
         @click="onlickLocation(location)"
-        class="flex text-base w-full border border-tgray-400 rounded-md px-2 py-1 mt-3"
+        class="flex text-base locationBtn border border-tgray-400 ml-10 rounded-md px-2 py-1 mt-3"
       >
         <img src="@/assets/img/icon/location.svg" class="w-3 my-auto" />
         <div class="ml-3">{{ location }}</div>
@@ -100,5 +106,9 @@ function onlickLocation(location: string) {
   .customWidth {
     width: 448px;
   }
+}
+
+.locationBtn {
+  width: 86%;
 }
 </style>

@@ -40,13 +40,15 @@ function onClickBack() {
   }
 }
 function initLoc() {
-  if (history.state.location != undefined) {
-    location.value = history.state.location;
+  let tempLoc = window.localStorage.getItem("location");
+  if (tempLoc != null && tempLoc != "지역 전체") {
+    location.value = tempLoc;
     selectedLoaction.value = location.value;
   }
 }
 function onClickSubmit(location: string) {
-  router.push({ path: "/storeList", state: { location } });
+  router.push("/storeList");
+  window.localStorage.setItem("location", location);
 }
 
 function onClickSetLocation() {

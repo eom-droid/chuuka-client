@@ -58,16 +58,15 @@ async function calcScrollAndGetDocs() {
   }
 }
 onActivated(() => {
+  let tempLoc = window.localStorage.getItem("location");
+
   if (document.getElementById("scrollEle") != null) {
     //@ts-ignore
     document.getElementById("scrollEle").scrollTop = savedScrollHeight.value;
   }
-  if (
-    history.state.location != undefined &&
-    location.value != history.state.location
-  ) {
+  if (tempLoc != null && location.value != tempLoc) {
     // 적용하기로 나온경우 && 다른 선택을 했을 시
-    location.value = history.state.location;
+    location.value = tempLoc;
     initValues();
     initAllStore();
   }
@@ -119,8 +118,9 @@ function getImgUrl(e: any) {
 }
 
 function initLocation() {
-  if (history.state.location != undefined) {
-    location.value = history.state.location;
+  let tempLoc = window.localStorage.getItem("location");
+  if (tempLoc != null) {
+    location.value = tempLoc;
   } else {
     location.value = "지역 전체";
   }
@@ -135,11 +135,8 @@ function onlickLocation(location: string) {
 }
 
 function onClickEachStore(store: IStoreLanding) {
-  window.localStorage.setItem("aa", JSON.stringify(store));
-  router.push({
-    path: "/storeList/" + store.id,
-    state: { store: JSON.parse(JSON.stringify(store)) },
-  });
+  window.localStorage.setItem("tempStoreInfo", JSON.stringify(store));
+  router.push("/storeList/" + store.id);
 }
 async function getNextDoc() {
   if (!isEnd.value) {

@@ -23,7 +23,7 @@ export const routes = [
     path: "/location",
     name: "location",
     component: () => import("@/views/location/Location.vue"),
-    meta: { keepAlive: false },
+    meta: { keepAlive: true },
   },
   {
     path: "/location/search",

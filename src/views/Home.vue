@@ -6,10 +6,10 @@ import NavigationBar from "@/components/NavigationBar.vue";
   <div class="h-100v mx-auto overflow-auto customWidth">
     <NavigationBar></NavigationBar>
     <main class="w-page-sm bg-white">
-      <div class="flex text-base font-bold">
+      <!-- <div class="flex text-base font-bold">
         <div class="mt-3 p-1 border-b-4 border-color-main w-16">홈</div>
         <div class="mt-3 p-1 ml-8">컨텐츠</div>
-      </div>
+      </div> -->
       <div class="relative flex justify-center align-middle">
         <img src="@/assets/img/slide/slide1.png" class="w-full" />
         <img src="@/assets/img/slide/dots.png" class="absolute bottom-5" />
@@ -27,21 +27,21 @@ import NavigationBar from "@/components/NavigationBar.vue";
             <p>케이크</p>
           </router-link>
           <div>
-            <div class="mainIcon getReady">
+            <div class="mainIconDisable getReady">
               <img src="@/assets/img/icon/bouquet.svg" class="w-full" />
               <p class="absolute text-white">준비중</p>
             </div>
             <p>꽃다발</p>
           </div>
           <div>
-            <div class="mainIcon getReady">
+            <div class="mainIconDisable getReady">
               <img src="@/assets/img/icon/coffe_car.svg" class="w-full" />
               <p class="absolute text-white">준비중</p>
             </div>
             <p>커피차</p>
           </div>
           <div>
-            <div class="mainIcon getReady">
+            <div class="mainIconDisable getReady">
               <img src="@/assets/img/icon/studio.svg" class="w-full" />
               <p class="absolute text-white">준비중</p>
             </div>
@@ -109,6 +109,9 @@ import NavigationBar from "@/components/NavigationBar.vue";
 
 .mainIcon {
   @apply border border-color-main p-2.5 rounded-md;
+}
+.mainIconDisable {
+  @apply p-2.5 rounded-md;
 }
 
 .getReady {
