@@ -1,25 +1,12 @@
 <script setup lang="ts">
-import {
-  getAllStoreLandingInfo,
-  IStoreLanding,
-  IUrl,
-  getStoreLandingInfo,
-} from "@/api/m1/store";
-import {
-  defineComponent,
-  ref,
-  computed,
-  onMounted,
-  getCurrentInstance,
-  onUnmounted,
-  watch,
-} from "vue";
-import defaultImg from "@/assets/chuuka.png";
+import { IStore, IUrl, getStoreInfoById } from "@/api/m1/store";
+import { ref, onMounted, getCurrentInstance } from "vue";
+import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
 import { toastInfo } from "@/utils/toast";
 import { IProduct, getAllProduct } from "@/api/m1/product";
 
-const store = ref({} as IStoreLanding);
+const store = ref({} as IStore);
 const productList = ref([] as IProduct[]);
 const isDesignBtnClicked = ref(false);
 const innerRoute = ref(0);
@@ -34,13 +21,10 @@ onMounted(() => {
   init();
 });
 async function init() {
-  // 라우팅 되는거 고민하기
-  // 1. lsit에서 들어오는거
-  // 2. 바로 url로 들어오는거 고민좀
   let tempStoreInfo = window.localStorage.getItem("tempStoreInfo");
   if (tempStoreInfo != null) {
     isDirectToStore.value = false;
-    store.value = JSON.parse(tempStoreInfo) as IStoreLanding;
+    store.value = JSON.parse(tempStoreInfo) as IStore;
     changeNewLine(store.value.introduction);
   } else {
     isDirectToStore.value = true;
@@ -48,14 +32,12 @@ async function init() {
     let tempPath = document.location.pathname.split("/");
 
     if (tempPath.length > 2) {
-      let tempResult = await getStoreLandingInfo(tempPath[2]);
+      let tempResult = await getStoreInfoById(tempPath[2]);
       if (tempResult != null) store.value = tempResult;
     }
     loading.value = false;
   }
 }
-
-function getStoreInfo() {}
 
 function getImgUrl(e: any) {
   e.target.src = defaultImg;
@@ -260,6 +242,7 @@ async function initProduct() {
             <img
               src="@/assets/gif/loadingIcon.gif"
               v-if="!isDesignBtnClicked"
+              class="w-40"
             />
             <div v-else class="grid grid-cols-3 gap-3">
               <div v-for="(product, index) in productList" :key="index">

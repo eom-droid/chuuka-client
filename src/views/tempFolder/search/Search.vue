@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import { router } from "@/router/router";
 import { debounce } from "lodash";
@@ -95,4 +95,4 @@ function changeKeyword(e: any) {
     width: 448px;
   }
 }
-</style>
+</style> -->

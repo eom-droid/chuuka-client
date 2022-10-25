@@ -1,16 +1,5 @@
 <script setup lang="ts">
-import { getAllStoreLandingInfo, IStoreLanding } from "@/api/m1/store";
-import {
-  defineComponent,
-  ref,
-  computed,
-  onMounted,
-  getCurrentInstance,
-  onUnmounted,
-  watch,
-  onActivated,
-} from "vue";
-import defaultImg from "@/assets/chuuka.png";
+import { ref, getCurrentInstance, onActivated } from "vue";
 import { router } from "@/router/router";
 import axios from "axios";
 import { urlConfig } from "@/../urlConfig.js";
@@ -33,11 +22,7 @@ function init() {
 }
 
 function onClickBack() {
-  if (history.state.back === null) {
-    router.push("/");
-  } else {
-    router.go(-1);
-  }
+  router.push("/");
 }
 function initLoc() {
   let tempLoc = window.localStorage.getItem("location");
@@ -47,8 +32,8 @@ function initLoc() {
   }
 }
 function onClickSubmit(location: string) {
-  router.push("/storeList");
   window.localStorage.setItem("location", location);
+  onClickBack();
 }
 
 function onClickSetLocation() {

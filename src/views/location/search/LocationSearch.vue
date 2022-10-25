@@ -1,15 +1,5 @@
 <script setup lang="ts">
-import { getAllStoreLandingInfo, IStoreLanding } from "@/api/m1/store";
-import {
-  defineComponent,
-  ref,
-  computed,
-  onMounted,
-  getCurrentInstance,
-  onUnmounted,
-  watch,
-} from "vue";
-import defaultImg from "@/assets/chuuka.png";
+import { ref, computed, getCurrentInstance } from "vue";
 import { locations } from "@/assets/city/city";
 
 import { router } from "@/router/router";
@@ -36,7 +26,8 @@ function changeKeyword(e: any) {
   keyword.value = e.target.value;
 }
 function onclickLocation(location: string) {
-  router.replace({ name: "location", state: { location } });
+  window.localStorage.setItem("location", location);
+  router.replace({ name: "location" });
 }
 </script>
 

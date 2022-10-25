@@ -8,13 +8,7 @@ export const routes = [
     meta: { keepAlive: true },
   },
   {
-    path: "/storeList",
-    name: "storeList",
-    component: () => import("@/views/storeList/StoreList.vue"),
-    meta: { keepAlive: true },
-  },
-  {
-    path: "/storeList/:storeId",
+    path: "/store/:storeId",
     name: "eachStore",
     component: () => import("@/views/eachStore/EachStore.vue"),
     meta: { keepAlive: false },
@@ -30,18 +24,6 @@ export const routes = [
     name: "location-search",
     component: () => import("@/views/location/search/LocationSearch.vue"),
     meta: { keepAlive: false },
-  },
-  {
-    path: "/search",
-    name: "search",
-    component: () => import("@/views/search/Search.vue"),
-    meta: { keepAlive: false },
-  },
-  {
-    path: "/explore",
-    name: "explore",
-    component: () => import("@/views/explore/Explore.vue"),
-    meta: { keepAlive: true },
   },
 ];
 

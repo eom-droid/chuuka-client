@@ -1,7 +1,4 @@
-<script setup lang="ts">
-import { onMounted } from "vue";
-import { router } from "./router/router";
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="bg-color-main h-100v flex">
@@ -25,7 +22,11 @@ import { router } from "./router/router";
       <!-- footer -->
       <div class="text-sm text-left bottom-0 fixed mb-7">
         <div class="text-white">
-          <a>회사소개</a>
+          <a
+            href="https://changeable-beam-1af.notion.site/CHUUKA-2d22455d43b64e8c83c4f7043dd67ec4"
+            target="_blank"
+            >회사소개</a
+          >
           <a class="ml-7" href="https://x170w.channel.io/lounge" target="_blank"
             >입점안내</a
           >
@@ -49,7 +50,7 @@ import { router } from "./router/router";
       v-slot="{ Component }"
       class="cusShadow w-page-sm bg-white h-100v"
     >
-      <keep-alive include="StoreList,Location,Explore" :max="10">
+      <keep-alive include="Home,Location" :max="10">
         <component :is="Component" />
       </keep-alive>
     </router-view>

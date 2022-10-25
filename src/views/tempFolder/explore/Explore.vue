@@ -8,13 +8,11 @@ onMounted(() => {
   init();
 });
 onActivated(() => {
-  console.log(window.localStorage.getItem("location"));
-  if (
-    history.state.location != undefined &&
-    location.value != history.state.location
-  ) {
+  let tempStoreInfo = window.localStorage.getItem("location");
+
+  if (tempStoreInfo != null && location.value != tempStoreInfo) {
     // 적용하기로 나온경우 && 다른 선택을 했을 시
-    location.value = history.state.location;
+    location.value = tempStoreInfo;
   }
 });
 function init() {
@@ -22,8 +20,10 @@ function init() {
 }
 
 function initLocation() {
-  if (history.state.location != undefined) {
-    location.value = history.state.location;
+  let tempStoreInfo = window.localStorage.getItem("location");
+
+  if (tempStoreInfo != null) {
+    location.value = tempStoreInfo;
   } else {
     location.value = "지역 전체";
   }
@@ -41,7 +41,7 @@ function onlickLocation(location: string) {
   if (location === "지역 전체") {
     router.push({ name: "location" });
   } else {
-    router.push({ name: "location", state: { location } });
+    router.push({ name: "location" });
   }
 }
 </script>
@@ -63,6 +63,7 @@ function onlickLocation(location: string) {
         <div class="ml-3">{{ location }}</div>
       </button>
     </div>
+    <div class="">dfgdfg</div>
   </main>
 </template>
 
