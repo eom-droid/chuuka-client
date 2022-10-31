@@ -22,7 +22,8 @@ onMounted(() => {
 });
 async function init() {
   let tempStoreInfo = window.localStorage.getItem("tempStoreInfo");
-  if (tempStoreInfo != null) {
+
+  if (tempStoreInfo != null && history.state.back != null) {
     isDirectToStore.value = false;
     store.value = JSON.parse(tempStoreInfo) as IStore;
     changeNewLine(store.value.introduction);
@@ -255,7 +256,7 @@ async function initProduct() {
         </div>
       </div>
     </div>
-    <div v-else>
+    <div v-else class="customWidth">
       <img src="@/assets/gif/loadingIcon.gif" v-show="loading" />
       <div v-show="!loading">
         <span class="mt-4 text-lg font-bold logo">CHUUKA</span>
