@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "@/plugins/firebase";
 import { firebaseDevPath } from "../tempdev";
+import { IPhoto } from "./photo";
 
 // export interface IProduct {
 //   id: string;
@@ -28,16 +29,12 @@ export interface IProduct {
   id: string;
   name: string;
   description: string;
-  photos: Array<IProductPhoto>;
+  photos: Array<IPhoto>;
   hashTags: Array<string>;
   isSoldOut: boolean;
   isHidden: boolean;
   regDtime: Timestamp;
   modDtime: Timestamp;
-}
-export interface IProductPhoto {
-  link: string;
-  gs: string;
 }
 
 export interface IOptionGroup {

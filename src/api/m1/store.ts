@@ -19,6 +19,7 @@ import {
 } from "firebase/firestore";
 import { firebaseApp, firestore } from "@/plugins/firebase.js";
 import { firebaseDevPath } from "../tempdev";
+import { IPhoto } from "./photo";
 
 // export interface IOpenAndCloseHour {
 //   open: string;
@@ -65,11 +66,6 @@ export interface IUrl {
 export interface ISns {
   instagram: string;
   kakaoTalk: string;
-}
-
-export interface IPhoto {
-  link: string;
-  gs: string;
 }
 
 //Read
