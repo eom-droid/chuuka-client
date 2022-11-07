@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { throttle } from "lodash";
+import { concat, throttle } from "lodash";
 import {
   getStoreInfoWithLimit,
   IStore,
@@ -14,6 +14,7 @@ import {
 } from "vue";
 import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
+import { reauthenticateWithRedirect } from "@firebase/auth";
 
 const tempAllStore = ref([] as Array<IStore>);
 const location = ref("");
@@ -21,6 +22,7 @@ const lastVisible = ref(null as any);
 const isEnd = ref(false);
 const isRunning = ref(false);
 const savedScrollHeight = ref(0);
+const tempArray = ref([{ id: "10000" }] as Array<IStore>);
 
 //@ts-ignore
 const { proxy } = getCurrentInstance();
@@ -49,7 +51,7 @@ async function calcScrollAndGetDocs() {
   // console.log(scrollHeight - scrollTop - offsetHeight);
   if (!isRunning.value && scrollHeight - scrollTop - offsetHeight < 150) {
     isRunning.value = true;
-    await getNextDoc();
+    await initAllStore();
     isRunning.value = false;
   }
 }
@@ -82,9 +84,12 @@ function init() {
   initLocation();
   initAllStore();
 }
+const a = ref(0);
 
 async function initAllStore() {
+  if (isEnd.value) return;
   let tempResult;
+  let mixedResult = [] as Array<IStore>;
   if (location.value === "지역 전체") {
     tempResult = await getStoreInfoWithLimit(lastVisible.value);
   } else {
@@ -94,13 +99,18 @@ async function initAllStore() {
       location.value
     );
   }
+
   tempResult.docs.map((ele) => {
     let data = ele.data() as IStore;
     data.id = ele.id;
-    tempAllStore.value.push(data);
+    mixedResult.push(data);
   });
+  // 마지막 doc 저장
   lastVisible.value = tempResult.docs[tempResult.docs.length - 1];
-  tempAllStore.value.sort(() => Math.random() - 0.5);
+  // 임시에서 sort하고
+  mixedResult.sort(() => Math.random() - 0.5);
+  // 이어붙이기
+  tempAllStore.value = tempAllStore.value.concat(mixedResult);
   if (tempResult.docs.length != 20) {
     isEnd.value = true;
   }
@@ -160,6 +170,7 @@ function locationBlur(tempLoc: string) {
 <template>
   <main class="customWidth px-2 overflow-auto" id="scrollEle">
     <div class="custom_shadow pb-4">
+      <!-- {{ lastVisible }} -->
       <div class="mt-4 text-lg font-bold logo">CHUUKA!</div>
       <a
         href="https://www.instagram.com/chuuka.official/"
