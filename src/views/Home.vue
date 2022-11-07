@@ -229,7 +229,7 @@ function locationBlur(tempLoc: string) {
               <div
                 v-for="(hashTag, index) in store.hashTags"
                 :key="index"
-                class="custom_textsize border border-color-main px-1.5 py-0.5 rounded-md mr-1.5"
+                class="custom_textsize border border-main px-1.5 py-0.5 rounded-md mr-1.5"
               >
                 #{{ hashTag }}
               </div>

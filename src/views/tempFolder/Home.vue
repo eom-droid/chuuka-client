@@ -7,7 +7,7 @@ import NavigationBar from "@/components/NavigationBar.vue";
     <NavigationBar></NavigationBar>
     <main class="w-page-sm bg-white">
       <!-- <div class="flex text-base font-bold">
-        <div class="mt-3 p-1 border-b-4 border-color-main w-16">홈</div>
+        <div class="mt-3 p-1 border-b-4 border-main w-16">홈</div>
         <div class="mt-3 p-1 ml-8">컨텐츠</div>
       </div> -->
       <div class="relative flex justify-center align-middle">
@@ -108,7 +108,7 @@ import NavigationBar from "@/components/NavigationBar.vue";
 }
 
 .mainIcon {
-  @apply border border-color-main p-2.5 rounded-md;
+  @apply border border-main p-2.5 rounded-md;
 }
 .mainIconDisable {
   @apply p-2.5 rounded-md;

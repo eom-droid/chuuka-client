@@ -132,7 +132,7 @@ function sortCity(argObj: any) {
 
         <div class="absolute bottom-0 z-10 w-full">
           <button
-            class="bg-color-main text-white h-12 rounded-md text-lg w-full"
+            class="bg-main text-white h-12 rounded-md text-lg w-full"
             @click="onClickSubmit(selectedLoaction)"
           >
             적용하기

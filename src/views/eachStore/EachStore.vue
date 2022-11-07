@@ -156,14 +156,14 @@ async function initProduct() {
           }}</span>
           <div class="flex mt-1">
             <a
-              class="mapFont"
+              class="map-font"
               v-if="store.locationUrl === undefined"
               target="_blank"
             >
               <span> </span>
             </a>
             <a
-              class="mapFont"
+              class="map-font"
               v-else-if="store.locationUrl.naver != undefined"
               :href="'https://naver.me/' + store.locationUrl.naver"
               target="_blank"
@@ -171,7 +171,7 @@ async function initProduct() {
               <span class=""> 지도 </span>
             </a>
             <a
-              class="mapFont"
+              class="map-font"
               v-else-if="store.locationUrl.kakao != undefined"
               :href="'https://place.map.kakao.com/' + store.locationUrl.kakao"
               target="_blank"
@@ -184,7 +184,7 @@ async function initProduct() {
           <div
             v-for="(hashTag, index) in store.hashTags"
             :key="index"
-            class="text-xs border-color-main border py-1 pl-1.5 pr-2 rounded-md mr-2"
+            class="text-xs border-main border py-1 pl-1.5 pr-2 rounded-md mr-2"
           >
             #{{ hashTag }}
           </div>
@@ -197,16 +197,19 @@ async function initProduct() {
         <div>
           <button
             class="w-full mt-3 text-base font-semibold h-11 rounded-md"
-            :class="
-              index === 0
-                ? 'bg-color-main text-white'
-                : 'bg-color-sub text-color-main'
-            "
+            :class="index === 0 ? 'btn-main' : 'btn-sub'"
             v-for="(url, index) in store.goUrl"
             :key="index"
             @click="onClickUrl(url)"
           >
-            <span class="btnFont">{{ url.name }}</span>
+            <span class="btn-font">{{ url.name }}</span>
+          </button>
+
+          <button
+            class="w-full mt-3 text-base font-semibold h-11 rounded-md"
+            :class="true ? 'btn-main' : 'btn-sub'"
+          >
+            <span class="btn-font">d</span>
           </button>
         </div>
       </div>
@@ -216,15 +219,22 @@ async function initProduct() {
         <div class="text-sm font-medium shadow-md flex">
           <button
             class="w-full h-full py-2.5"
-            :class="innerRoute === 0 ? 'border-b-color-main border-b-2' : ''"
+            :class="innerRoute === 0 ? 'border-b-main border-b-4' : ''"
             @click="onClickInnerRoute(0)"
           >
-            가게 소개
+            필독 사항
           </button>
           <button
             class="w-full h-full py-2.5"
-            :class="innerRoute === 0 ? '' : 'border-b-color-main border-b-2'"
+            :class="innerRoute === 1 ? 'border-b-main border-b-4' : ''"
             @click="onClickInnerRoute(1)"
+          >
+            일정/소식
+          </button>
+          <button
+            class="w-full h-full py-2.5"
+            :class="innerRoute === 2 ? 'border-b-main border-b-4' : ''"
+            @click="onClickInnerRoute(2)"
           >
             디자인
           </button>
@@ -238,7 +248,13 @@ async function initProduct() {
           >
             {{ store.introduction }}
           </div>
-          <div v-show="innerRoute != 0" class="mt-3 mx-3">
+          <div
+            class="text-left mt-3 mx-3 text-sm whitespace-pre-line"
+            v-show="innerRoute === 1"
+          >
+            {{ store.introduction }}
+          </div>
+          <div v-show="innerRoute === 2" class="mt-3 mx-3">
             <img
               src="@/assets/gif/loadingIcon.gif"
               v-if="!isDesignBtnClicked"
@@ -295,11 +311,11 @@ async function initProduct() {
   font-family: "Montserrat", sans-serif;
 }
 
-.mapFont {
+.map-font {
   @apply instagram ml-2 mt-auto inline-block align-bottom w-10 text-base;
 }
 
-.btnFont {
+.btn-font {
   font-family: "Noto Sans KR", Avenir;
 }
 

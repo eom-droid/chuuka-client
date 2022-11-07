@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="bg-color-main h-100v flex">
+  <div class="bg-main h-100v flex">
     <div class="w-1/12 disnone"></div>
     <div class="mx-auto mt-20 disnone">
       <div class="text-xl text-left mb-auto font-semibold">
@@ -31,7 +31,7 @@
             >입점안내</a
           >
         </div>
-        <div class="text-color-sub font-light">
+        <div class="text-sub font-light">
           <div class="mt-3">
             <span>(주)추카</span>
             <span class="ml-3">대표 : 송준호</span>
