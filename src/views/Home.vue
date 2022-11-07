@@ -182,7 +182,7 @@ function locationBlur(tempLoc: string) {
       /></a>
       <button
         @click="onlickLocation(location)"
-        class="flex text-base w-full border border-tgray-400 rounded-md px-2 py-1 mt-3 h-8"
+        class="flex text-base w-full border border-neutral-400 rounded-md px-2 py-1 mt-3 h-8"
       >
         <img src="@/assets/img/icon/location.svg" class="w-3 my-auto" />
         <div class="ml-3">{{ location }}</div>
@@ -192,7 +192,7 @@ function locationBlur(tempLoc: string) {
       <div
         v-for="(store, index) in tempAllStore"
         :key="index"
-        class="border-b border-tgray-200 mb-2 flex pb-2"
+        class="border-b border-neutral-200 mb-2 flex pb-2"
         @click="onClickEachStore(store)"
       >
         <img
@@ -215,7 +215,7 @@ function locationBlur(tempLoc: string) {
                 >{{ store.name }}</span
               >
             </div>
-            <div class="text-tgray-600 text-xs mt-2">
+            <div class="text-neutral-600 text-xs mt-2">
               <span>{{ locationBlur(store.location)[0] }}</span
               ><span
                 class="customBlur"
@@ -238,7 +238,7 @@ function locationBlur(tempLoc: string) {
         </div>
       </div>
     </div>
-    <div class="text-tgray-400 text-base mb-2" v-show="isEnd">
+    <div class="text-neutral-400 text-base mb-2" v-show="isEnd">
       더 이상의 업체가 없습니다.
     </div>
   </main>

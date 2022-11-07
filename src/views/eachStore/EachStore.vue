@@ -151,7 +151,7 @@ async function initProduct() {
 
         <div class="flex text-base mt-1">
           <img src="@/assets/img/icon/location.svg" class="w-4 mx-0.5" />
-          <span class="text-sm ml-2 mt-1 text-left text-tgray-500">{{
+          <span class="text-sm ml-2 mt-1 text-left text-neutral-500">{{
             store.location
           }}</span>
           <div class="flex mt-1">
@@ -189,9 +189,9 @@ async function initProduct() {
             #{{ hashTag }}
           </div>
         </div>
-        <!-- <hr class="border-tgray-200 mt-5" v-if="store.goUrl != undefined" /> -->
+        <!-- <hr class="border-neutral-200 mt-5" v-if="store.goUrl != undefined" /> -->
       </div>
-      <hr class="border-tgray-200 mt-5" v-if="store.goUrl != undefined" />
+      <hr class="border-neutral-200 mt-5" v-if="store.goUrl != undefined" />
 
       <div class="px-3 pb-3">
         <div>
@@ -211,7 +211,7 @@ async function initProduct() {
         </div>
       </div>
 
-      <div class="bg-tgray-100 h-2"></div>
+      <div class="bg-neutral-100 h-2"></div>
       <div class="">
         <div class="text-sm font-medium shadow-md flex">
           <button
@@ -249,7 +249,7 @@ async function initProduct() {
                 <img :src="product.photos[0].link" />
               </div>
             </div>
-            <div class="mt-5 text-tgray-500" v-if="productList.length <= 0">
+            <div class="mt-5 text-neutral-500" v-if="productList.length <= 0">
               샘플 디자인이 없습니다.
             </div>
           </div>

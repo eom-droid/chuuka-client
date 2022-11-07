@@ -121,9 +121,9 @@ function sortCity(argObj: any) {
             <button class="text-xs ml-3 text-blue-500">현재 위치로 설정</button>
           </div>
 
-          <div class="mt-5 bg-tgray-300 rounded-md">
+          <div class="mt-5 bg-neutral-300 rounded-md">
             <router-link to="/location/search" class="">
-              <button class="text-tgray-700 w-full h-12 text-base">
+              <button class="text-neutral-700 w-full h-12 text-base">
                 위치 변경하기
               </button>
             </router-link>

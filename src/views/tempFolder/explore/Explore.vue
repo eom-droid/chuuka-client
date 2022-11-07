@@ -57,7 +57,7 @@ function onlickLocation(location: string) {
 
       <button
         @click="onlickLocation(location)"
-        class="flex text-base locationBtn border border-tgray-400 ml-10 rounded-md px-2 py-1 mt-3"
+        class="flex text-base locationBtn border border-neutral-400 ml-10 rounded-md px-2 py-1 mt-3"
       >
         <img src="@/assets/img/icon/location.svg" class="w-3 my-auto" />
         <div class="ml-3">{{ location }}</div>

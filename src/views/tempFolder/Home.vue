@@ -55,7 +55,7 @@ import NavigationBar from "@/components/NavigationBar.vue";
           <p class="">이런 케이크는 어때요?</p>
           <router-link
             to="/explore"
-            class="underline text-sm text-tgray-500 font-bold"
+            class="underline text-sm text-neutral-500 font-bold"
             >더보기</router-link
           >
         </div>
