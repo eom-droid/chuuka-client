@@ -17,6 +17,24 @@ const emitter = proxy.$emitter;
 const loading = ref(false);
 const isDirectToStore = ref(false);
 
+let fooMustRead = ref([
+  {
+    title: "주문방법",
+    content: "주문방법 콘텐츠",
+    isOpen: false,
+  },
+  {
+    title: "크기/맛",
+    content: "크기/맛 콘텐츠",
+    isOpen: false,
+  },
+  {
+    title: "유의 사항",
+    content: "유의 사항 콘텐츠",
+    isOpen: false,
+  },
+]);
+
 onMounted(() => {
   init();
 });
@@ -193,10 +211,11 @@ async function initProduct() {
       </div>
       <hr class="border-neutral-200 mt-5" v-if="store.goUrl != undefined" />
 
+      <!-- NOTE 가게링크 -->
       <div class="px-3 pb-3">
         <div>
           <button
-            class="w-full mt-3 text-base font-semibold h-11 rounded-md"
+            class="text-lg"
             :class="index === 0 ? 'btn-main' : 'btn-sub'"
             v-for="(url, index) in store.goUrl"
             :key="index"
@@ -204,19 +223,14 @@ async function initProduct() {
           >
             <span class="btn-font">{{ url.name }}</span>
           </button>
-
-          <button
-            class="w-full mt-3 text-base font-semibold h-11 rounded-md"
-            :class="true ? 'btn-main' : 'btn-sub'"
-          >
-            <span class="btn-font">d</span>
-          </button>
         </div>
       </div>
 
       <div class="bg-neutral-100 h-2"></div>
+
+      <!-- NOTE 탭 -->
       <div class="">
-        <div class="text-sm font-medium shadow-md flex">
+        <div class="text-base font-medium flex">
           <button
             class="w-full h-full py-2.5"
             :class="innerRoute === 0 ? 'border-b-main border-b-4' : ''"
@@ -240,21 +254,55 @@ async function initProduct() {
           </button>
         </div>
 
-        <div class="">
-          <!-- 띄어쓰기 적용하는 것 -->
-          <div
-            class="text-left mt-3 mx-3 text-sm whitespace-pre-line"
-            v-show="innerRoute === 0"
-          >
-            {{ store.introduction }}
+        <div class="text-sm font-medium flex mx-3">
+          <button class="btn-main text-base">주문 양식 복사</button>
+        </div>
+
+        <div class="my-2 mx-3"><hr /></div>
+
+        <div class="text-base text-left">
+          <!-- NOTE 필독 사항 -->
+          <div v-show="innerRoute === 0" class="m-3 grid gap-3">
+            <div
+              v-for="(item, index) in fooMustRead"
+              :key="index"
+              class="border border-mid-gray shadow-sm rounded-md p-3"
+            >
+              <div class="flex justify-between">
+                <div>
+                  {{ item.title }}
+                </div>
+                <div @click="item.isOpen = !item.isOpen">
+                  <div v-show="!item.isOpen">
+                    펼치기<font-awesome-icon
+                      icon="chevron-down"
+                      class="text-main ml-2"
+                    />
+                  </div>
+                  <div v-show="item.isOpen">
+                    접기<font-awesome-icon
+                      icon="chevron-up"
+                      class="text-main ml-2"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div v-show="item.isOpen" class="mt-1 text-sm">
+                {{ item.content }}
+              </div>
+            </div>
           </div>
+
+          <!-- NOTE 일정/소식 -->
           <div
-            class="text-left mt-3 mx-3 text-sm whitespace-pre-line"
             v-show="innerRoute === 1"
+            class="text-left m-3 whitespace-pre-line"
           >
             {{ store.introduction }}
           </div>
-          <div v-show="innerRoute === 2" class="mt-3 mx-3">
+
+          <!-- NOTE 디자인 -->
+          <div v-show="innerRoute === 2" class="m-3">
             <img
               src="@/assets/gif/loadingIcon.gif"
               v-if="!isDesignBtnClicked"

@@ -9,10 +9,12 @@
     "serve": "vite preview --host --port 14011"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
+    "@fortawesome/free-solid-svg-icons": "^6.2.0",
+    "@fortawesome/vue-fontawesome": "^3.0.1",
     "@types/lodash": "^4.14.186",
     "axios": "^0.27.2",
     "firebase": "^9.8.1",
+    "lodash": "^4.17.21",
     "mitt": "^3.0.0",
     "moment": "^2.29.1",
     "mosha-vue-toastify": "^1.0.23",
