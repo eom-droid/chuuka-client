@@ -65,6 +65,21 @@ hr {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+#app {
+  overflow: auto;
+}
+#app::-webkit-scrollbar {
+  width: 8px;
+}
+#app::-webkit-scrollbar-thumb {
+  background-color: grey;
+  border-radius: 10px;
+}
+#app::-webkit-scrollbar-track {
+  background-color: light-grey;
+}
+
 body {
   -ms-overflow-style: none;
 }

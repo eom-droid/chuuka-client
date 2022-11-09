@@ -169,7 +169,7 @@ function locationBlur(tempLoc: string) {
 
 <template>
   <main class="customWidth px-2 overflow-auto" id="scrollEle">
-    <div class="custom_shadow pb-4">
+    <div>
       <!-- {{ lastVisible }} -->
       <div class="mt-4 text-lg font-bold logo">CHUUKA!</div>
       <a
@@ -182,13 +182,13 @@ function locationBlur(tempLoc: string) {
       /></a>
       <button
         @click="onlickLocation(location)"
-        class="flex text-base w-full border border-neutral-400 rounded-md px-2 py-1 mt-3 h-8"
+        class="flex text-base w-full border border-neutral-400 rounded-md px-2 py-1 mt-3 h-10"
       >
         <img src="@/assets/img/icon/location.svg" class="w-3 my-auto" />
-        <div class="ml-3">{{ location }}</div>
+        <div class="ml-3 my-auto">{{ location }}</div>
       </button>
     </div>
-    <div class="mt-5">
+    <div class="mt-3">
       <div
         v-for="(store, index) in tempAllStore"
         :key="index"
@@ -247,9 +247,6 @@ function locationBlur(tempLoc: string) {
 <style>
 .thumnail {
   aspect-ratio: 1 / 1;
-}
-.custom_shadow {
-  box-shadow: 0 4px 2px -1px rgba(0, 0, 0, 0.1);
 }
 .custom_textsize {
   font-size: 10px;

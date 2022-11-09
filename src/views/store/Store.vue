@@ -156,7 +156,6 @@ async function initProduct() {
           class="fixed w-7 hover:cursor-pointer rounded-full bg-slate-200 p-1 ml-3 mt-4"
           @click="onClickBack()"
         />
-
         <img
           v-if="store.profileImage != undefined"
           :src="store.profileImage.link"
@@ -229,7 +228,7 @@ async function initProduct() {
           <div
             v-for="(hashTag, index) in store.hashTags"
             :key="index"
-            class="text-xs border-main border py-1 pl-1.5 pr-2 rounded-md mr-2"
+            class="text-xs border-main border py-2 pl-1.5 pr-2 rounded-md mr-2"
           >
             #{{ hashTag }}
           </div>
@@ -295,11 +294,14 @@ async function initProduct() {
                 :key="index"
                 class="store-content-block"
               >
-                <div class="flex justify-between">
+                <div
+                  @click="item.isOpen = !item.isOpen"
+                  class="flex justify-between cursor-pointer"
+                >
                   <div>
                     {{ item.title }}
                   </div>
-                  <div @click="item.isOpen = !item.isOpen">
+                  <div>
                     <div v-show="!item.isOpen">
                       펼치기<font-awesome-icon
                         icon="chevron-down"
