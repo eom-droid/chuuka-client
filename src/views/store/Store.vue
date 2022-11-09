@@ -5,6 +5,8 @@ import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
 import { toastInfo } from "@/utils/toast";
 import { IProduct, getAllProduct } from "@/api/m1/product";
+import { INews } from "@/api/m1/news";
+import { Timestamp } from "@firebase/firestore";
 
 const store = ref({} as IStore);
 const productList = ref([] as IProduct[]);
@@ -16,6 +18,31 @@ const { proxy } = getCurrentInstance();
 const emitter = proxy.$emitter;
 const loading = ref(false);
 const isDirectToStore = ref(false);
+
+const fooNewsList = [
+  {
+    id: "id1",
+    title: "제목",
+    content: "내용",
+    photos: [],
+    regWriter: "",
+    modWriter: "",
+    isHidden: false,
+    regDtime: Timestamp.fromDate(new Date()),
+    modDtime: Timestamp.fromDate(new Date()),
+  },
+  {
+    id: "id2",
+    title: "제목",
+    content: "내용",
+    photos: [],
+    regWriter: "",
+    modWriter: "",
+    isHidden: false,
+    regDtime: Timestamp.fromDate(new Date()),
+    modDtime: Timestamp.fromDate(new Date()),
+  },
+] as INews[];
 
 let fooMustRead = ref([
   {
@@ -123,7 +150,7 @@ async function initProduct() {
 <template>
   <main class="">
     <div v-if="store.id != undefined" class="">
-      <div class="customWidth">
+      <div class="custom-width">
         <img
           src="@/assets/img/icon/backword.svg"
           class="fixed w-7 hover:cursor-pointer rounded-full bg-slate-200 p-1 ml-3 mt-4"
@@ -221,7 +248,7 @@ async function initProduct() {
             :key="index"
             @click="onClickUrl(url)"
           >
-            <span class="btn-font">{{ url.name }}</span>
+            <span>{{ url.name }}</span>
           </button>
         </div>
       </div>
@@ -254,41 +281,42 @@ async function initProduct() {
           </button>
         </div>
 
-        <div class="text-sm font-medium flex mx-3">
-          <button class="btn-main text-base">주문 양식 복사</button>
-        </div>
-
-        <div class="my-2 mx-3"><hr /></div>
-
         <div class="text-base text-left">
           <!-- NOTE 필독 사항 -->
-          <div v-show="innerRoute === 0" class="m-3 grid gap-3">
-            <div
-              v-for="(item, index) in fooMustRead"
-              :key="index"
-              class="border border-mid-gray shadow-sm rounded-md p-3"
-            >
-              <div class="flex justify-between">
-                <div>
-                  {{ item.title }}
-                </div>
-                <div @click="item.isOpen = !item.isOpen">
-                  <div v-show="!item.isOpen">
-                    펼치기<font-awesome-icon
-                      icon="chevron-down"
-                      class="text-main ml-2"
-                    />
+          <div v-show="innerRoute === 0">
+            <div class="text-sm font-medium flex mx-3">
+              <button class="btn-main text-base">주문 양식 복사</button>
+            </div>
+
+            <div class="my-2 mx-3"><hr /></div>
+            <div class="m-3 grid gap-3">
+              <div
+                v-for="(item, index) in fooMustRead"
+                :key="index"
+                class="store-content-block"
+              >
+                <div class="flex justify-between">
+                  <div>
+                    {{ item.title }}
                   </div>
-                  <div v-show="item.isOpen">
-                    접기<font-awesome-icon
-                      icon="chevron-up"
-                      class="text-main ml-2"
-                    />
+                  <div @click="item.isOpen = !item.isOpen">
+                    <div v-show="!item.isOpen">
+                      펼치기<font-awesome-icon
+                        icon="chevron-down"
+                        class="text-main ml-2"
+                      />
+                    </div>
+                    <div v-show="item.isOpen">
+                      접기<font-awesome-icon
+                        icon="chevron-up"
+                        class="text-main ml-2"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div v-show="item.isOpen" class="mt-1 text-sm">
-                {{ item.content }}
+                <div v-show="item.isOpen" class="mt-1 text-sm">
+                  {{ item.content }}
+                </div>
               </div>
             </div>
           </div>
@@ -296,9 +324,23 @@ async function initProduct() {
           <!-- NOTE 일정/소식 -->
           <div
             v-show="innerRoute === 1"
-            class="text-left m-3 whitespace-pre-line"
+            class="text-left m-3 whitespace-pre-line grid gap-3 text-sm"
           >
-            {{ store.introduction }}
+            <div class="store-content-block bg-light-gray">
+              {{ store.introduction }}
+            </div>
+            <div
+              v-for="(news, index) in fooNewsList"
+              :key="index"
+              class="store-content-block bg-light-gray"
+            >
+              <div class="">
+                {{ news.modDtime.toDate().toLocaleTimeString("ko-KR") }}
+              </div>
+              <div class="my-1"><hr /></div>
+              <div class="text-lg font-semibold">{{ news.title }}</div>
+              <div>{{ news.content }}</div>
+            </div>
           </div>
 
           <!-- NOTE 디자인 -->
@@ -320,7 +362,7 @@ async function initProduct() {
         </div>
       </div>
     </div>
-    <div v-else class="customWidth">
+    <div v-else class="custom-width">
       <img src="@/assets/gif/loadingIcon.gif" v-show="loading" />
       <div v-show="!loading">
         <span class="mt-4 text-lg font-bold logo">CHUUKA</span>
@@ -336,23 +378,9 @@ async function initProduct() {
   </main>
 </template>
 
-<style>
+<style scoped>
 .instagram {
   color: rgba(4, 151, 249, 1);
-}
-.custom_textsize {
-  font-size: 12px;
-}
-.custom_textarea {
-  border: none;
-  overflow: auto;
-  outline: none;
-
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-
-  resize: none; /*remove the resize handle on the bottom right*/
 }
 .logo {
   font-style: italic;
@@ -363,17 +391,17 @@ async function initProduct() {
   @apply instagram ml-2 mt-auto inline-block align-bottom w-10 text-base;
 }
 
-.btn-font {
-  font-family: "Noto Sans KR", Avenir;
+.store-content-block {
+  @apply border border-mid-gray shadow-sm rounded-md p-3;
 }
 
 @media (max-width: 448px) {
-  .customWidth {
+  .custom-width {
     width: 100vw;
   }
 }
 @media (min-width: 448px) {
-  .customWidth {
+  .custom-width {
     width: 448px;
   }
 }
