@@ -72,8 +72,8 @@ function changeKeyword(e: any) {
         가게 검색결과 {{ storeResultList.length }}개
       </div>
       <div>
-        <div v-for="eachStore in storeResultList">
-          {{ eachStore.name }}
+        <div v-for="store in storeResultList">
+          {{ store.name }}
         </div>
       </div>
     </div>

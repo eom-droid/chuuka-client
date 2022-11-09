@@ -137,7 +137,7 @@ function onlickLocation(location: string) {
   }
 }
 
-function onClickEachStore(store: IStore) {
+function onClickStore(store: IStore) {
   window.localStorage.setItem("tempStoreInfo", JSON.stringify(store));
   router.push("/store/" + store.id);
 }
@@ -193,7 +193,7 @@ function locationBlur(tempLoc: string) {
         v-for="(store, index) in tempAllStore"
         :key="index"
         class="border-b border-neutral-200 mb-2 flex pb-2"
-        @click="onClickEachStore(store)"
+        @click="onClickStore(store)"
       >
         <img
           v-if="store.profileImage != undefined"

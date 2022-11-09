@@ -9,8 +9,8 @@ export const routes = [
   },
   {
     path: "/store/:storeId",
-    name: "eachStore",
-    component: () => import("@/views/eachStore/EachStore.vue"),
+    name: "store",
+    component: () => import("@/views/store/Store.vue"),
     meta: { keepAlive: false },
   },
   {
