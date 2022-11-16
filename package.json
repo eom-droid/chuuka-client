@@ -11,6 +11,7 @@
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/vue-fontawesome": "^3.0.1",
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@types/lodash": "^4.14.186",
     "axios": "^0.27.2",
     "firebase": "^9.8.1",

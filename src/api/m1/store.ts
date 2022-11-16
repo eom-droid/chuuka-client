@@ -58,6 +58,14 @@ export interface IStore {
     kakao: string;
     naver: string;
   };
+  mustRead: IMustRead;
+}
+
+export interface IMustRead {
+  orderForm: string;
+  orderMethod: string;
+  sizeAndSheet: string;
+  notice: string;
 }
 export interface IUrl {
   name: string;

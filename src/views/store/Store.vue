@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IStore, IUrl, getStoreInfoById } from "@/api/m1/store";
+import { IStore, IUrl, getStoreInfoById, IMustRead } from "@/api/m1/store";
 import { ref, onMounted, getCurrentInstance } from "vue";
 import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
@@ -7,6 +7,7 @@ import { toastInfo } from "@/utils/toast";
 import { IProduct, getAllProduct } from "@/api/m1/product";
 import { INews } from "@/api/m1/news";
 import { Timestamp } from "@firebase/firestore";
+import { Agent, globalAgent } from "https";
 
 const store = ref({} as IStore);
 const productList = ref([] as IProduct[]);
@@ -44,23 +45,37 @@ const fooNewsList = [
   },
 ] as INews[];
 
-let fooMustRead = ref([
-  {
-    title: "주문방법",
-    content: "주문방법 콘텐츠",
-    isOpen: false,
-  },
-  {
-    title: "크기/맛",
-    content: "크기/맛 콘텐츠",
-    isOpen: false,
-  },
-  {
-    title: "유의 사항",
-    content: "유의 사항 콘텐츠",
-    isOpen: false,
-  },
-]);
+const sections = {
+  orderForm: "주문양식",
+  orderMethod: "주문방법",
+  sizeAndSheet: "크기/맛",
+  notice: "유의사항",
+};
+
+// let fooMustRead = ref({
+//   sections.orderForm{
+//     title: "주문방법",
+//     content: "주문방법 콘텐츠",
+//     isOpen: false,
+//   },
+//   {
+//     title: "크기/맛",
+//     content: "크기/맛 콘텐츠",
+//     isOpen: false,
+//   },
+//   {
+//     title: "유의 사항",
+//     content: "유의 사항 콘텐츠",
+//     isOpen: false,
+//   },
+// });
+
+const fooMustRead = ref({
+  // orderForm: { isOpen: false, content: "" },
+  orderMethod: { isOpen: false, content: "" },
+  sizeAndSheet: { isOpen: false, content: "" },
+  notice: { isOpen: false, content: "" },
+});
 
 onMounted(() => {
   init();
@@ -71,7 +86,7 @@ async function init() {
   if (tempStoreInfo != null && history.state.back != null) {
     isDirectToStore.value = false;
     store.value = JSON.parse(tempStoreInfo) as IStore;
-    changeNewLine(store.value.introduction);
+    // changeNewLine(store.value.introduction);
   } else {
     isDirectToStore.value = true;
     loading.value = true;
@@ -82,6 +97,22 @@ async function init() {
       if (tempResult != null) store.value = tempResult;
     }
     loading.value = false;
+  }
+  initFooMustRead();
+}
+
+function initFooMustRead() {
+  if (store.value.mustRead != undefined) {
+    if (store.value.mustRead.orderMethod != undefined) {
+      fooMustRead.value.orderMethod.content = store.value.mustRead.orderMethod;
+    }
+    if (store.value.mustRead.notice != undefined) {
+      fooMustRead.value.notice.content = store.value.mustRead.notice;
+    }
+    if (store.value.mustRead.sizeAndSheet != undefined) {
+      fooMustRead.value.sizeAndSheet.content =
+        store.value.mustRead.sizeAndSheet;
+    }
   }
 }
 
@@ -145,10 +176,70 @@ async function initProduct() {
   productList.value = await getAllProduct(store.value.id);
   isDesignBtnClicked.value = true;
 }
+
+// function onClickCopyOrderFrom() {
+//   console.log(store.value.mustRead.orderForm);
+// }
+
+///////////////////////양식 복사하기
+
+// 버튼 클릭 했을 때
+// <!-- ios에서 복사여부 확인하기 -->
+function onClickCopyOrderFrom() {
+  /* Get the text field */
+  var copyText = document.getElementById("clipboard");
+
+  var isIOS = navigator.userAgent.match(/i(Phone|Pod)/i) != null ? true : false;
+  if (isIOS) {
+    // ios 일때
+    iosCopyToClipboard(copyText);
+  } else {
+    // ios가 아닐때
+    copyToClipboard(copyText);
+  }
+
+  /* Alert the copied text */
+  alert("copy 되었습니다.");
+  return false;
+}
+
+// ios가 아닐 때
+function copyToClipboard(copyText: any) {
+  /* Select the text field */
+  copyText.select();
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+}
+
+// ios 일때
+function iosCopyToClipboard(el: any) {
+  var oldContentEditable = el.contentEditable,
+    oldReadOnly = el.readOnly,
+    range = document.createRange();
+
+  el.contentEditable = true;
+  el.readOnly = false;
+  range.selectNodeContents(el);
+
+  var s = window.getSelection();
+  if (s != null) {
+    s.removeAllRanges();
+    s.addRange(range);
+  }
+
+  // A big number, to cover anything that could be inside the element.
+  el.setSelectionRange(0, 999999);
+
+  el.contentEditable = oldContentEditable;
+  el.readOnly = oldReadOnly;
+
+  document.execCommand("copy");
+}
 </script>
 
 <template>
-  <main class="">
+  <main class="overflow-auto overflow-x-hidden">
     <div v-if="store.id != undefined" class="">
       <div class="custom-width">
         <img
@@ -284,12 +375,116 @@ async function initProduct() {
           <!-- NOTE 필독 사항 -->
           <div v-show="innerRoute === 0">
             <div class="text-sm font-medium flex mx-3">
-              <button class="btn-main text-base">주문 양식 복사</button>
+              <button
+                class="btn-main text-base"
+                @click="onClickCopyOrderFrom()"
+              >
+                주문 양식 복사
+              </button>
+              <!-- ios에서 복사여부 확인하기 -->
+              <textarea
+                v-show="false"
+                v-model="store.mustRead.orderForm"
+                id="clipboard"
+              ></textarea>
             </div>
 
             <div class="my-2 mx-3"><hr /></div>
             <div class="m-3 grid gap-3">
-              <div
+              <!-- 필독사항/주문방법 -->
+              <div class="store-content-block">
+                <div
+                  @click="
+                    fooMustRead.orderMethod.isOpen =
+                      !fooMustRead.orderMethod.isOpen
+                  "
+                  class="flex justify-between cursor-pointer"
+                >
+                  <div>
+                    {{ sections.orderMethod }}
+                  </div>
+                  <div v-show="!fooMustRead.orderMethod.isOpen">
+                    펼치기<font-awesome-icon
+                      icon="chevron-down"
+                      class="text-main ml-2"
+                    />
+                  </div>
+                  <div v-show="fooMustRead.orderMethod.isOpen">
+                    접기<font-awesome-icon
+                      icon="chevron-up"
+                      class="text-main ml-2"
+                    />
+                  </div>
+                </div>
+                <div
+                  v-show="fooMustRead.orderMethod.isOpen"
+                  class="mt-1 text-sm whitespace-pre-line"
+                >
+                  {{ fooMustRead.orderMethod.content }}
+                </div>
+              </div>
+              <!-- 필독사항/크기시트 -->
+              <div class="store-content-block">
+                <div
+                  @click="
+                    fooMustRead.sizeAndSheet.isOpen =
+                      !fooMustRead.sizeAndSheet.isOpen
+                  "
+                  class="flex justify-between cursor-pointer"
+                >
+                  <div>
+                    {{ sections.sizeAndSheet }}
+                  </div>
+                  <div v-show="!fooMustRead.sizeAndSheet.isOpen">
+                    펼치기<font-awesome-icon
+                      icon="chevron-down"
+                      class="text-main ml-2"
+                    />
+                  </div>
+                  <div v-show="fooMustRead.sizeAndSheet.isOpen">
+                    접기<font-awesome-icon
+                      icon="chevron-up"
+                      class="text-main ml-2"
+                    />
+                  </div>
+                </div>
+                <div
+                  v-show="fooMustRead.sizeAndSheet.isOpen"
+                  class="mt-1 text-sm whitespace-pre-line"
+                >
+                  {{ fooMustRead.sizeAndSheet.content }}
+                </div>
+              </div>
+              <!-- 필독사항/유의사항 -->
+              <div class="store-content-block">
+                <div
+                  @click="
+                    fooMustRead.notice.isOpen = !fooMustRead.notice.isOpen
+                  "
+                  class="flex justify-between cursor-pointer"
+                >
+                  <div>{{ sections.notice }}</div>
+                  <div v-show="!fooMustRead.notice.isOpen">
+                    펼치기<font-awesome-icon
+                      icon="chevron-down"
+                      class="text-main ml-2"
+                    />
+                  </div>
+                  <div v-show="fooMustRead.notice.isOpen">
+                    접기<font-awesome-icon
+                      icon="chevron-up"
+                      class="text-main ml-2"
+                    />
+                  </div>
+                </div>
+                <div
+                  v-show="fooMustRead.notice.isOpen"
+                  class="mt-1 text-sm whitespace-pre-line"
+                >
+                  {{ fooMustRead.notice.content }}
+                </div>
+              </div>
+              <!-- <div
                 v-for="(item, index) in fooMustRead"
                 :key="index"
                 class="store-content-block"
@@ -319,7 +514,7 @@ async function initProduct() {
                 <div v-show="item.isOpen" class="mt-1 text-sm">
                   {{ item.content }}
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
 
