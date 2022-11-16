@@ -10,6 +10,7 @@ module.exports = {
         "usual-black": "#191919",
         "mid-gray": "#D9D9D9",
         "light-gray": "#F5F5F5",
+        "text-gray": "#616161",
         font: "#000000",
         orange: colors.orange,
         neutral: colors.neutral,

@@ -3,20 +3,20 @@ import { IStore, IUrl, getStoreInfoById, IMustRead } from "@/api/m1/store";
 import { ref, onMounted, getCurrentInstance } from "vue";
 import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
-import { toastInfo } from "@/utils/toast";
+import { toastInfo, toastSuccess } from "@/utils/toast";
 import { IProduct, getAllProduct } from "@/api/m1/product";
-import { INews } from "@/api/m1/news";
+import { getAllNews, INews } from "@/api/m1/news";
 import { Timestamp } from "@firebase/firestore";
 import { Agent, globalAgent } from "https";
+import { getKoreanDateTime } from "@/utils/moment";
 
 const store = ref({} as IStore);
 const productList = ref([] as IProduct[]);
+const newsList = ref([] as INews[]);
 const isDesignBtnClicked = ref(false);
+const isNewsBtnClicked = ref(false);
 const innerRoute = ref(0);
 
-//@ts-ignore
-const { proxy } = getCurrentInstance();
-const emitter = proxy.$emitter;
 const loading = ref(false);
 const isDirectToStore = ref(false);
 
@@ -168,13 +168,25 @@ function onClickHome() {
 function onClickInnerRoute(to: number) {
   if (innerRoute.value === to) return;
   innerRoute.value = to;
-  if (!isDesignBtnClicked.value) {
-    initProduct();
+  if (to === 1) {
+    if (!isNewsBtnClicked.value) {
+      initNews();
+    }
+  }
+
+  if (to === 2) {
+    if (!isDesignBtnClicked.value) {
+      initProduct();
+    }
   }
 }
 async function initProduct() {
   productList.value = await getAllProduct(store.value.id);
   isDesignBtnClicked.value = true;
+}
+async function initNews() {
+  newsList.value = await getAllNews(store.value.id);
+  isNewsBtnClicked.value = true;
 }
 
 // function onClickCopyOrderFrom() {
@@ -184,12 +196,14 @@ async function initProduct() {
 ///////////////////////양식 복사하기
 
 // 버튼 클릭 했을 때
+// 이거 안됨 ㅅㅂ
 // <!-- ios에서 복사여부 확인하기 -->
 function onClickCopyOrderFrom() {
   /* Get the text field */
   var copyText = document.getElementById("clipboard");
 
   var isIOS = navigator.userAgent.match(/i(Phone|Pod)/i) != null ? true : false;
+
   if (isIOS) {
     // ios 일때
     iosCopyToClipboard(copyText);
@@ -199,7 +213,8 @@ function onClickCopyOrderFrom() {
   }
 
   /* Alert the copied text */
-  alert("copy 되었습니다.");
+  // alert("copy 되었습니다.");
+  toastSuccess("클립보드 복사완료~");
   return false;
 }
 
@@ -239,7 +254,7 @@ function iosCopyToClipboard(el: any) {
 </script>
 
 <template>
-  <main class="overflow-auto overflow-x-hidden">
+  <main class="overflow-auto overflow-x-hidden w-full noScroll">
     <div v-if="store.id != undefined" class="">
       <div class="custom-width">
         <img
@@ -250,7 +265,7 @@ function iosCopyToClipboard(el: any) {
         <img
           v-if="store.profileImage != undefined"
           :src="store.profileImage.link"
-          class="w-full object-cover h-25v"
+          class="w-full object-cover h-25v flex-none"
           @error="getImgUrl"
         />
         <img
@@ -383,9 +398,9 @@ function iosCopyToClipboard(el: any) {
               </button>
               <!-- ios에서 복사여부 확인하기 -->
               <textarea
-                v-show="false"
                 v-model="store.mustRead.orderForm"
                 id="clipboard"
+                class="clipboardCss"
               ></textarea>
             </div>
 
@@ -523,20 +538,81 @@ function iosCopyToClipboard(el: any) {
             v-show="innerRoute === 1"
             class="text-left m-3 whitespace-pre-line grid gap-3 text-sm"
           >
-            <div class="store-content-block bg-light-gray">
-              {{ store.introduction }}
-            </div>
+            <img
+              src="@/assets/gif/loadingIcon.gif"
+              v-if="!isNewsBtnClicked"
+              class="w-40"
+            />
             <div
-              v-for="(news, index) in fooNewsList"
+              v-for="(news, index) in newsList"
               :key="index"
-              class="store-content-block bg-light-gray"
+              class="border border-mid-gray shadow-sm rounded-md px-3 pb-3 pt-2"
+              v-else
             >
-              <div class="">
-                {{ news.modDtime.toDate().toLocaleTimeString("ko-KR") }}
+              <div class="text-xs">
+                {{ getKoreanDateTime(news.modDtime.toDate()) }}
               </div>
-              <div class="my-1"><hr /></div>
-              <div class="text-lg font-semibold">{{ news.title }}</div>
-              <div>{{ news.content }}</div>
+              <div class="mt-1 my-3"><hr /></div>
+              <div></div>
+              <!-- 1. 사진 X -->
+              <div
+                v-if="
+                  news.photos === undefined ||
+                  news.photos.length === 0 ||
+                  news.photos[0].link === ''
+                "
+              >
+                <div class="text-base font-semibold">{{ news.title }}</div>
+                <div class="text-sm mt-3 tracking-tighter leading-tight">
+                  {{ news.content }}
+                </div>
+              </div>
+              <!-- 2. 사진 O -->
+              <!-- 2-2. 사진 한개 -->
+              <div v-else-if="news.photos.length === 1">
+                <div class="text-base font-semibold">{{ news.title }}</div>
+                <div class="w-full border border-mid-gray mt-3">
+                  <img
+                    :src="news.photos[0].link"
+                    class="w-full h-20v object-contain"
+                  />
+                </div>
+                <div class="text-sm mt-3 tracking-tighter leading-tight">
+                  {{ news.content }}
+                </div>
+              </div>
+              <!-- 2-1. 사진 여러개 -->
+              <div v-else>
+                <div class="text-base font-semibold">{{ news.title }}</div>
+                <div class="flex w-full mt-3 h-20v">
+                  <div class="w-2/3 border border-mid-gray h-full">
+                    <img
+                      :src="news.photos[0].link"
+                      class="object-contain h-full w-full"
+                    />
+                  </div>
+
+                  <div class="w-1/3 ml-1 flex flex-col justify-between">
+                    <div class="mb-1 w-full border border-mid-gray h-1/2">
+                      <img
+                        :src="news.photos[1].link"
+                        class="object-contain w-full h-full"
+                      />
+                    </div>
+
+                    <div
+                      class="w-full font-medium h-1/2 bg-usual-black opacity-50 text-white text-2xl flex"
+                    >
+                      <span class="m-auto">
+                        +{{ news.photos.length - 2 }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-sm mt-3 tracking-tighter leading-tight">
+                  {{ news.content }}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -547,9 +623,16 @@ function iosCopyToClipboard(el: any) {
               v-if="!isDesignBtnClicked"
               class="w-40"
             />
-            <div v-else class="grid grid-cols-3 gap-3">
-              <div v-for="(product, index) in productList" :key="index">
-                <img :src="product.photos[0].link" />
+            <div v-else class="grid grid-cols-3 gap-0.5">
+              <div
+                v-for="(product, index) in productList"
+                :key="index"
+                class="w-full h-full imgRatio border border-mid-gray"
+              >
+                <img
+                  :src="product.photos[0].link"
+                  class="w-full h-full object-cover"
+                />
               </div>
             </div>
             <div class="mt-5 text-neutral-500" v-if="productList.length <= 0">
@@ -590,6 +673,23 @@ function iosCopyToClipboard(el: any) {
 
 .store-content-block {
   @apply border border-mid-gray shadow-sm rounded-md p-3;
+}
+.imgRatio {
+  aspect-ratio: 1/1;
+}
+.clipboardCss {
+  opacity: 0.01;
+  /* height: 1; */
+  position: absolute;
+  z-index: -1;
+}
+
+.noScroll::-webkit-scrollbar {
+  display: none;
+}
+.noscroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @media (max-width: 448px) {

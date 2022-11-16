@@ -8,6 +8,9 @@ const getParsedDate = (arg: Date): string => moment(arg).format("YYYY-MM-DD");
 
 const getFormat = (format: string): string => moment().format(format);
 
+const getKoreanDateTime = (arg: Date): string =>
+  moment(arg).format("YYYY[년] MM[월] DD[일] HH[:]mm");
+
 const getWeekNo = (v_date_str: string): number => {
   var date = new Date();
   if (v_date_str) {
@@ -82,4 +85,11 @@ const weekNumberByMonth = (dateFormat: string): number => {
   return weekNo;
 };
 
-export { getDate, getTime, getFormat, getParsedDate, weekNumberByMonth };
+export {
+  getDate,
+  getTime,
+  getFormat,
+  getParsedDate,
+  weekNumberByMonth,
+  getKoreanDateTime,
+};

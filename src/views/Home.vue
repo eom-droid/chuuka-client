@@ -168,7 +168,10 @@ function locationBlur(tempLoc: string) {
 </script>
 
 <template>
-  <main class="customWidth px-2 overflow-auto" id="scrollEle">
+  <main
+    class="customWidth px-2 overflow-auto w-full flex-none noScroll"
+    id="scrollEle"
+  >
     <div>
       <!-- {{ lastVisible }} -->
       <div class="mt-4 text-lg font-bold logo">CHUUKA!</div>
@@ -261,6 +264,13 @@ function locationBlur(tempLoc: string) {
   -webkit-background-clip: text;
 }
 
+.noScroll::-webkit-scrollbar {
+  display: none;
+}
+.noscroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 @media (max-width: 448px) {
   .customWidth {
     width: 100vw;

@@ -62,7 +62,7 @@
 .cusShadow {
   box-shadow: 0 0 22px -2px rgb(0 0 0 / 75%);
 }
-@media (max-width: 900px) {
+@media (max-width: 950px) {
   .disnone {
     display: none;
   }
