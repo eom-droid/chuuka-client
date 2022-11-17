@@ -36,7 +36,6 @@ async function init() {
     if (tempPath.length > 2) {
       let tempResult = await getStoreInfoById(tempPath[2]);
       if (tempResult != null) {
-        console.log("asdasd");
         setStoreInfo(tempResult);
         console.log(getStoreInfo);
       }

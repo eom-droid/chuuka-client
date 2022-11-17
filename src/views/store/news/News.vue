@@ -3,8 +3,9 @@
     <img src="@/assets/gif/loadingIcon.gif" v-if="isLoading" class="w-40" />
     <div
       v-for="(news, index) in getNews"
-      :key="index"
+      :key="news.id"
       class="border border-mid-gray shadow-sm rounded-md px-3 pb-3 pt-2"
+      @click="onClickNews(news)"
       v-else
     >
       <div class="text-xs">
@@ -68,20 +69,14 @@ import { useStoreInfoStore } from "@/stores/storeInfo";
 import { getKoreanDateTime } from "@/utils/moment";
 import { storeToRefs } from "pinia";
 import { ref, onMounted } from "vue";
+import { router } from "@/router/router";
 
 const pinia = useStoreInfoStore();
 const piniaNews = useNewsStore();
 const { getNews } = storeToRefs(piniaNews);
 const { getStoreInfo } = pinia;
-const { getInitStoreId, setInitStoreId, setNews } = piniaNews;
+const { getInitStoreId, setInitStoreId, setNews, setSelectedNews } = piniaNews;
 const isLoading = ref(true);
-
-const sections = {
-  orderForm: "주문양식",
-  orderMethod: "주문방법",
-  sizeAndSheet: "크기/맛",
-  notice: "유의사항",
-};
 
 onMounted(() => {
   init();
@@ -95,5 +90,10 @@ async function init() {
   setInitStoreId(getStoreInfo.id);
   setNews(tempNewList);
   isLoading.value = false;
+}
+
+function onClickNews(selectedNews: INews) {
+  setSelectedNews(selectedNews);
+  router.push("/store/" + getStoreInfo.id + "/news/" + selectedNews.id);
 }
 </script>

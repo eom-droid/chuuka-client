@@ -36,6 +36,12 @@ export const routes = [
     ],
   },
   {
+    path: "/store/:storeId/news/:newsId",
+    name: "newsDetail",
+    component: () => import("@/views/store/news/NewsDetail.vue"),
+    meta: { keepAlive: true },
+  },
+  {
     path: "/location",
     name: "location",
     component: () => import("@/views/location/Location.vue"),

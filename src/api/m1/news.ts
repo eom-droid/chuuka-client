@@ -8,6 +8,7 @@ import {
   getDocs,
   Timestamp,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { firebaseDevPath } from "../tempdev";
 import { IPhoto } from "./photo";
@@ -57,6 +58,26 @@ export async function getAllNews(storeId: string): Promise<INews[]> {
     data.id = ele.id;
     result.push(data);
   });
+
+  return result;
+}
+
+export async function getNewsById(
+  storeId: string,
+  newsId: string
+): Promise<INews> {
+  let result = {} as INews;
+  const q = doc(
+    firestore,
+    firebaseDevPath + "store/" + storeId + "/news",
+    newsId
+  );
+
+  const snapShots = await getDoc(q);
+  if (snapShots.exists()) {
+    result = snapShots.data() as INews;
+    result.id = snapShots.id;
+  }
 
   return result;
 }
