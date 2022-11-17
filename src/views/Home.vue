@@ -15,6 +15,10 @@ import {
 import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
 import { reauthenticateWithRedirect } from "@firebase/auth";
+import { useStoreInfoStore } from "@/stores/storeInfo";
+
+const pinia = useStoreInfoStore();
+const { getStoreInfo, setStoreInfo } = pinia;
 
 const tempAllStore = ref([] as Array<IStore>);
 const location = ref("");
@@ -138,7 +142,8 @@ function onlickLocation(location: string) {
 }
 
 function onClickStore(store: IStore) {
-  window.localStorage.setItem("tempStoreInfo", JSON.stringify(store));
+  setStoreInfo(store);
+  // window.localStorage.setItem("tempStoreInfo", JSON.stringify(store));
   router.push("/store/" + store.id);
 }
 async function getNextDoc() {

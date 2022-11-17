@@ -12,6 +12,28 @@ export const routes = [
     name: "store",
     component: () => import("@/views/store/Store.vue"),
     meta: { keepAlive: false },
+    children: [
+      {
+        path: "/store/:storeId",
+        meta: { keepAlive: true },
+        component: () => import("@/views/store/mustRead/MustRead.vue"),
+      },
+      {
+        path: "mustRead",
+        meta: { keepAlive: true },
+        component: () => import("@/views/store/mustRead/MustRead.vue"),
+      },
+      {
+        path: "news",
+        meta: { keepAlive: true },
+        component: () => import("@/views/store/news/News.vue"),
+      },
+      {
+        path: "design",
+        meta: { keepAlive: true },
+        component: () => import("@/views/store/design/Design.vue"),
+      },
+    ],
   },
   {
     path: "/location",
