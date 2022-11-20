@@ -25,17 +25,43 @@
               "
               class="mt-5 border border-mid-gray"
             >
-              <img
-                :src="getSelectedNews.photos[0].link"
-                class="w-full h-25v object-contain"
-              />
+              <div v-if="getSelectedNews.photos.length === 1">
+                <img
+                  :src="getSelectedNews.photos[0].link"
+                  class="w-full h-25v object-contain"
+                />
+              </div>
+              <div v-else>
+                <vueper-slides class="no-shadow" fixed-height="25vh">
+                  <vueper-slide
+                    v-for="(slide, i) in getSelectedNews.photos"
+                    :key="i"
+                  >
+                    <template #content>
+                      <img
+                        :src="slide.link"
+                        class="object-contain h-25v mx-auto"
+                      />
+                    </template>
+                  </vueper-slide>
+                </vueper-slides>
+                <!-- <div
+                  v-for="(eachImg, index) in getSelectedNews.photos"
+                  :key="index"
+                >
+                  <img
+                    :src="eachImg.link"
+                    class="w-full h-25v object-contain"
+                  />
+                </div> -->
+              </div>
             </div>
             <div class="whitespace-pre-line text-sm mt-5">
               {{ getSelectedNews.content }}
             </div>
           </div>
           <button
-            class="w-full bg-main rounded text-white font-bold py-3 text-xl absolute -bottom-12"
+            class="w-full bg-main rounded text-white font-bold py-3 text-xl absolute -bottom-10"
           >
             카카오 채널 상담하기
           </button>
@@ -63,6 +89,9 @@ import { storeToRefs } from "pinia";
 import { ref, onMounted } from "vue";
 import { router } from "@/router/router";
 import { getStoreInfoById } from "@/api/m1/store";
+//@ts-ignore
+import { VueperSlides, VueperSlide } from "vueperslides";
+import "vueperslides/dist/vueperslides.css";
 
 const pinia = useStoreInfoStore();
 const piniaNews = useNewsStore();
@@ -97,14 +126,14 @@ async function init() {
 
 function onClickHome() {
   if (getStoreInfo.value.id != undefined) {
-    router.push("/store" + getStoreInfo.value.id);
+    router.push("/store/" + getStoreInfo.value.id + "/news");
   } else {
     router.push("/");
   }
 }
 
 function onClickBack() {
-  router.push("/store" + getStoreInfo.value.id);
+  router.push("/store/" + getStoreInfo.value.id + "/news");
 }
 </script>
 <style>
@@ -128,6 +157,10 @@ function onClickBack() {
 }
 
 .customHeight {
-  height: 81vh;
+  height: 79vh;
+}
+
+.tempSit {
+  background-size: contain;
 }
 </style>

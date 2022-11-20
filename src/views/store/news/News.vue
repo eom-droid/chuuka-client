@@ -54,9 +54,11 @@
           </div>
         </div>
         <div class="text-sm mt-3 tracking-tighter leading-tight">
-          {{ news.content }}
+          {{ cutLine(news.content) }}
           <br />
-          <button class="text-text-gray">...더보기</button>
+          <button class="text-text-gray" v-show="countLine(news.content) >= 2">
+            ...더보기
+          </button>
         </div>
       </div>
     </div>
@@ -95,5 +97,17 @@ async function init() {
 function onClickNews(selectedNews: INews) {
   setSelectedNews(selectedNews);
   router.push("/store/" + getStoreInfo.id + "/news/" + selectedNews.id);
+}
+
+function countLine(newLine: string) {
+  return newLine.split(/\r\n|\r|\n/).length;
+}
+function cutLine(newLine: string) {
+  const cutedLine = newLine.split(/\r\n|\r|\n/);
+  if (cutedLine.length === 1) {
+    return cutedLine[0];
+  } else {
+    return cutedLine[0] + cutedLine[1];
+  }
 }
 </script>

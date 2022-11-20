@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { IStore, IUrl, getStoreInfoById, IMustRead } from "@/api/m1/store";
-import { ref, onMounted, getCurrentInstance } from "vue";
+import { ref, onMounted, getCurrentInstance, onActivated } from "vue";
 import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
 import { toastInfo, toastSuccess } from "@/utils/toast";
@@ -26,6 +26,7 @@ const loading = ref(false);
 
 onMounted(() => {
   init();
+  initInnerRoute();
 });
 async function init() {
   if (getStoreInfo.value.id != undefined) {
@@ -37,16 +38,15 @@ async function init() {
       let tempResult = await getStoreInfoById(tempPath[2]);
       if (tempResult != null) {
         setStoreInfo(tempResult);
-        console.log(getStoreInfo);
       }
     }
     loading.value = false;
   }
-  initInnerRoute();
 }
 function initInnerRoute() {
   let tempPathList = window.location.pathname.split("/");
   if (tempPathList.length >= 4) {
+    console.log(">=4");
     if (tempPathList[3] === "news") {
       innerRoute.value = 1;
     } else if (tempPathList[3] === "design") {
