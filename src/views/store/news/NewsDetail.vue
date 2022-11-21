@@ -97,14 +97,14 @@ async function init() {
 
 function onClickHome() {
   if (getStoreInfo.value.id != undefined) {
-    router.push("/store" + getStoreInfo.value.id);
+    router.push("/store/" + getStoreInfo.value.id);
   } else {
     router.push("/");
   }
 }
 
 function onClickBack() {
-  router.push("/store" + getStoreInfo.value.id);
+  router.push("/store/" + getStoreInfo.value.id);
 }
 </script>
 <style>
