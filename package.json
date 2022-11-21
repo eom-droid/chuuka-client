@@ -21,6 +21,7 @@
     "mosha-vue-toastify": "^1.0.23",
     "path": "^0.12.7",
     "pinia": "^2.0.23",
+    "vite-plugin-pwa": "^0.13.3",
     "vue": "^3.2.37",
     "vue-router": "^4.0.16"
   },
