@@ -9,9 +9,9 @@
     "serve": "vite preview --host --port 14011"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/vue-fontawesome": "^3.0.1",
-    "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@types/lodash": "^4.14.186",
     "axios": "^0.27.2",
     "firebase": "^9.8.1",
@@ -19,8 +19,8 @@
     "mitt": "^3.0.0",
     "moment": "^2.29.1",
     "mosha-vue-toastify": "^1.0.23",
-    "pinia": "^2.0.23",
     "path": "^0.12.7",
+    "pinia": "^2.0.23",
     "vue": "^3.2.37",
     "vue-router": "^4.0.16"
   },
