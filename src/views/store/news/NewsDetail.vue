@@ -126,14 +126,22 @@ async function init() {
 
 function onClickHome() {
   if (getStoreInfo.value.id != undefined) {
+<<<<<<< HEAD
     router.push("/store/" + getStoreInfo.value.id + "/news");
+=======
+    router.push("/store/" + getStoreInfo.value.id);
+>>>>>>> 93bcaec9c75256fa7ca9ad9d5291ac411efc0288
   } else {
     router.push("/");
   }
 }
 
 function onClickBack() {
+<<<<<<< HEAD
   router.push("/store/" + getStoreInfo.value.id + "/news");
+=======
+  router.push("/store/" + getStoreInfo.value.id);
+>>>>>>> 93bcaec9c75256fa7ca9ad9d5291ac411efc0288
 }
 </script>
 <style>

@@ -147,7 +147,7 @@ function onClickCopyOrderFrom() {
 
   /* Alert the copied text */
   // alert("copy 되었습니다.");
-  toastSuccess("클립보드 복사완료~");
+  toastSuccess("주문 양식을 복사했어요");
   return false;
 }
 
