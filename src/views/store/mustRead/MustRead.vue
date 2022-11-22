@@ -119,10 +119,16 @@ onMounted(() => {
   init();
 });
 function init() {
-  mustRead.value.orderForm.content = getStoreInfo.mustRead.orderForm;
-  mustRead.value.orderMethod.content = getStoreInfo.mustRead.orderMethod;
-  mustRead.value.sizeAndSheet.content = getStoreInfo.mustRead.sizeAndSheet;
-  mustRead.value.notice.content = getStoreInfo.mustRead.notice;
+  if (getStoreInfo.mustRead != undefined) {
+    if (getStoreInfo.mustRead.orderForm != undefined)
+      mustRead.value.orderForm.content = getStoreInfo.mustRead.orderForm;
+    if (getStoreInfo.mustRead.orderMethod != undefined)
+      mustRead.value.orderMethod.content = getStoreInfo.mustRead.orderMethod;
+    if (getStoreInfo.mustRead.sizeAndSheet != undefined)
+      mustRead.value.sizeAndSheet.content = getStoreInfo.mustRead.sizeAndSheet;
+    if (getStoreInfo.mustRead.notice != undefined)
+      mustRead.value.notice.content = getStoreInfo.mustRead.notice;
+  }
 }
 
 function onClickCopyOrderFrom() {

@@ -46,7 +46,6 @@ async function init() {
 function initInnerRoute() {
   let tempPathList = window.location.pathname.split("/");
   if (tempPathList.length >= 4) {
-    console.log(">=4");
     if (tempPathList[3] === "news") {
       innerRoute.value = 1;
     } else if (tempPathList[3] === "design") {

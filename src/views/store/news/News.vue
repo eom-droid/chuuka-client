@@ -62,6 +62,12 @@
         </div>
       </div>
     </div>
+    <div
+      class="mt-5 text-neutral-500 text-center text-base"
+      v-if="getNews.length <= 0"
+    >
+      일정/소식이 없습니다.
+    </div>
   </div>
 </template>
 <script setup lang="ts">

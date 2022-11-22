@@ -137,7 +137,6 @@ export async function updateNewsWithNet(
   const id = news.id;
   news.modDtime = nowDTime;
   news = removeId(news);
-  console.log(news);
   await updateDoc(
     doc(firestore, "chuuka/" + netDivision + "/store/" + storeId + "/news", id),
     {
