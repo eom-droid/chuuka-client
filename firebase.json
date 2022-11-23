@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "chuuka-d",
+    "site": "chuuka-s",
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [

@@ -2,7 +2,7 @@
   <!-- NOTE 필독 사항 -->
   <div>
     <div class="text-sm font-medium flex mx-3">
-      <button class="btn-main text-base" @click="onClickCopyOrderFrom()">
+      <button class="btn-main-short text-base" @click="onClickCopyOrderFrom()">
         주문 양식 복사
       </button>
       <textarea

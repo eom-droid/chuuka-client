@@ -75,10 +75,10 @@ function onClickHome() {
 <template>
   <main class="overflow-auto overflow-x-hidden w-full noScroll">
     <div v-if="getStoreInfo.id != undefined" class="">
-      <div class="custom-width">
+      <div class="custom-width relative">
         <img
           src="@/assets/img/icon/backword.svg"
-          class="fixed w-7 hover:cursor-pointer rounded-full bg-slate-200 p-1 ml-3 mt-4"
+          class="absolute w-7 hover:cursor-pointer rounded-full bg-slate-200 p-1 ml-3 mt-4"
           @click="onClickBack()"
         />
         <img
@@ -169,15 +169,22 @@ function onClickHome() {
 
       <!-- NOTE 가게링크 -->
       <div class="px-3 pb-3">
-        <div>
+        <div class="">
           <button
-            class="text-lg"
+            class="text-lg justify-center flex"
             :class="index === 0 ? 'btn-main' : 'btn-sub'"
             v-for="(url, index) in getStoreInfo.goUrl"
             :key="index"
             @click="onClickUrl(url)"
           >
-            <span>{{ url.name }}</span>
+            <div class="flex my-auto">
+              <img
+                v-show="index === 0"
+                src="@/assets/img/icon/kakao.svg"
+                class="w-7 mr-4"
+              />
+              <span>{{ url.name }}</span>
+            </div>
           </button>
         </div>
       </div>

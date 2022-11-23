@@ -82,12 +82,12 @@ function sortCity(argObj: any) {
   <main class="customWidth px-2">
     <div class="mt-4 relative customHeight">
       <div class="">
-        <div class="flex">
+        <div class="flex relative">
           <!-- 라우터 무한루프 문제 해결 필요 -->
 
           <img
             src="@/assets/img/icon/backword.svg"
-            class="fixed w-6 hover:cursor-pointer"
+            class="absolute w-6 hover:cursor-pointer"
             @click="onClickBack()"
           />
 

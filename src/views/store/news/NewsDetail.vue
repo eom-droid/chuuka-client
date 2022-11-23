@@ -144,7 +144,31 @@ function onClickKakao() {
   console.log(getStoreInfo.value.sns);
 }
 </script>
+
 <style>
+.vueperslides__arrow {
+  @apply text-main text-xs;
+}
+.vueperslides__bullet .default {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: none;
+  box-shadow: none;
+  transition: 0.3s;
+  width: 16px;
+  height: 16px;
+}
+
+.vueperslides__bullet--active .default {
+  @apply bg-main;
+}
+
+.vueperslides__bullet span {
+  display: block;
+  color: #fff;
+  font-size: 10px;
+  opacity: 0.8;
+}
+
 .noScroll::-webkit-scrollbar {
   display: none;
 }
