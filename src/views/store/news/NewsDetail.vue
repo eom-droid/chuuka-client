@@ -60,11 +60,14 @@
               {{ getSelectedNews.content }}
             </div>
           </div>
-          <button
-            class="w-full bg-main rounded text-white font-bold py-3 text-xl absolute -bottom-10"
+
+          <a
+            class="w-full bg-main rounded text-white font-bold py-3 text-xl absolute -bottom-10 text-center"
+            :href="'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk"
+            target="_blank"
           >
             카카오 채널 상담하기
-          </button>
+          </a>
         </div>
         <div v-else>
           <span class="mt-4 text-lg font-bold logo">CHUUKA</span>
@@ -81,7 +84,7 @@
   </main>
 </template>
 <script setup lang="ts">
-import { getAllNews, INews, getNewsById } from "@/api/m1/news";
+import { getNewsById } from "@/api/m1/news";
 import { useNewsStore } from "@/stores/news";
 import { useStoreInfoStore } from "@/stores/storeInfo";
 import { getKoreanDateTime } from "@/utils/moment";
@@ -98,7 +101,7 @@ const piniaNews = useNewsStore();
 const { getSelectedNews } = storeToRefs(piniaNews);
 const { getStoreInfo } = storeToRefs(pinia);
 const { setStoreInfo } = pinia;
-const { getInitStoreId, setInitStoreId, setNews, setSelectedNews } = piniaNews;
+const { getInitStoreId, setSelectedNews } = piniaNews;
 const isLoading = ref(true);
 
 onMounted(() => {
@@ -126,22 +129,19 @@ async function init() {
 
 function onClickHome() {
   if (getStoreInfo.value.id != undefined) {
-<<<<<<< HEAD
     router.push("/store/" + getStoreInfo.value.id + "/news");
-=======
-    router.push("/store/" + getStoreInfo.value.id);
->>>>>>> 93bcaec9c75256fa7ca9ad9d5291ac411efc0288
   } else {
     router.push("/");
   }
 }
 
 function onClickBack() {
-<<<<<<< HEAD
   router.push("/store/" + getStoreInfo.value.id + "/news");
-=======
-  router.push("/store/" + getStoreInfo.value.id);
->>>>>>> 93bcaec9c75256fa7ca9ad9d5291ac411efc0288
+}
+
+function onClickKakao() {
+  console.log(getStoreInfo.value.goUrl);
+  console.log(getStoreInfo.value.sns);
 }
 </script>
 <style>

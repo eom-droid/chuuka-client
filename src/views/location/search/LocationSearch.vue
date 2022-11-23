@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, getCurrentInstance } from "vue";
+import { ref, computed } from "vue";
 import { locations } from "@/assets/city/city";
 
 import { router } from "@/router/router";
@@ -14,10 +14,6 @@ const searchArray = computed(() => {
   });
   return result;
 });
-
-//@ts-ignore
-const { proxy } = getCurrentInstance();
-const emitter = proxy.$emitter;
 
 function onClickBack() {
   router.replace({ name: "location", state: { location: undefined } });

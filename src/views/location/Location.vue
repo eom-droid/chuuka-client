@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, onActivated } from "vue";
+import { ref, onActivated } from "vue";
 import { router } from "@/router/router";
 import axios from "axios";
 import { urlConfig } from "@/../urlConfig.js";
@@ -8,9 +8,7 @@ import { locations } from "@/assets/city/city";
 const selectedLoaction = ref("지역 전체");
 const location = ref("");
 const latLong = ref({ latitude: 0, longitude: 0 });
-//@ts-ignore
-const { proxy } = getCurrentInstance();
-const emitter = proxy.$emitter;
+
 const btnRunning = ref(false);
 
 onActivated(() => {

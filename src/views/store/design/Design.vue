@@ -23,7 +23,7 @@
           <template v-slot:body
             ><img
               :src="product.photos[0].link"
-              class="w-full h-full object-cover"
+              class="w-full h-full object-cover border border-black rounded-md"
           /></template>
         </Modal>
       </div>

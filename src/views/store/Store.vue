@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import { IStore, IUrl, getStoreInfoById, IMustRead } from "@/api/m1/store";
-import { ref, onMounted, getCurrentInstance, onActivated } from "vue";
+import { IUrl, getStoreInfoById } from "@/api/m1/store";
+import { ref, onMounted } from "vue";
 import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
-import { toastInfo, toastSuccess } from "@/utils/toast";
-import { IProduct, getAllProduct } from "@/api/m1/product";
-import { getAllNews, INews } from "@/api/m1/news";
-import { Timestamp } from "@firebase/firestore";
-import { Agent, globalAgent } from "https";
-import { getKoreanDateTime } from "@/utils/moment";
+import { IProduct } from "@/api/m1/product";
+import { INews } from "@/api/m1/news";
 import { useStoreInfoStore } from "@/stores/storeInfo";
 import { storeToRefs } from "pinia";
 
@@ -16,10 +12,6 @@ const pinia = useStoreInfoStore();
 const { getStoreInfo } = storeToRefs(pinia);
 const { setStoreInfo } = pinia;
 
-const productList = ref([] as IProduct[]);
-const newsList = ref([] as INews[]);
-const isDesignBtnClicked = ref(false);
-const isNewsBtnClicked = ref(false);
 const innerRoute = ref(0);
 
 const loading = ref(false);
