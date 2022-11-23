@@ -1,20 +1,13 @@
 <script setup lang="ts">
-import { concat, throttle } from "lodash";
+import { throttle } from "lodash";
 import {
   getStoreInfoWithLimit,
   IStore,
   getStoreInfoByField,
 } from "@/api/m1/store";
-import {
-  ref,
-  onMounted,
-  getCurrentInstance,
-  onUnmounted,
-  onActivated,
-} from "vue";
+import { ref, onMounted, onUnmounted, onActivated } from "vue";
 import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
-import { reauthenticateWithRedirect } from "@firebase/auth";
 import { useStoreInfoStore } from "@/stores/storeInfo";
 
 const pinia = useStoreInfoStore();
@@ -27,10 +20,6 @@ const isEnd = ref(false);
 const isRunning = ref(false);
 const savedScrollHeight = ref(0);
 const tempArray = ref([{ id: "10000" }] as Array<IStore>);
-
-//@ts-ignore
-const { proxy } = getCurrentInstance();
-const emitter = proxy.$emitter;
 
 onMounted(() => {
   init();

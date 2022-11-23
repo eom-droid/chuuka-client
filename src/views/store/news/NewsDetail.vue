@@ -25,26 +25,55 @@
               "
               class="mt-5 border border-mid-gray"
             >
-              <img
-                :src="getSelectedNews.photos[0].link"
-                class="w-full h-25v object-contain"
-              />
+              <div v-if="getSelectedNews.photos.length === 1">
+                <img
+                  :src="getSelectedNews.photos[0].link"
+                  class="w-full h-25v object-contain"
+                />
+              </div>
+              <div v-else>
+                <vueper-slides class="no-shadow" fixed-height="25vh">
+                  <vueper-slide
+                    v-for="(slide, i) in getSelectedNews.photos"
+                    :key="i"
+                  >
+                    <template #content>
+                      <img
+                        :src="slide.link"
+                        class="object-contain h-25v mx-auto"
+                      />
+                    </template>
+                  </vueper-slide>
+                </vueper-slides>
+                <!-- <div
+                  v-for="(eachImg, index) in getSelectedNews.photos"
+                  :key="index"
+                >
+                  <img
+                    :src="eachImg.link"
+                    class="w-full h-25v object-contain"
+                  />
+                </div> -->
+              </div>
             </div>
             <div class="whitespace-pre-line text-sm mt-5">
               {{ getSelectedNews.content }}
             </div>
           </div>
-          <button
-            class="w-full bg-main rounded text-white font-bold py-3 text-xl absolute -bottom-12"
+
+          <a
+            class="w-full bg-main rounded text-white font-bold py-3 text-xl absolute -bottom-10 text-center"
+            :href="'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk"
+            target="_blank"
           >
             카카오 채널 상담하기
-          </button>
+          </a>
         </div>
         <div v-else>
           <span class="mt-4 text-lg font-bold logo">CHUUKA</span>
           <div class="mt-20">해당 게시물이 없습니다.</div>
           <button
-            class="instagram inline-block align-bottom"
+            class="text-usual-blue inline-block align-bottom"
             @click="onClickHome()"
           >
             돌아가기
@@ -55,7 +84,7 @@
   </main>
 </template>
 <script setup lang="ts">
-import { getAllNews, INews, getNewsById } from "@/api/m1/news";
+import { getNewsById } from "@/api/m1/news";
 import { useNewsStore } from "@/stores/news";
 import { useStoreInfoStore } from "@/stores/storeInfo";
 import { getKoreanDateTime } from "@/utils/moment";
@@ -63,13 +92,16 @@ import { storeToRefs } from "pinia";
 import { ref, onMounted } from "vue";
 import { router } from "@/router/router";
 import { getStoreInfoById } from "@/api/m1/store";
+//@ts-ignore
+import { VueperSlides, VueperSlide } from "vueperslides";
+import "vueperslides/dist/vueperslides.css";
 
 const pinia = useStoreInfoStore();
 const piniaNews = useNewsStore();
 const { getSelectedNews } = storeToRefs(piniaNews);
 const { getStoreInfo } = storeToRefs(pinia);
 const { setStoreInfo } = pinia;
-const { getInitStoreId, setInitStoreId, setNews, setSelectedNews } = piniaNews;
+const { getInitStoreId, setSelectedNews } = piniaNews;
 const isLoading = ref(true);
 
 onMounted(() => {
@@ -97,14 +129,19 @@ async function init() {
 
 function onClickHome() {
   if (getStoreInfo.value.id != undefined) {
-    router.push("/store/" + getStoreInfo.value.id);
+    router.push("/store/" + getStoreInfo.value.id + "/news");
   } else {
     router.push("/");
   }
 }
 
 function onClickBack() {
-  router.push("/store/" + getStoreInfo.value.id);
+  router.push("/store/" + getStoreInfo.value.id + "/news");
+}
+
+function onClickKakao() {
+  console.log(getStoreInfo.value.goUrl);
+  console.log(getStoreInfo.value.sns);
 }
 </script>
 <style>
@@ -128,6 +165,10 @@ function onClickBack() {
 }
 
 .customHeight {
-  height: 81vh;
+  height: 79vh;
+}
+
+.tempSit {
+  background-size: contain;
 }
 </style>

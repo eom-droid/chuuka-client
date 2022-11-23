@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import { IStore, IUrl, getStoreInfoById, IMustRead } from "@/api/m1/store";
-import { ref, onMounted, getCurrentInstance } from "vue";
+import { IUrl, getStoreInfoById } from "@/api/m1/store";
+import { ref, onMounted } from "vue";
 import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
-import { toastInfo, toastSuccess } from "@/utils/toast";
-import { IProduct, getAllProduct } from "@/api/m1/product";
-import { getAllNews, INews } from "@/api/m1/news";
-import { Timestamp } from "@firebase/firestore";
-import { Agent, globalAgent } from "https";
-import { getKoreanDateTime } from "@/utils/moment";
+import { IProduct } from "@/api/m1/product";
+import { INews } from "@/api/m1/news";
 import { useStoreInfoStore } from "@/stores/storeInfo";
 import { storeToRefs } from "pinia";
 
@@ -16,16 +12,13 @@ const pinia = useStoreInfoStore();
 const { getStoreInfo } = storeToRefs(pinia);
 const { setStoreInfo } = pinia;
 
-const productList = ref([] as IProduct[]);
-const newsList = ref([] as INews[]);
-const isDesignBtnClicked = ref(false);
-const isNewsBtnClicked = ref(false);
 const innerRoute = ref(0);
 
 const loading = ref(false);
 
 onMounted(() => {
   init();
+  initInnerRoute();
 });
 async function init() {
   if (getStoreInfo.value.id != undefined) {
@@ -37,12 +30,10 @@ async function init() {
       let tempResult = await getStoreInfoById(tempPath[2]);
       if (tempResult != null) {
         setStoreInfo(tempResult);
-        console.log(getStoreInfo);
       }
     }
     loading.value = false;
   }
-  initInnerRoute();
 }
 function initInnerRoute() {
   let tempPathList = window.location.pathname.split("/");
@@ -119,7 +110,7 @@ function onClickHome() {
             <img src="@/assets/img/icon/instagram.svg" class="w-5" />
             <div>
               <span
-                class="instagram text-lg ml-1.5"
+                class="text-usual-blue text-lg ml-1.5"
                 style="font-family: Roboto"
                 >{{ getStoreInfo.sns.instagram }}</span
               >
@@ -233,7 +224,7 @@ function onClickHome() {
         <span class="mt-4 text-lg font-bold logo">CHUUKA</span>
         <div class="mt-20">해당 가게가 없습니다.</div>
         <button
-          class="instagram inline-block align-bottom"
+          class="text-usual-blue inline-block align-bottom"
           @click="onClickHome()"
         >
           돌아가기
@@ -244,16 +235,13 @@ function onClickHome() {
 </template>
 
 <style scoped>
-.instagram {
-  color: rgba(4, 151, 249, 1);
-}
 .logo {
   font-style: italic;
   font-family: "Montserrat", sans-serif;
 }
 
 .map-font {
-  @apply instagram ml-2 mt-auto inline-block align-bottom w-10 text-base;
+  @apply text-usual-blue ml-2 mt-auto inline-block align-bottom w-10 text-base;
 }
 
 .store-content-block {

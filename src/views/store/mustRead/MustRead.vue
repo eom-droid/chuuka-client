@@ -5,7 +5,6 @@
       <button class="btn-main text-base" @click="onClickCopyOrderFrom()">
         주문 양식 복사
       </button>
-      <!-- ios에서 복사여부 확인하기 -->
       <textarea
         v-model="mustRead.orderForm.content"
         id="clipboard"
@@ -36,9 +35,12 @@
         </div>
         <div
           v-show="mustRead.orderMethod.isOpen"
-          class="mt-1 text-sm whitespace-pre-line"
+          class="my-3 text-sm whitespace-pre-line"
         >
-          {{ mustRead.orderMethod.content }}
+          <div v-if="mustRead.orderMethod.content != ''">
+            {{ mustRead.orderMethod.content }}
+          </div>
+          <div v-else class="">주문방법이 없습니다. 금방 추가할게요 ㅠㅠ.</div>
         </div>
       </div>
       <!-- 필독사항/크기시트 -->
@@ -62,9 +64,12 @@
         </div>
         <div
           v-show="mustRead.sizeAndSheet.isOpen"
-          class="mt-1 text-sm whitespace-pre-line"
+          class="my-3 text-sm whitespace-pre-line"
         >
-          {{ mustRead.sizeAndSheet.content }}
+          <div v-if="mustRead.sizeAndSheet.content != ''">
+            {{ mustRead.sizeAndSheet.content }}
+          </div>
+          <div v-else class="">크기/맛이 없습니다. 금방 추가할게요 ㅠㅠ.</div>
         </div>
       </div>
       <!-- 필독사항/유의사항 -->
@@ -86,9 +91,12 @@
         </div>
         <div
           v-show="mustRead.notice.isOpen"
-          class="mt-1 text-sm whitespace-pre-line"
+          class="my-3 text-sm whitespace-pre-line"
         >
-          {{ mustRead.notice.content }}
+          <div v-if="mustRead.notice.content != ''">
+            {{ mustRead.notice.content }}
+          </div>
+          <div v-else>유의사항이 없습니다. 금방 추가할게요 ㅠㅠ.</div>
         </div>
       </div>
     </div>
@@ -96,7 +104,7 @@
 </template>
 <script setup lang="ts">
 import { useStoreInfoStore } from "@/stores/storeInfo";
-import { toastSuccess } from "@/utils/toast";
+import { toastInfo, toastSuccess } from "@/utils/toast";
 import { ref, onMounted } from "vue";
 
 const pinia = useStoreInfoStore();
@@ -119,18 +127,28 @@ onMounted(() => {
   init();
 });
 function init() {
-  mustRead.value.orderForm.content = getStoreInfo.mustRead.orderForm;
-  mustRead.value.orderMethod.content = getStoreInfo.mustRead.orderMethod;
-  mustRead.value.sizeAndSheet.content = getStoreInfo.mustRead.sizeAndSheet;
-  mustRead.value.notice.content = getStoreInfo.mustRead.notice;
+  if (getStoreInfo.mustRead != undefined) {
+    if (getStoreInfo.mustRead.orderForm != undefined)
+      mustRead.value.orderForm.content = getStoreInfo.mustRead.orderForm;
+    if (getStoreInfo.mustRead.orderMethod != undefined)
+      mustRead.value.orderMethod.content = getStoreInfo.mustRead.orderMethod;
+    if (getStoreInfo.mustRead.sizeAndSheet != undefined)
+      mustRead.value.sizeAndSheet.content = getStoreInfo.mustRead.sizeAndSheet;
+    if (getStoreInfo.mustRead.notice != undefined)
+      mustRead.value.notice.content = getStoreInfo.mustRead.notice;
+  }
 }
 
 function onClickCopyOrderFrom() {
+  console.log(mustRead.value.orderForm.content);
+  if (mustRead.value.orderForm.content === "") {
+    toastInfo("금방추가할게요 ㅠㅠ.");
+    return;
+  }
   /* Get the text field */
   var copyText = document.getElementById("clipboard");
 
   var isIOS = navigator.userAgent.match(/i(Phone|Pod)/i) != null ? true : false;
-
   if (isIOS) {
     // ios 일때
     iosCopyToClipboard(copyText);

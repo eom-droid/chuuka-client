@@ -30,9 +30,10 @@ export interface IProduct {
   name: string;
   description: string;
   photos: Array<IPhoto>;
-  hashTags: Array<string>;
-  isSoldOut: boolean;
-  isHidden: boolean;
+  todayOrderable: boolean;
+  sizeChangeable: boolean;
+  designChangeable: boolean;
+  isFixed: boolean;
   regDtime: Timestamp;
   modDtime: Timestamp;
 }
@@ -65,24 +66,24 @@ export async function addProduct(storeId: string, product: IProduct) {
   });
   return id;
 }
-export async function updateProduct(storeId: string, product: IProduct) {
-  const nowDTime = Timestamp.fromDate(new Date());
-  const id = product.id;
-  product.modDtime = nowDTime;
-  product = removeId(product);
-  await updateDoc(
-    doc(firestore, firebaseDevPath + "store/" + storeId + "/product", id),
-    {
-      modDtime: product.modDtime,
-      name: product.name,
-      description: product.description,
-      hashTags: product.hashTags,
-      photos: product.photos,
-      isHidden: product.isHidden,
-      isSoldOut: product.isSoldOut,
-    }
-  );
-}
+// export async function updateProduct(storeId: string, product: IProduct) {
+//   const nowDTime = Timestamp.fromDate(new Date());
+//   const id = product.id;
+//   product.modDtime = nowDTime;
+//   product = removeId(product);
+//   await updateDoc(
+//     doc(firestore, firebaseDevPath + "store/" + storeId + "/product", id),
+//     {
+//       modDtime: product.modDtime,
+//       name: product.name,
+//       description: product.description,
+//       hashTags: product.hashTags,
+//       photos: product.photos,
+//       isHidden: product.isHidden,
+//       isSoldOut: product.isSoldOut,
+//     }
+//   );
+// }
 
 export async function getAllProduct(storeId: string): Promise<Array<IProduct>> {
   let result = [] as Array<IProduct>;
