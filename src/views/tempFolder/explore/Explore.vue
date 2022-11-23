@@ -68,9 +68,6 @@ function onlickLocation(location: string) {
 </template>
 
 <style>
-.instagram {
-  color: rgba(4, 151, 249, 1);
-}
 .custom_textsize {
   font-size: 12px;
 }
@@ -91,7 +88,7 @@ function onlickLocation(location: string) {
 }
 
 .mapFont {
-  @apply instagram ml-2 mt-auto inline-block align-bottom w-10 text-base;
+  @apply text-usual-blue ml-2 mt-auto inline-block align-bottom w-10 text-base;
 }
 
 .btnFont {

@@ -2,6 +2,14 @@ import { createWebHistory, createRouter } from "vue-router";
 
 export const routes = [
   {
+    path: "/:pathMatch(.*)*",
+    redirect: "/404",
+  },
+  {
+    path: "/404",
+    component: () => import("@/views/NotFound.vue"),
+  },
+  {
     path: "/",
     name: "root",
     component: () => import("@/views/Home.vue"),

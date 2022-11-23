@@ -73,7 +73,7 @@
           <span class="mt-4 text-lg font-bold logo">CHUUKA</span>
           <div class="mt-20">해당 게시물이 없습니다.</div>
           <button
-            class="instagram inline-block align-bottom"
+            class="text-usual-blue inline-block align-bottom"
             @click="onClickHome()"
           >
             돌아가기

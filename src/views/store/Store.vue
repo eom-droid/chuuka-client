@@ -110,7 +110,7 @@ function onClickHome() {
             <img src="@/assets/img/icon/instagram.svg" class="w-5" />
             <div>
               <span
-                class="instagram text-lg ml-1.5"
+                class="text-usual-blue text-lg ml-1.5"
                 style="font-family: Roboto"
                 >{{ getStoreInfo.sns.instagram }}</span
               >
@@ -224,7 +224,7 @@ function onClickHome() {
         <span class="mt-4 text-lg font-bold logo">CHUUKA</span>
         <div class="mt-20">해당 가게가 없습니다.</div>
         <button
-          class="instagram inline-block align-bottom"
+          class="text-usual-blue inline-block align-bottom"
           @click="onClickHome()"
         >
           돌아가기
@@ -235,16 +235,13 @@ function onClickHome() {
 </template>
 
 <style scoped>
-.instagram {
-  color: rgba(4, 151, 249, 1);
-}
 .logo {
   font-style: italic;
   font-family: "Montserrat", sans-serif;
 }
 
 .map-font {
-  @apply instagram ml-2 mt-auto inline-block align-bottom w-10 text-base;
+  @apply text-usual-blue ml-2 mt-auto inline-block align-bottom w-10 text-base;
 }
 
 .store-content-block {
