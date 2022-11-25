@@ -53,7 +53,8 @@ export interface IStore {
   name: string;
   sns: ISns;
   hashTags: Array<string>;
-  goUrl: Array<IUrl>;
+  // goUrl: Array<IUrl>;
+  storeButtons: Array<IStoreButton>;
   locationUrl: {
     kakao: string;
     naver: string;
@@ -67,10 +68,15 @@ export interface IMustRead {
   sizeAndSheet: string;
   notice: string;
 }
-export interface IUrl {
+
+export interface IStoreButton {
   name: string;
   url: string;
 }
+// export interface IUrl {
+//   name: string;
+//   url: string;
+// }
 export interface ISns {
   instagram: string;
   kakaoTalk: string;

@@ -19,26 +19,22 @@ export const routes = [
     path: "/store/:storeId",
     name: "store",
     component: () => import("@/views/store/Store.vue"),
-    meta: { keepAlive: false },
     children: [
       {
         path: "/store/:storeId",
-        meta: { keepAlive: true },
         component: () => import("@/views/store/mustRead/MustRead.vue"),
       },
       {
         path: "mustRead",
-        meta: { keepAlive: true },
         component: () => import("@/views/store/mustRead/MustRead.vue"),
       },
       {
         path: "news",
-        meta: { keepAlive: true },
+
         component: () => import("@/views/store/news/News.vue"),
       },
       {
         path: "design",
-        meta: { keepAlive: true },
         component: () => import("@/views/store/design/Design.vue"),
       },
     ],
@@ -64,9 +60,6 @@ export const routes = [
 ];
 
 export const router = createRouter({
-  scrollBehavior(to, from, savedPosition) {
-    return savedPosition != null ? savedPosition : { top: 0 };
-  },
   history: createWebHistory(),
   routes,
 });

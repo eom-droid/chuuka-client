@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { IUrl, getStoreInfoById } from "@/api/m1/store";
-import { ref, onMounted } from "vue";
+import { getStoreInfoById } from "@/api/m1/store";
+import { ref, onMounted, onUpdated, onActivated, watch } from "vue";
 import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
-import { IProduct } from "@/api/m1/product";
-import { INews } from "@/api/m1/news";
 import { useStoreInfoStore } from "@/stores/storeInfo";
 import { storeToRefs } from "pinia";
 
@@ -13,13 +11,20 @@ const { getStoreInfo } = storeToRefs(pinia);
 const { setStoreInfo } = pinia;
 
 const innerRoute = ref(0);
-
 const loading = ref(false);
 
-onMounted(() => {
-  init();
+onMounted(async () => {
+  await init();
   initInnerRoute();
 });
+
+watch(
+  () => router.currentRoute.value,
+  (newValue, prevCount) => {
+    initInnerRoute();
+  },
+  { deep: true }
+);
 async function init() {
   if (getStoreInfo.value.id != undefined) {
     return;
@@ -36,15 +41,18 @@ async function init() {
   }
 }
 function initInnerRoute() {
-  let tempPathList = window.location.pathname.split("/");
+  let tempPathList = history.state.current.split("/");
   if (tempPathList.length >= 4) {
     if (tempPathList[3] === "news") {
       innerRoute.value = 1;
     } else if (tempPathList[3] === "design") {
       innerRoute.value = 2;
+    } else {
+      innerRoute.value = 0;
     }
+  } else if (tempPathList.length === 3) {
+    innerRoute.value = 0;
   }
-  // if(window.location.pathname.split('/'))
 }
 
 function getImgUrl(e: any) {
@@ -59,9 +67,9 @@ function onClickBack() {
   router.push("/");
 }
 
-function onClickUrl(urlKey: IUrl) {
-  if (urlKey != undefined) {
-    window.open(urlKey.url, "_blank");
+function onClickUrl(url: string | undefined) {
+  if (url != undefined) {
+    window.open(url, "_blank");
   } else {
     // console.log("이상해용");
   }
@@ -73,7 +81,10 @@ function onClickHome() {
 </script>
 
 <template>
-  <main class="overflow-auto overflow-x-hidden w-full noScroll">
+  <main
+    class="overflow-auto overflow-x-hidden w-full noScroll"
+    id="storeScrollEle"
+  >
     <div v-if="getStoreInfo.id != undefined" class="">
       <div class="custom-width relative">
         <img
@@ -94,28 +105,30 @@ function onClickHome() {
           @error="getImgUrl"
         />
       </div>
-      <div class="px-3 pt-4 pb-2">
+      <div class="px-3 pt-4 pb-2 relative">
+        <div class="absolute flex -top-6">
+          <a
+            :href="'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk"
+            target="_blank"
+          >
+            <img src="@/assets/img/icon/kakaoBorder.svg" class="w-12" />
+          </a>
+          <a
+            :href="'https://www.instagram.com/' + getStoreInfo.sns.instagram"
+            target="_blank"
+          >
+            <img
+              src="@/assets/img/icon/instagramBorder.svg"
+              class="w-12 ml-4"
+            />
+          </a>
+        </div>
         <!-- 이름과 인스타그램 -->
-        <div class="flex">
+        <div class="flex mt-6">
           <!-- <div class="my-auto flex"> -->
           <div class="my-auto">
             <span class="text-xl font-bold">{{ getStoreInfo.name }}</span>
           </div>
-
-          <a
-            class="ml-3 flex"
-            :href="'https://www.instagram.com/' + getStoreInfo.sns.instagram"
-            target="_blank"
-          >
-            <img src="@/assets/img/icon/instagram.svg" class="w-5" />
-            <div>
-              <span
-                class="text-usual-blue text-lg ml-1.5"
-                style="font-family: Roboto"
-                >{{ getStoreInfo.sns.instagram }}</span
-              >
-            </div>
-          </a>
         </div>
 
         <div class="flex text-base mt-1">
@@ -160,29 +173,32 @@ function onClickHome() {
             #{{ hashTag }}
           </div>
         </div>
-        <!-- <hr class="border-neutral-200 mt-5" v-if="store.goUrl != undefined" /> -->
       </div>
-      <hr
-        class="border-neutral-200 mt-5"
-        v-if="getStoreInfo.goUrl != undefined"
-      />
+      <hr class="border-neutral-200 mt-5" />
 
       <!-- NOTE 가게링크 -->
       <div class="px-3 pb-3">
         <div class="">
           <button
-            class="text-lg justify-center flex"
-            :class="index === 0 ? 'btn-main' : 'btn-sub'"
-            v-for="(url, index) in getStoreInfo.goUrl"
-            :key="index"
-            @click="onClickUrl(url)"
+            class="text-lg justify-center flex btn-main"
+            @click="
+              onClickUrl(
+                'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk + '/chat'
+              )
+            "
           >
             <div class="flex my-auto">
-              <img
-                v-show="index === 0"
-                src="@/assets/img/icon/kakao.svg"
-                class="w-7 mr-4"
-              />
+              <img src="@/assets/img/icon/kakao.svg" class="w-7 mr-4" />
+              <span>카카오 채널 상담하기</span>
+            </div>
+          </button>
+          <button
+            class="text-lg justify-center flex btn-sub"
+            v-for="(url, index) in getStoreInfo.storeButtons"
+            :key="index"
+            @click="onClickUrl(url.url)"
+          >
+            <div class="flex my-auto">
               <span>{{ url.name }}</span>
             </div>
           </button>

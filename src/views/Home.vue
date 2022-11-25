@@ -19,7 +19,6 @@ const lastVisible = ref(null as any);
 const isEnd = ref(false);
 const isRunning = ref(false);
 const savedScrollHeight = ref(0);
-const tempArray = ref([{ id: "10000" }] as Array<IStore>);
 
 onMounted(() => {
   init();
@@ -42,7 +41,7 @@ async function calcScrollAndGetDocs() {
     return;
   savedScrollHeight.value = scrollTop;
   // console.log(scrollHeight - scrollTop - offsetHeight);
-  if (!isRunning.value && scrollHeight - scrollTop - offsetHeight < 150) {
+  if (!isRunning.value && scrollHeight - scrollTop - offsetHeight < 250) {
     isRunning.value = true;
     await initAllStore();
     isRunning.value = false;

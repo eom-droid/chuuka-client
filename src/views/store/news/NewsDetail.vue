@@ -63,7 +63,9 @@
 
           <a
             class="w-full bg-main rounded text-white font-bold py-3 text-xl absolute -bottom-10 text-center"
-            :href="'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk"
+            :href="
+              'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk + '/chat'
+            "
             target="_blank"
           >
             카카오 채널 상담하기
@@ -137,11 +139,6 @@ function onClickHome() {
 
 function onClickBack() {
   router.push("/store/" + getStoreInfo.value.id + "/news");
-}
-
-function onClickKakao() {
-  console.log(getStoreInfo.value.goUrl);
-  console.log(getStoreInfo.value.sns);
 }
 </script>
 

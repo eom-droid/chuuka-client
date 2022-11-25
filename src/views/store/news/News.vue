@@ -1,6 +1,10 @@
 <template>
   <div class="text-left m-3 whitespace-pre-line grid gap-3 text-sm">
-    <img src="@/assets/gif/loadingIcon.gif" v-if="isLoading" class="w-40" />
+    <img
+      src="@/assets/gif/loadingIcon.gif"
+      v-if="isLoading"
+      class="w-40 mx-auto"
+    />
     <div
       v-for="(news, index) in getNews"
       :key="news.id"
@@ -76,33 +80,56 @@ import { useNewsStore } from "@/stores/news";
 import { useStoreInfoStore } from "@/stores/storeInfo";
 import { getKoreanDateTime } from "@/utils/moment";
 import { storeToRefs } from "pinia";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeMount, onUpdated } from "vue";
+import { throttle } from "lodash";
 import { router } from "@/router/router";
 
 const pinia = useStoreInfoStore();
 const piniaNews = useNewsStore();
-const { getNews } = storeToRefs(piniaNews);
-const { getStoreInfo } = pinia;
-const { getInitStoreId, setInitStoreId, setNews, setSelectedNews } = piniaNews;
+const { getNews, getInitStoreId, getSavedTop } = storeToRefs(piniaNews);
+const { getStoreInfo } = storeToRefs(pinia);
+const { setInitStoreId, setNews, setSelectedNews, setSavedTop } = piniaNews;
 const isLoading = ref(true);
 
 onMounted(() => {
+  document
+    .getElementById("storeScrollEle")
+    ?.addEventListener("scroll", throttle(scrollFunc, 300));
   init();
 });
+
+onUpdated(() => {
+  setScroll();
+});
+
+function scrollFunc() {
+  var scrollTop = document.getElementById("storeScrollEle")?.scrollTop;
+  if (scrollTop != undefined) {
+    setSavedTop(scrollTop);
+  }
+}
+
 async function init() {
-  if (getInitStoreId === getStoreInfo.id) {
+  if (getInitStoreId.value === getStoreInfo.value.id) {
     isLoading.value = false;
     return;
   }
-  let tempNewList = await getAllNews(getStoreInfo.id);
-  setInitStoreId(getStoreInfo.id);
-  setNews(tempNewList);
+  setSavedTop(0);
+  setInitStoreId(getStoreInfo.value.id);
+  setNews(await getAllNews(getStoreInfo.value.id));
   isLoading.value = false;
+}
+
+function setScroll() {
+  if (document.getElementById("storeScrollEle") != null) {
+    //@ts-ignore
+    document.getElementById("storeScrollEle").scrollTop = getSavedTop.value;
+  }
 }
 
 function onClickNews(selectedNews: INews) {
   setSelectedNews(selectedNews);
-  router.push("/store/" + getStoreInfo.id + "/news/" + selectedNews.id);
+  router.push("/store/" + getStoreInfo.value.id + "/news/" + selectedNews.id);
 }
 
 function countLine(newLine: string) {

@@ -6,6 +6,7 @@ export const useNewsStore = defineStore("news", () => {
   const news = ref([] as INews[]);
   const selectedNews = ref({} as INews);
   const initStoreId = ref("");
+  const savedTop = ref(0);
   //   const doubleCount = computed(() => count.value * 2);
   const getNews = computed(() => {
     return news.value;
@@ -26,6 +27,13 @@ export const useNewsStore = defineStore("news", () => {
     selectedNews.value = newValue;
   }
 
+  function setSavedTop(newValue: number) {
+    savedTop.value = newValue;
+  }
+  const getSavedTop = computed(() => {
+    return savedTop.value;
+  });
+
   return {
     getNews,
     setNews,
@@ -33,5 +41,7 @@ export const useNewsStore = defineStore("news", () => {
     getInitStoreId,
     getSelectedNews,
     setSelectedNews,
+    setSavedTop,
+    getSavedTop,
   };
 });
