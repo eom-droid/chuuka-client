@@ -8,7 +8,7 @@
       <div
         v-for="(product, index) in getProduct"
         :key="index"
-        class="w-full h-full imgRatio border border-mid-gray"
+        class="w-full h-full imgRatio border border-mid-gray relative"
       >
         <img
           :src="product.photos[0].link"
@@ -20,7 +20,7 @@
           @close="showModal[index] = false"
           :key="index"
         >
-          <template v-slot:body
+          <template v-slot:image
             ><img
               :src="product.photos[0].link"
               class="w-full h-full object-cover border border-mid-gray rounded-md"

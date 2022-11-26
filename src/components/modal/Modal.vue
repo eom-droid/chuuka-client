@@ -10,7 +10,8 @@
             닫기
           </button>
           <div class="modal-body">
-            <slot name="body"></slot>
+            <slot name="image"></slot>
+            <slot name="description"></slot>
           </div>
         </div>
       </div>
@@ -37,6 +38,7 @@
 }
 
 .modal-container {
+  max-width: 448px;
   width: 95%;
   margin: 0px auto;
   padding: 10px 15px;

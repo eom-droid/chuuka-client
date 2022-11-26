@@ -1,7 +1,11 @@
 <template>
   <main class="overflow-auto overflow-x-hidden w-full noScroll font-medium">
     <div class="text-left m-3 whitespace-pre-line grid gap-3 text-sm">
-      <img src="@/assets/gif/loadingIcon.gif" v-if="isLoading" class="w-40" />
+      <img
+        src="@/assets/gif/loadingIcon.gif"
+        v-if="isLoading"
+        class="w-40 mx-auto"
+      />
       <div v-else>
         <div v-if="getSelectedNews.id != undefined" class="h-90v relative">
           <div class="relative flex mt-3">

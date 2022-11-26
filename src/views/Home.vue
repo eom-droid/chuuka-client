@@ -234,7 +234,7 @@ function locationBlur(tempLoc: string) {
         </div>
       </div>
     </div>
-    <div class="text-neutral-400 text-base mb-2" v-show="isEnd">
+    <div class="text-neutral-400 text-base mb-28" v-show="isEnd">
       더 이상의 업체가 없습니다.
     </div>
   </main>
