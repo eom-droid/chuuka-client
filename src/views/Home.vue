@@ -24,14 +24,14 @@ onMounted(() => {
   init();
 
   document
-    .getElementById("scrollEle")
+    .getElementById("homeScrollEle")
     ?.addEventListener("scroll", throttle(calcScrollAndGetDocs, 50));
 });
 
 async function calcScrollAndGetDocs() {
-  var scrollTop = document.getElementById("scrollEle")?.scrollTop;
-  var scrollHeight = document.getElementById("scrollEle")?.scrollHeight; // added
-  var offsetHeight = document.getElementById("scrollEle")?.offsetHeight;
+  var scrollTop = document.getElementById("homeScrollEle")?.scrollTop;
+  var scrollHeight = document.getElementById("homeScrollEle")?.scrollHeight; // added
+  var offsetHeight = document.getElementById("homeScrollEle")?.offsetHeight;
 
   if (
     scrollTop === undefined ||
@@ -49,9 +49,10 @@ async function calcScrollAndGetDocs() {
 onActivated(() => {
   let tempLoc = window.localStorage.getItem("location");
 
-  if (document.getElementById("scrollEle") != null) {
+  if (document.getElementById("homeScrollEle") != null) {
     //@ts-ignore
-    document.getElementById("scrollEle").scrollTop = savedScrollHeight.value;
+    document.getElementById("homeScrollEle").scrollTop =
+      savedScrollHeight.value;
   }
   if (tempLoc != null && location.value != tempLoc) {
     // 적용하기로 나온경우 && 다른 선택을 했을 시
@@ -68,7 +69,7 @@ function initValues() {
 }
 onUnmounted(() => {
   document
-    .getElementById("scrollEle")
+    .getElementById("homeScrollEle")
     ?.removeEventListener("scroll", (event) => {});
 });
 function init() {
@@ -160,7 +161,7 @@ function locationBlur(tempLoc: string) {
 </script>
 
 <template>
-  <main class="px-2 w-full">
+  <main class="x-basic-padding w-full" id="homeScrollEle">
     <div>
       <!-- {{ lastVisible }} -->
       <div class="mt-4 text-lg font-bold logo">CHUUKA!</div>
@@ -233,6 +234,7 @@ function locationBlur(tempLoc: string) {
     <div class="text-neutral-400 text-base" v-show="isEnd">
       더 이상의 업체가 없습니다.
     </div>
+    <div class="h-28"></div>
   </main>
 </template>
 

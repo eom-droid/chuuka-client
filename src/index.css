@@ -6,8 +6,8 @@
 
 /* 컴포넌트 */
 .btn-main {
-  @apply bg-main text-white w-full mt-3 font-semibold rounded-md;
-  height: 50px;
+  @apply bg-main text-white w-full mt-3 font-semibold  rounded-md;
+  height: 48px;
 }
 .btn-main-short {
   @apply bg-main text-white w-full mt-3 font-semibold h-11 rounded-md;
@@ -15,7 +15,7 @@
 
 .btn-sub {
   @apply bg-sub text-main w-full mt-3 font-semibold rounded-md;
-  height: 50px;
+  height: 48px;
 }
 .btn-sub-short {
   @apply bg-sub text-main w-full mt-3 font-semibold h-11 rounded-md;
@@ -24,6 +24,24 @@
 /* 페이지 여백 조절 */
 .w-page-sm {
   @apply max-w-md;
+}
+
+.x-basic-padding {
+  @apply px-3;
+}
+.x-basic-margin {
+  @apply mx-3;
+}
+main {
+  @apply h-100v overflow-y-auto overflow-x-hidden noScroll w-full;
+}
+
+.noScroll::-webkit-scrollbar {
+  display: none;
+}
+.noscroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* body */

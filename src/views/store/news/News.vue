@@ -1,5 +1,5 @@
 <template>
-  <div class="text-left m-3 whitespace-pre-line grid gap-3 text-sm">
+  <div class="text-left my-3 whitespace-pre-line grid gap-3 text-sm">
     <img
       src="@/assets/gif/loadingIcon.gif"
       v-if="isLoading"
@@ -80,7 +80,7 @@ import { useNewsStore } from "@/stores/news";
 import { useStoreInfoStore } from "@/stores/storeInfo";
 import { getKoreanDateTime } from "@/utils/moment";
 import { storeToRefs } from "pinia";
-import { ref, onMounted, onBeforeMount, onUpdated } from "vue";
+import { ref, onMounted, onUnmounted, onUpdated } from "vue";
 import { throttle } from "lodash";
 import { router } from "@/router/router";
 

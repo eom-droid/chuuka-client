@@ -1,22 +1,22 @@
 <template>
-  <main class="w-full font-medium">
-    <div class="text-left whitespace-pre-line grid gap-3 text-sm mx-3 mt-3">
+  <main class="font-medium x-basic-padding">
+    <div class="text-left whitespace-pre-line grid gap-3 text-sm">
       <img
         src="@/assets/gif/loadingIcon.gif"
         v-if="isLoading"
         class="w-40 mx-auto"
       />
       <div v-else>
-        <div v-if="getSelectedNews.id != undefined" class="relative">
-          <div class="relative flex mt-3">
+        <div v-if="getSelectedNews.id != undefined" class="">
+          <div class="relative flex py-4">
             <img
               src="@/assets/img/icon/backword.svg"
-              class="absolute w-6 hover:cursor-pointer"
+              class="absolute w-6 hover:cursor-pointer mt-0.5"
               @click="onClickBack()"
             />
             <span class="text-xl mx-auto">일정/소식</span>
           </div>
-          <div class="mt-8 customHeight">
+          <div class="mt-5">
             <p class="text-xl">{{ getSelectedNews.title }}</p>
             <p class="text-sm text-text-gray mt-2.5">
               {{ getKoreanDateTime(getSelectedNews.modDtime.toDate()) }}
@@ -62,24 +62,25 @@
                 </div> -->
               </div>
             </div>
-            <div class="whitespace-pre-line text-sm mt-5 font-normal h-full">
+            <div class="whitespace-pre-line text-sm mt-5 font-normal">
               {{ getSelectedNews.content }}
             </div>
           </div>
-
-          <button
-            class="text-lg justify-center flex btn-main"
-            @click="
-              onClickUrl(
-                'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk + '/chat'
-              )
-            "
-          >
-            <div class="flex my-auto">
-              <img src="@/assets/img/icon/kakao.svg" class="w-7 mr-4" />
-              <span>카카오 채널 상담하기</span>
-            </div>
-          </button>
+          <div class="mt-5">
+            <button
+              class="text-lg justify-center flex btn-main"
+              @click="
+                onClickUrl(
+                  'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk + '/chat'
+                )
+              "
+            >
+              <div class="flex my-auto">
+                <img src="@/assets/img/icon/kakao.svg" class="w-7 mr-4" />
+                <span>카카오 채널 상담하기</span>
+              </div>
+            </button>
+          </div>
         </div>
         <div v-else>
           <span class="mt-4 text-lg font-bold logo">CHUUKA</span>
@@ -93,6 +94,7 @@
         </div>
       </div>
     </div>
+    <div class="h-28"></div>
   </main>
 </template>
 <script setup lang="ts">

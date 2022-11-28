@@ -1,5 +1,5 @@
 <template>
-  <main class="">
+  <main class="px-4">
     <div class="mt-20">잘못된 접근입니다.</div>
     <button
       class="text-usual-blue inline-block align-bottom mt-5"

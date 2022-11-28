@@ -45,16 +45,12 @@
         </div>
       </div>
     </div>
-    <div
-      class="cusShadow w-page-sm bg-white customWidth noScroll h-100v overflow-y-auto overflow-x-hidden mx-auto"
-      id="scrollEle"
-    >
+    <div class="cusShadow w-page-sm bg-white customWidth mx-auto">
       <router-view v-slot="{ Component }" class="">
         <keep-alive :include="['Home', 'Location']" :max="10">
           <component :is="Component" />
         </keep-alive>
       </router-view>
-      <div class="h-28"></div>
     </div>
 
     <div class="w-1/12 disnone"></div>
@@ -80,13 +76,5 @@
   .customWidth {
     width: 448px;
   }
-}
-
-.noScroll::-webkit-scrollbar {
-  display: none;
-}
-.noscroll {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 </style>

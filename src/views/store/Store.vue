@@ -80,7 +80,7 @@ function onClickHome() {
 </script>
 
 <template>
-  <main class="w-full" id="storeScrollEle">
+  <main class="" id="storeScrollEle">
     <div v-if="getStoreInfo.id != undefined" class="">
       <div class="relative">
         <img
@@ -101,7 +101,7 @@ function onClickHome() {
           @error="getImgUrl"
         />
       </div>
-      <div class="px-3 pt-4 pb-2 relative">
+      <div class="x-basic-padding pt-4 pb-2 relative">
         <div class="absolute flex -top-6">
           <a
             :href="'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk"
@@ -112,11 +112,9 @@ function onClickHome() {
           <a
             :href="'https://www.instagram.com/' + getStoreInfo.sns.instagram"
             target="_blank"
+            class="ml-4"
           >
-            <img
-              src="@/assets/img/icon/instagramBorder.svg"
-              class="w-12 ml-4"
-            />
+            <img src="@/assets/img/icon/instagramBorder.svg" class="w-12" />
           </a>
         </div>
         <!-- 이름과 인스타그램 -->
@@ -127,12 +125,12 @@ function onClickHome() {
           </div>
         </div>
 
-        <div class="flex text-base mt-1">
+        <div class="flex text-base font-medium mt-3">
           <img src="@/assets/img/icon/location.svg" class="w-4 mx-0.5" />
           <span class="text-sm ml-2 mt-1 text-left text-neutral-500">{{
             getStoreInfo.location
           }}</span>
-          <div class="flex mt-1">
+          <div class="flex mt-0.5">
             <a
               class="map-font"
               v-if="getStoreInfo.locationUrl === undefined"
@@ -160,20 +158,20 @@ function onClickHome() {
             </a>
           </div>
         </div>
-        <div class="flex mt-3">
+        <div class="flex mt-4">
           <div
             v-for="(hashTag, index) in getStoreInfo.hashTags"
             :key="index"
-            class="text-xs border-main border py-2 pl-1.5 pr-2 rounded-md mr-2"
+            class="text-xs font-medium border-main border py-2 px-2.5 rounded-md mr-2"
           >
             #{{ hashTag }}
           </div>
         </div>
       </div>
-      <hr class="border-neutral-200 mt-5" />
+      <hr class="bg-mid-gray mt-2 x-basic-margin" />
 
       <!-- NOTE 가게링크 -->
-      <div class="px-3 pb-3">
+      <div class="x-basic-padding pb-3">
         <div class="">
           <button
             class="text-lg justify-center flex btn-main"
@@ -201,7 +199,7 @@ function onClickHome() {
         </div>
       </div>
 
-      <div class="bg-neutral-100 h-2"></div>
+      <div class="bg-neutral-100 h-2.5"></div>
 
       <!-- NOTE 탭 -->
       <div class="">
@@ -232,7 +230,7 @@ function onClickHome() {
           </router-link>
         </div>
 
-        <div class="text-base text-left">
+        <div class="text-base text-left x-basic-padding">
           <router-view></router-view>
         </div>
       </div>
@@ -250,6 +248,7 @@ function onClickHome() {
         </button>
       </div>
     </div>
+    <div class="h-28"></div>
   </main>
 </template>
 

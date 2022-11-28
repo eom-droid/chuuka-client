@@ -1,7 +1,7 @@
 <template>
   <!-- NOTE 필독 사항 -->
-  <div>
-    <div class="text-sm font-medium flex mx-3">
+  <div class="">
+    <div class="text-sm font-medium flex">
       <button class="btn-main-short text-base" @click="onClickCopyOrderFrom()">
         주문 양식 복사
       </button>
@@ -13,8 +13,8 @@
       ></textarea>
     </div>
 
-    <div class="my-2 mx-3"><hr /></div>
-    <div class="m-3 grid gap-3">
+    <div class="my-2"><hr /></div>
+    <div class="my-3 grid gap-3">
       <!-- 필독사항/주문방법 -->
       <div class="store-content-block">
         <div

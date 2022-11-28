@@ -1,5 +1,5 @@
 <template>
-  <div class="m-3">
+  <div class="my-3">
     <div v-if="isLoading" class="flex">
       <img src="@/assets/gif/loadingIcon.gif" class="w-40 mx-auto" />
     </div>
