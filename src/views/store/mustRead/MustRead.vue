@@ -6,6 +6,7 @@
         주문 양식 복사
       </button>
       <textarea
+        readonly
         v-model="mustRead.orderForm.content"
         id="clipboard"
         class="clipboardCss"
@@ -156,7 +157,7 @@ function onClickCopyOrderFrom() {
     // ios가 아닐때
     copyToClipboard(copyText);
   }
-
+  copyText?.blur();
   /* Alert the copied text */
   // alert("copy 되었습니다.");
   toastSuccess("주문 양식을 복사했어요");
@@ -172,29 +173,38 @@ function copyToClipboard(copyText: any) {
   document.execCommand("copy");
 }
 
-// ios 일때
+// // ios 일때
+// function iosCopyToClipboard(el: any) {
+//   var oldContentEditable = el.contentEditable,
+//     oldReadOnly = el.readOnly,
+//     range = document.createRange();
+
+//   el.contentEditable = true;
+//   el.readOnly = false;
+//   range.selectNodeContents(el);
+
+//   var s = window.getSelection();
+//   if (s != null) {
+//     s.removeAllRanges();
+//     s.addRange(range);
+//   }
+
+//   // A big number, to cover anything that could be inside the element.
+//   el.setSelectionRange(0, 999999);
+
+//   el.contentEditable = oldContentEditable;
+//   el.readOnly = oldReadOnly;
+
+//   document.execCommand("copy");
+// }
 function iosCopyToClipboard(el: any) {
-  var oldContentEditable = el.contentEditable,
-    oldReadOnly = el.readOnly,
-    range = document.createRange();
-
-  el.contentEditable = true;
-  el.readOnly = false;
-  range.selectNodeContents(el);
-
-  var s = window.getSelection();
-  if (s != null) {
-    s.removeAllRanges();
-    s.addRange(range);
-  }
-
-  // A big number, to cover anything that could be inside the element.
-  el.setSelectionRange(0, 999999);
-
-  el.contentEditable = oldContentEditable;
-  el.readOnly = oldReadOnly;
-
+  var textarea = document.createElement("textarea");
+  textarea.value = getStoreInfo.mustRead.orderForm; // 복사할 메시지
+  document.body.appendChild(textarea);
+  textarea.select();
+  textarea.setSelectionRange(0, 9999); // For IOS
   document.execCommand("copy");
+  document.body.removeChild(textarea);
 }
 </script>
 <style>

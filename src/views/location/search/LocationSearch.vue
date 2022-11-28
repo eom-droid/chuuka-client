@@ -29,7 +29,7 @@ function onclickLocation(location: string) {
 
 <template>
   <main class="overflow-x-hidden px-2">
-    <div class="mt-4 customWidth">
+    <div class="mt-4">
       <div class="flex">
         <img
           src="@/assets/img/icon/backword.svg"
@@ -67,16 +67,6 @@ function onclickLocation(location: string) {
 </template>
 
 <style>
-@media (max-width: 448px) {
-  .customWidth {
-    width: 100vw;
-  }
-}
-@media (min-width: 448px) {
-  .customWidth {
-    width: 448px;
-  }
-}
 .inputWidth {
   width: 86%;
 }

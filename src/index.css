@@ -31,6 +31,12 @@ body {
   @apply bg-white text-font; /* 라이트모드 */
   overscroll-behavior: none;
   -webkit-user-select: none;
+  width: 100%;
+  position: fixed;
+  overflow: hidden;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
 }
 
 main {

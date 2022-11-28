@@ -25,7 +25,7 @@ onMounted(() => {
 
   document
     .getElementById("scrollEle")
-    ?.addEventListener("scroll", throttle(calcScrollAndGetDocs, 200));
+    ?.addEventListener("scroll", throttle(calcScrollAndGetDocs, 50));
 });
 
 async function calcScrollAndGetDocs() {
@@ -161,10 +161,7 @@ function locationBlur(tempLoc: string) {
 </script>
 
 <template>
-  <main
-    class="customWidth px-2 overflow-auto w-full flex-none noScroll"
-    id="scrollEle"
-  >
+  <main class="px-2 overflow-auto w-full" id="scrollEle">
     <div>
       <!-- {{ lastVisible }} -->
       <div class="mt-4 text-lg font-bold logo">CHUUKA!</div>
@@ -234,9 +231,10 @@ function locationBlur(tempLoc: string) {
         </div>
       </div>
     </div>
-    <div class="text-neutral-400 text-base mb-28" v-show="isEnd">
+    <div class="text-neutral-400 text-base" v-show="isEnd">
       더 이상의 업체가 없습니다.
     </div>
+    <div class="h-28"></div>
   </main>
 </template>
 
@@ -257,23 +255,6 @@ function locationBlur(tempLoc: string) {
   -webkit-background-clip: text;
 }
 
-.noScroll::-webkit-scrollbar {
-  display: none;
-}
-.noscroll {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-@media (max-width: 448px) {
-  .customWidth {
-    width: 100vw;
-  }
-}
-@media (min-width: 448px) {
-  .customWidth {
-    width: 448px;
-  }
-}
 .imgWidth {
   width: 28%;
 }

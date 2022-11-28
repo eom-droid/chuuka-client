@@ -4,7 +4,7 @@
       <img src="@/assets/gif/loadingIcon.gif" class="w-40 mx-auto" />
     </div>
 
-    <div v-else class="grid grid-cols-3 gap-0.5">
+    <div v-else class="grid grid-cols-3 gap-0.5 relative">
       <div
         v-for="(product, index) in getProduct"
         :key="index"
@@ -20,11 +20,36 @@
           @close="showModal[index] = false"
           :key="index"
         >
+          <template v-slot:header
+            ><span class="font-bold text-xl">{{ product.name }}</span></template
+          >
           <template v-slot:image
             ><img
               :src="product.photos[0].link"
-              class="w-full h-full object-cover border border-mid-gray rounded-md"
+              class="w-full h-full max-h-96 object-cover border border-mid-gray rounded-md"
           /></template>
+          <template v-slot:description>
+            <div
+              class="whitespace-pre-line text-sm h-36 max-h-48 font-medium overflow-y-auto"
+            >
+              {{ product.description }}
+            </div>
+          </template>
+          <template v-slot:bottom-btn>
+            <button
+              class="text-lg justify-center flex btn-main"
+              @click="
+                onClickUrl(
+                  'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk + '/chat'
+                )
+              "
+            >
+              <div class="flex my-auto">
+                <img src="@/assets/img/icon/kakao.svg" class="w-7 mr-4" />
+                <span>카카오 채널 상담하기</span>
+              </div>
+            </button>
+          </template>
         </Modal>
       </div>
     </div>
@@ -66,6 +91,14 @@ async function init() {
   setProduct(tempProductList);
   isLoading.value = false;
   showModal.value = new Array(getProduct.value.length).fill(false);
+}
+
+function onClickUrl(url: string | undefined) {
+  if (url != undefined) {
+    window.open(url, "_blank");
+  } else {
+    // console.log("이상해용");
+  }
 }
 </script>
 <style>

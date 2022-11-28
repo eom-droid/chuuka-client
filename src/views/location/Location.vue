@@ -79,7 +79,7 @@ function sortCity(argObj: any) {
 </script>
 
 <template>
-  <main class="customWidth px-2">
+  <main class="px-2">
     <div class="mt-4 relative customHeight">
       <div class="">
         <div class="flex relative">
@@ -144,15 +144,5 @@ function sortCity(argObj: any) {
 <style>
 .customHeight {
   height: 94vh;
-}
-@media (max-width: 448px) {
-  .customWidth {
-    width: 100vw;
-  }
-}
-@media (min-width: 448px) {
-  .customWidth {
-    width: 448px;
-  }
 }
 </style>

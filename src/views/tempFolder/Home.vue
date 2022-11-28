@@ -3,7 +3,7 @@ import NavigationBar from "@/components/NavigationBar.vue";
 </script>
 
 <template>
-  <div class="h-100v mx-auto overflow-auto customWidth">
+  <div class="h-100v mx-auto overflow-auto">
     <NavigationBar></NavigationBar>
     <main class="w-page-sm bg-white">
       <!-- <div class="flex text-base font-bold">
@@ -121,16 +121,5 @@ import NavigationBar from "@/components/NavigationBar.vue";
 
 .subTitle {
   @apply text-base font-normal mt-4;
-}
-
-@media (max-width: 448px) {
-  .customWidth {
-    width: 100vw;
-  }
-}
-@media (min-width: 448px) {
-  .customWidth {
-    width: 448px;
-  }
 }
 </style>

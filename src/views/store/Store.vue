@@ -81,12 +81,9 @@ function onClickHome() {
 </script>
 
 <template>
-  <main
-    class="overflow-auto overflow-x-hidden w-full noScroll"
-    id="storeScrollEle"
-  >
+  <main class="overflow-auto overflow-x-hidden w-full" id="storeScrollEle">
     <div v-if="getStoreInfo.id != undefined" class="">
-      <div class="custom-width relative">
+      <div class="relative">
         <img
           src="@/assets/img/icon/backword.svg"
           class="absolute w-7 hover:cursor-pointer rounded-full bg-slate-200 p-1 ml-3 mt-4"
@@ -241,7 +238,7 @@ function onClickHome() {
         </div>
       </div>
     </div>
-    <div v-else class="custom-width">
+    <div v-else class="">
       <img src="@/assets/gif/loadingIcon.gif" v-show="loading" />
       <div v-show="!loading">
         <span class="mt-4 text-lg font-bold logo">CHUUKA</span>
@@ -254,6 +251,7 @@ function onClickHome() {
         </button>
       </div>
     </div>
+    <div class="h-28"></div>
   </main>
 </template>
 
@@ -269,24 +267,5 @@ function onClickHome() {
 
 .store-content-block {
   @apply border border-mid-gray shadow-sm rounded-md p-3;
-}
-
-.noScroll::-webkit-scrollbar {
-  display: none;
-}
-.noscroll {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-@media (max-width: 448px) {
-  .custom-width {
-    width: 100vw;
-  }
-}
-@media (min-width: 448px) {
-  .custom-width {
-    width: 448px;
-  }
 }
 </style>

@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="bg-main h-100v flex">
+  <div class="bg-main h-100v flex w-full">
     <div class="w-1/12 disnone"></div>
     <div class="mx-auto mt-20 disnone">
       <div class="text-xl text-left mb-auto font-semibold">
@@ -45,15 +45,15 @@
         </div>
       </div>
     </div>
-
     <router-view
       v-slot="{ Component }"
-      class="cusShadow w-page-sm bg-white h-100v"
+      class="cusShadow w-page-sm bg-white h-100v customWidth noScroll"
     >
       <keep-alive :include="['Home', 'Location']" :max="10">
         <component :is="Component" />
       </keep-alive>
     </router-view>
+
     <div class="w-1/12 disnone"></div>
   </div>
 </template>
@@ -66,5 +66,24 @@
   .disnone {
     display: none;
   }
+}
+
+@media (max-width: 448px) {
+  .customWidth {
+    width: 100vw;
+  }
+}
+@media (min-width: 448px) {
+  .customWidth {
+    width: 448px;
+  }
+}
+
+.noScroll::-webkit-scrollbar {
+  display: none;
+}
+.noscroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 </style>

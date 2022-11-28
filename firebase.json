@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "chuuka-s",
+    "site": "chuuka",
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
@@ -11,29 +11,29 @@
     ],
     "headers": [
       {
-        "source": "**/*.html",
+        "source": "/*.*",
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "max-age=0, no-cache"
+            "value": "no-cache, no-store, must-revalidate"
           }
         ]
       },
       {
-        "source": "**/*.@(css|js)",
+        "source": "**/*.@(js|css)",
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "max-age=3500"
+            "value": "max-age=3600"
           }
         ]
       },
       {
-        "source": "**/*.@(jpg|jpeg|gif|png)",
+        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|eot|otf|ttf|ttc|woff|woff2|font.css)",
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "max-age=3300"
+            "value": "max-age=172800"
           }
         ]
       }

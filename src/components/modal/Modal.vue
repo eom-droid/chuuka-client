@@ -3,15 +3,24 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-          <button
-            class="modal-default-button text-base font-medium mb-4 mt-1"
-            @click="$emit('close')"
-          >
-            닫기
-          </button>
+          <div>
+            <slot name="header" class=""></slot>
+            <button
+              class="modal-default-button text-base font-medium"
+              @click="$emit('close')"
+            >
+              닫기
+            </button>
+          </div>
+
           <div class="modal-body">
-            <slot name="image"></slot>
-            <slot name="description"></slot>
+            <div><slot name="image"></slot></div>
+            <div class="desc-textarea">
+              <slot name="description"></slot>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <slot name="bottom-btn"> </slot>
           </div>
         </div>
       </div>
@@ -41,7 +50,7 @@
   max-width: 448px;
   width: 95%;
   margin: 0px auto;
-  padding: 10px 15px;
+  padding: 20px 16px;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
@@ -55,7 +64,7 @@
 }
 
 .modal-body {
-  margin: 20px 0;
+  margin: 10px 0 0 0;
 }
 
 .modal-default-button {
@@ -78,5 +87,9 @@
 .modal-body,
 .modal {
   color: #666 !important;
+}
+
+.desc-textarea {
+  margin-top: 10px;
 }
 </style>

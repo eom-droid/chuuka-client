@@ -29,3 +29,5 @@ dist-ssr
 *.cache
 /firebaseConfig.js
 /urlConfig.ts
+/dist
+/dists

@@ -47,7 +47,7 @@ function onlickLocation(location: string) {
 </script>
 
 <template>
-  <main class="customWidth">
+  <main class="">
     <div class="flex">
       <img
         src="@/assets/img/icon/backword.svg"
@@ -93,17 +93,6 @@ function onlickLocation(location: string) {
 
 .btnFont {
   font-family: "Noto Sans KR", Avenir;
-}
-
-@media (max-width: 448px) {
-  .customWidth {
-    width: 100vw;
-  }
-}
-@media (min-width: 448px) {
-  .customWidth {
-    width: 448px;
-  }
 }
 
 .locationBtn {

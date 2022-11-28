@@ -1,22 +1,22 @@
 <template>
-  <main class="overflow-auto overflow-x-hidden w-full noScroll font-medium">
-    <div class="text-left m-3 whitespace-pre-line grid gap-3 text-sm">
+  <main class="overflow-x-hidden w-full font-medium">
+    <div class="text-left whitespace-pre-line grid gap-3 text-sm mx-3 mt-3">
       <img
         src="@/assets/gif/loadingIcon.gif"
         v-if="isLoading"
         class="w-40 mx-auto"
       />
       <div v-else>
-        <div v-if="getSelectedNews.id != undefined" class="h-90v relative">
+        <div v-if="getSelectedNews.id != undefined" class="relative">
           <div class="relative flex mt-3">
             <img
               src="@/assets/img/icon/backword.svg"
-              class="fixed w-6 hover:cursor-pointer"
+              class="absolute w-6 hover:cursor-pointer"
               @click="onClickBack()"
             />
             <span class="text-xl mx-auto">일정/소식</span>
           </div>
-          <div class="mt-8 flex flex-col noScroll overflow-auto customHeight">
+          <div class="mt-8 customHeight">
             <p class="text-xl">{{ getSelectedNews.title }}</p>
             <p class="text-sm text-text-gray mt-2.5">
               {{ getKoreanDateTime(getSelectedNews.modDtime.toDate()) }}
@@ -36,16 +36,18 @@
                 />
               </div>
               <div v-else>
-                <vueper-slides class="no-shadow" fixed-height="25vh">
+                <vueper-slides class="no-shadow" fixed-height="25vh" fractions>
                   <vueper-slide
                     v-for="(slide, i) in getSelectedNews.photos"
                     :key="i"
                   >
                     <template #content>
-                      <img
-                        :src="slide.link"
-                        class="object-contain h-25v mx-auto"
-                      />
+                      <div class="w-full">
+                        <img
+                          :src="slide.link"
+                          class="object-contain h-25v mx-auto"
+                        />
+                      </div>
                     </template>
                   </vueper-slide>
                 </vueper-slides>
@@ -60,24 +62,28 @@
                 </div> -->
               </div>
             </div>
-            <div class="whitespace-pre-line text-sm mt-5">
+            <div class="whitespace-pre-line text-sm mt-5 font-normal h-full">
               {{ getSelectedNews.content }}
             </div>
           </div>
 
-          <a
-            class="w-full bg-main rounded text-white font-bold py-3 text-xl absolute -bottom-10 text-center"
-            :href="
-              'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk + '/chat'
+          <button
+            class="text-lg justify-center flex btn-main"
+            @click="
+              onClickUrl(
+                'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk + '/chat'
+              )
             "
-            target="_blank"
           >
-            카카오 채널 상담하기
-          </a>
+            <div class="flex my-auto">
+              <img src="@/assets/img/icon/kakao.svg" class="w-7 mr-4" />
+              <span>카카오 채널 상담하기</span>
+            </div>
+          </button>
         </div>
         <div v-else>
           <span class="mt-4 text-lg font-bold logo">CHUUKA</span>
-          <div class="mt-20">해당 게시물이 없습니다.</div>
+          <div class="mt-20">해당 게시물이 없습니다</div>
           <button
             class="text-usual-blue inline-block align-bottom"
             @click="onClickHome()"
@@ -87,6 +93,7 @@
         </div>
       </div>
     </div>
+    <div class="h-28"></div>
   </main>
 </template>
 <script setup lang="ts">
@@ -144,6 +151,14 @@ function onClickHome() {
 function onClickBack() {
   router.push("/store/" + getStoreInfo.value.id + "/news");
 }
+
+function onClickUrl(url: string | undefined) {
+  if (url != undefined) {
+    window.open(url, "_blank");
+  } else {
+    // console.log("이상해용");
+  }
+}
 </script>
 
 <style>
@@ -155,8 +170,11 @@ function onClickBack() {
   border: none;
   box-shadow: none;
   transition: 0.3s;
-  width: 16px;
-  height: 16px;
+  width: 8px;
+  height: 8px;
+}
+.vueperslides__bullet {
+  margin: 8px 2px;
 }
 
 .vueperslides__bullet--active .default {
@@ -170,27 +188,9 @@ function onClickBack() {
   opacity: 0.8;
 }
 
-.noScroll::-webkit-scrollbar {
-  display: none;
-}
-.noscroll {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-@media (max-width: 448px) {
-  .custom-width {
-    width: 100vw;
-  }
-}
-@media (min-width: 448px) {
-  .custom-width {
-    width: 448px;
-  }
-}
-
-.customHeight {
-  height: 79vh;
+.vueperslides__progress {
+  background: rgba(0, 0, 0, 0.25);
+  color: #ff5252;
 }
 
 .tempSit {
