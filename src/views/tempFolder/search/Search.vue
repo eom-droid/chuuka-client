@@ -29,7 +29,6 @@ const cakeResultList = ref([]);
 
 // const storeResultList = computed(() => {
 //   debounce(function () {
-//     console.log(keyword.value);
 //   }, 1000);
 // });
 

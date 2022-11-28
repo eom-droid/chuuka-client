@@ -141,7 +141,6 @@ function init() {
 }
 
 function onClickCopyOrderFrom() {
-  console.log(mustRead.value.orderForm.content);
   if (mustRead.value.orderForm.content === "") {
     toastInfo("금방추가할게요 ㅠㅠ.");
     return;

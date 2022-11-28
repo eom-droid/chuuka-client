@@ -28,7 +28,7 @@ function onclickLocation(location: string) {
 </script>
 
 <template>
-  <main class="overflow-x-hidden px-2">
+  <main class="px-2">
     <div class="mt-4">
       <div class="flex">
         <img

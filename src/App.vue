@@ -45,14 +45,17 @@
         </div>
       </div>
     </div>
-    <router-view
-      v-slot="{ Component }"
-      class="cusShadow w-page-sm bg-white h-100v customWidth noScroll"
+    <div
+      class="cusShadow w-page-sm bg-white customWidth noScroll h-100v overflow-y-auto overflow-x-hidden mx-auto"
+      id="scrollEle"
     >
-      <keep-alive :include="['Home', 'Location']" :max="10">
-        <component :is="Component" />
-      </keep-alive>
-    </router-view>
+      <router-view v-slot="{ Component }" class="">
+        <keep-alive :include="['Home', 'Location']" :max="10">
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
+      <div class="h-28"></div>
+    </div>
 
     <div class="w-1/12 disnone"></div>
   </div>

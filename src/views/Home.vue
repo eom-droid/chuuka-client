@@ -40,8 +40,7 @@ async function calcScrollAndGetDocs() {
   )
     return;
   savedScrollHeight.value = scrollTop;
-  // console.log(scrollHeight - scrollTop - offsetHeight);
-  if (!isRunning.value && scrollHeight - scrollTop - offsetHeight < 250) {
+  if (!isRunning.value && scrollHeight - scrollTop - offsetHeight < 400) {
     isRunning.value = true;
     await initAllStore();
     isRunning.value = false;
@@ -161,7 +160,7 @@ function locationBlur(tempLoc: string) {
 </script>
 
 <template>
-  <main class="px-2 overflow-auto w-full" id="scrollEle">
+  <main class="px-2 w-full">
     <div>
       <!-- {{ lastVisible }} -->
       <div class="mt-4 text-lg font-bold logo">CHUUKA!</div>
@@ -234,7 +233,6 @@ function locationBlur(tempLoc: string) {
     <div class="text-neutral-400 text-base" v-show="isEnd">
       더 이상의 업체가 없습니다.
     </div>
-    <div class="h-28"></div>
   </main>
 </template>
 

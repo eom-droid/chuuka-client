@@ -35,7 +35,6 @@ function onClickSubmit(location: string) {
 }
 
 function onClickSetLocation() {
-  // console.log(btnRunning.value);
   if (btnRunning.value) return;
   btnRunning.value = true;
 
@@ -53,7 +52,6 @@ function onClickSetLocation() {
     },
     (error) => {
       setTimeout(() => (btnRunning.value = false), 10000);
-      // console.log(error.message);
     }
   );
 }

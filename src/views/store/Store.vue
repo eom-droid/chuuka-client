@@ -71,7 +71,6 @@ function onClickUrl(url: string | undefined) {
   if (url != undefined) {
     window.open(url, "_blank");
   } else {
-    // console.log("이상해용");
   }
 }
 
@@ -81,7 +80,7 @@ function onClickHome() {
 </script>
 
 <template>
-  <main class="overflow-auto overflow-x-hidden w-full" id="storeScrollEle">
+  <main class="w-full" id="storeScrollEle">
     <div v-if="getStoreInfo.id != undefined" class="">
       <div class="relative">
         <img
@@ -251,7 +250,6 @@ function onClickHome() {
         </button>
       </div>
     </div>
-    <div class="h-28"></div>
   </main>
 </template>
 

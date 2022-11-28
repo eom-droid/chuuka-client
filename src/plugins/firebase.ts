@@ -10,11 +10,9 @@ import { getAuth } from "firebase/auth";
 
 let firebaseApp = firebase.initializeApp(firebaseConfig);
 // https://stackoverflow.com/questions/69240255/uncaught-typeerror-firebaseapp-firestore-is-not-a-function-when-integrating-f
-// console.log(firebaseApp);
 let firestore = getFirestore(firebaseApp);
 // let firestorage = firebase.storage().ref();
 let firestorage = getStorage(firebaseApp);
 // let fireAuth = getAuth();
 
-// console.log(firestore);
 export { firebaseApp, firestore, firestorage };

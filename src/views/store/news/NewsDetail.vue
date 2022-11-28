@@ -1,5 +1,5 @@
 <template>
-  <main class="overflow-x-hidden w-full font-medium">
+  <main class="w-full font-medium">
     <div class="text-left whitespace-pre-line grid gap-3 text-sm mx-3 mt-3">
       <img
         src="@/assets/gif/loadingIcon.gif"
@@ -93,7 +93,6 @@
         </div>
       </div>
     </div>
-    <div class="h-28"></div>
   </main>
 </template>
 <script setup lang="ts">
@@ -156,7 +155,6 @@ function onClickUrl(url: string | undefined) {
   if (url != undefined) {
     window.open(url, "_blank");
   } else {
-    // console.log("이상해용");
   }
 }
 </script>

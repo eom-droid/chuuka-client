@@ -97,7 +97,6 @@ function onClickUrl(url: string | undefined) {
   if (url != undefined) {
     window.open(url, "_blank");
   } else {
-    // console.log("이상해용");
   }
 }
 </script>
