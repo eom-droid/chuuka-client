@@ -1,8 +1,8 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask">
+    <div class="modal-mask" @click="$emit('close')">
       <div class="modal-wrapper">
-        <div class="modal-container">
+        <div class="modal-container" onclick="event.stopPropagation()">
           <div>
             <slot name="header" class=""></slot>
             <button
@@ -28,10 +28,15 @@
   </transition>
 </template>
 
+<script lang="ts" setup>
+import { ref } from "vue";
+const isOpen = ref(false);
+</script>
+
 <style>
 .modal-mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 10000001;
   top: 0;
   left: 0;
   width: 100%;
@@ -55,7 +60,6 @@
   border-radius: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
 }
 
 .modal-header h3 {

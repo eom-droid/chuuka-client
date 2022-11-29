@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { locations } from "@/assets/city/city";
-
 import { router } from "@/router/router";
+
 const keyword = ref("");
 const searchArray = computed(() => {
   if (keyword.value.trim() === "") return [];
@@ -25,10 +25,14 @@ function onclickLocation(location: string) {
   window.localStorage.setItem("location", location);
   router.replace({ name: "location" });
 }
+
+onMounted(() => {
+  console.log("LocationSearch");
+});
 </script>
 
 <template>
-  <transition name="slide">
+  <transition name="slide" appear>
     <main class="x-basic-padding mt-14">
       <div class="flex">
         <div
@@ -41,12 +45,22 @@ function onclickLocation(location: string) {
               class="w-6 h-6 ml"
             />
             <input
-              class="bg-light-gray text-base ml-2.5"
+              class="bg-light-gray text-base ml-2.5 w-full"
               placeholder="시, 도, 군/구 를 검색해주세요."
+              :value="keyword"
+              @input="changeKeyword"
             />
           </div>
         </div>
-        <span class="text-usual-blue text-lg w-10 my-auto ml-4">닫기</span>
+        <button
+          class="text-usual-blue text-lg w-10 my-auto ml-4"
+          @click="router.push('/location')"
+        >
+          닫기
+        </button>
+      </div>
+      <div>
+        {{ searchArray }}
       </div>
 
       <!-- <div class="flex">
@@ -87,22 +101,36 @@ function onclickLocation(location: string) {
 </template>
 
 <style>
-.inputWidth {
-  width: 86%;
+/* .slide-leave-active,
+.slide-enter-active {
+  transition: 1s;
 }
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 1s ease-in-out;
+.slide-enter {
+  transform: translate(-100%, 0);
 }
-
-.slide-enter-from,
 .slide-leave-to {
-  transform: translateX(390px);
-  opacity: 0;
-}
+  transform: translate(100%, 0);
+} */
 
-.leave-screen-enter-active,
+.slide-leave-active,
+.slide-enter-active {
+  transition: 1s;
+}
+.slide-enter-from {
+  transform: translate(100%, 0);
+}
+.slide-leave-to {
+  transform: translate(-100%, 0);
+}
+/* .fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to  {
+  opacity: 0;
+} */
+
+/* .leave-screen-enter-active,
 .leave-screen-leave-active {
   background-color: rgba(0, 0, 0, 1);
   transform: translateX(0);
@@ -113,5 +141,5 @@ function onclickLocation(location: string) {
 .leave-screen-enter {
   background-color: rgba(0, 0, 0, 0);
   transform: translateX(-100%);
-}
+} */
 </style>

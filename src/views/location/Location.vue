@@ -1,38 +1,74 @@
 <script setup lang="ts">
-import { ref, onActivated } from "vue";
+import { ref, onActivated, computed } from "vue";
 import { router } from "@/router/router";
 import axios from "axios";
 import { urlConfig } from "@/../urlConfig.js";
 import { locations } from "@/assets/city/city";
+import { usePersonalStore } from "@/stores/personal";
+import { storeToRefs } from "pinia";
 
-const selectedLoaction = ref("지역 전체");
-const location = ref("");
+//localStorage와 pinia 사용으로 전체 로직 변경필요
+// 준혁이가 디자인 끝내면 다시시작
+
+const pinia = usePersonalStore();
+const {
+  getIsInitialized,
+  getSelectedLocation,
+  getLastSearchedAddress,
+  getSearchedList,
+} = storeToRefs(pinia);
+const {
+  setIsInitialized,
+  setSelectedLocation,
+  setLastSearchedAddress,
+  setSearchedList,
+} = pinia;
+
+const innerRoute = ref(0);
+const selectedLocation = ref("");
+const address = ref("");
 const latLong = ref({ latitude: 0, longitude: 0 });
 
 const btnRunning = ref(false);
 const tempSearchedList = ref(["서울 종로구", "서울 중구"] as string[]);
 
-onActivated(() => {
-  btnRunning.value = false;
-  init();
+const keyword = ref("");
+const searchArray = computed(() => {
+  if (keyword.value.trim() === "") return [];
+  let result = [] as Array<string>;
+  locations.map((ele) => {
+    if (ele.includes(keyword.value)) {
+      result.push(ele);
+    }
+  });
+  return result;
 });
-function init() {
-  initLoc();
+
+function changeKeyword(e: any) {
+  keyword.value = e.target.value;
 }
 
-function onClickBack() {
-  router.push("/");
-}
-function initLoc() {
-  let tempLoc = window.localStorage.getItem("location");
-  if (tempLoc != null && tempLoc != "지역 전체") {
-    location.value = tempLoc;
-    selectedLoaction.value = location.value;
-  }
-}
-function onClickSubmit(location: string) {
-  window.localStorage.setItem("location", location);
-  onClickBack();
+onActivated(() => {
+  btnRunning.value = false;
+  if (getIsInitialized.value) return;
+
+  init();
+});
+
+function init() {
+  setIsInitialized(true);
+  let tempSelectedLocation = window.localStorage.getItem("selectedLocation");
+  let templastSearchedAddress = window.localStorage.getItem(
+    "lastSearchedAddress"
+  );
+  let tempSearchedList = window.localStorage.getItem("searchedList");
+
+  // 추후 작업 필요 null일때 비교하고
+
+  // if (tempLoc != null && tempLoc != "지역 전체") {
+  //   address.value = tempLoc;
+  //   selectedLoaction.value = address.value;
+  // }
 }
 
 function onClickSetLocation() {
@@ -56,6 +92,7 @@ function onClickSetLocation() {
     }
   );
 }
+
 function sortCity(argObj: any) {
   let tempMap = argObj.results[0].region;
   let result = "";
@@ -71,95 +108,211 @@ function sortCity(argObj: any) {
   }
   result = result.trim();
   if (locations.find((ele) => ele === result) != undefined) {
-    location.value = result;
-    selectedLoaction.value = result;
+    address.value = result;
+    setSelectedLocation(result);
+    selectedLocation.value = result;
+    getSelectedLocation.value = result;
   }
+}
+
+function onClickLocationSearchBtn() {
+  innerRoute.value = 1;
+  setTimeout(() => {
+    document.getElementById("searchInput")?.focus();
+  }, 301);
+}
+
+function onClickXBtn() {
+  keyword.value = "";
+  document.getElementById("searchInput")?.blur();
 }
 </script>
 
 <template>
-  <main class="w-full font-medium">
-    <div class="x-basic-padding mb-6">
-      <div class="flex relative my-4">
-        <!-- 라우터 무한루프 문제 해결 필요 -->
-
-        <img
-          src="@/assets/img/icon/backword.svg"
-          class="absolute w-6 h-6 hover:cursor-pointer mt-0.5"
-          @click="onClickBack()"
-        />
-
-        <p class="font-semibold text-xl m-auto">위치</p>
-      </div>
-
-      <div class="">
-        <label class="py-5 flex">
-          <img src="@/assets/img/icon/earth.svg" class="w-5" />
-          <p class="ml-3 text-base">지역 전체</p>
-          <input
-            type="radio"
-            v-model="selectedLoaction"
-            class="radioBtn ml-auto w-5"
-            value="지역 전체"
-          />
-        </label>
-        <button
-          class="bg-light-gray w-full h-12 align-middle rounded-md"
-          @click="router.push({ name: 'location-search' })"
-        >
-          <div class="py-3 px-2.5 flex">
+  <main class="w-full font-medium relative">
+    <Transition name="slide-location">
+      <!-- 위치 -->
+      <div class="w-full z-0 absolute" v-show="innerRoute === 0">
+        <div class="x-basic-padding mb-6">
+          <div class="flex relative my-4">
             <img
-              src="@/assets/img/icon/search_text_gray.svg"
-              class="w-6 h-6 ml"
+              src="@/assets/img/icon/backword.svg"
+              class="absolute w-6 h-6 hover:cursor-pointer mt-0.5"
+              @click="router.push('/')"
             />
-            <span class="text-base ml-2.5 text-text-gray font-normal"
-              >시, 도, 군/구 를 검색해주세요.</span
-            >
-          </div>
-        </button>
-        <button class="mt-6 ml-2.5 flex">
-          <img src="@/assets/img/icon/target.svg" class="w-5 h-5 my-auto" />
-          <span class="underline text-base ml-2.5">현재 위치</span>
-        </button>
-        <!-- <label class="mt-5 ml-2 flex" v-show="location != ''">
-          <img src="@/assets/img/icon/location.svg" class="w-5" />
-          <p class="ml-3 text-base">{{ location }}</p>
-          <input
-            type="radio"
-            v-model="selectedLoaction"
-            class="radioBtn ml-auto w-5"
-            :value="location"
-          />
-        </label>
-        <div class="text-left" @click="onClickSetLocation()">
-          <button class="text-xs ml-3 text-blue-500">현재 위치로 설정</button>
-        </div>
 
-        <div class="mt-5 bg-neutral-300 rounded-md">
-          <router-link to="/location/search" class="">
-            <button class="text-neutral-700 w-full h-12 text-base">
-              위치 변경하기
+            <p class="font-semibold text-xl m-auto">위치</p>
+          </div>
+
+          <div class="">
+            <label class="py-5 flex">
+              <img src="@/assets/img/icon/earth.svg" class="w-5 ml-0.5" />
+              <p class="ml-2.5 text-base">지역 전체</p>
+              <input
+                type="radio"
+                v-model="getSelectedLocation"
+                class="radioBtn ml-auto w-5"
+                value="지역 전체"
+              />
+            </label>
+            <label class="py-5 flex">
+              <img src="@/assets/img/icon/earth.svg" class="w-5 ml-0.5" />
+              <p class="ml-2.5 text-base">지역 전체</p>
+              <input
+                type="radio"
+                v-model="getSelectedLocation"
+                class="radioBtn ml-auto w-5"
+                value="지역 전체"
+              />
+            </label>
+
+            <button
+              class="bg-light-gray w-full h-12 align-middle rounded-md"
+              @click="onClickLocationSearchBtn()"
+            >
+              <div class="py-3 px-2.5 flex">
+                <img
+                  src="@/assets/img/icon/search_text_gray.svg"
+                  class="w-6 h-6 ml"
+                />
+                <span class="text-base ml-2.5 text-text-gray font-normal"
+                  >시, 도, 군/구 를 검색해주세요.</span
+                >
+              </div>
             </button>
-          </router-link>
-        </div> -->
+            <button class="mt-6 ml-2.5 flex" @click="onClickSetLocation()">
+              <img src="@/assets/img/icon/target.svg" class="w-5 h-5 my-auto" />
+              <span class="underline text-base ml-2.5">현재 위치</span>
+            </button>
+          </div>
+        </div>
+        <div class="w-full bg-light-gray h-2.5"></div>
+        <div class="x-basic-padding text-left mt-8">
+          <div class="text-text-gray">검색 기록</div>
+          <div class="mt-3">
+            <button
+              v-for="searched in tempSearchedList"
+              :key="searched"
+              class="w-full text-left text-base"
+            >
+              <p class="py-3">{{ searched }}</p>
+              <hr class="bg-mid-gray" />
+            </button>
+          </div>
+        </div>
+        <div class="h-28"></div>
       </div>
-    </div>
-    <div class="w-full bg-light-gray h-2.5"></div>
-    <div class="x-basic-padding text-left mt-8">
-      <div class="text-text-gray">검색 기록</div>
-      <div class="mt-3">
-        <button
-          v-for="searched in tempSearchedList"
-          :key="searched"
-          class="w-full text-left text-base"
-        >
-          <p class="py-3">{{ searched }}</p>
-          <hr class="bg-mid-gray" />
-        </button>
+    </Transition>
+    <Transition name="slide-location-search">
+      <!-- 위치 검색 -->
+      <div
+        class="x-basic-padding mt-14 z-10 absolute w-full"
+        v-show="innerRoute === 1"
+      >
+        <div class="flex">
+          <div
+            class="bg-light-gray w-full h-12 align-middle rounded-md searchBox"
+          >
+            <div class="py-3 px-2.5 flex">
+              <img
+                src="@/assets/img/icon/search_text_gray.svg"
+                class="w-6 h-6 ml"
+              />
+              <input
+                id="searchInput"
+                class="searchInput"
+                placeholder="시, 도, 군/구 를 검색해주세요."
+                :value="keyword"
+                @input="changeKeyword"
+              />
+              <button>
+                <img
+                  src="@/assets/img/icon/cancleBtn.svg"
+                  v-show="keyword != ''"
+                  @click="onClickXBtn()"
+                  class="w-6 h-6"
+                />
+              </button>
+            </div>
+          </div>
+          <button
+            class="text-usual-blue text-lg w-10 my-auto ml-3"
+            @click="innerRoute = 0"
+            v-show="keyword === ''"
+          >
+            닫기
+          </button>
+        </div>
+        <div class="mt-6 text-left ml-1 text-text-gray">
+          "{{ keyword }}" 검색 결과
+        </div>
+        <div class="mt-5">
+          <div v-for="loc in searchArray">
+            <button class="text-base py-2 my-1 w-full text-left" @click="">
+              {{ loc }}
+            </button>
+            <hr />
+          </div>
+        </div>
+        <div class="h-28"></div>
       </div>
-    </div>
-    <div class="h-28"></div>
+    </Transition>
   </main>
 </template>
 
-<style></style>
+<style>
+/* .slide-up {
+  transition: all 3s;
+}
+.slide-up-enter-active {
+  transition: all 3s ease;
+}
+.slide-up-leave-active {
+  transition: all 3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-up-enter,
+.slide-up-leave-active {
+  opacity: 0;
+  transform: translateY(100%);
+} */
+
+/* .slide-leave-active,
+.slide-enter-active {
+  transition: 1s;
+}
+.slide-enter {
+  transform: translate(-100%, 0);
+}
+.slide-leave-to {
+  transform: translate(100%, 0);
+} */
+
+.searchInput {
+  @apply bg-light-gray text-base ml-2.5 w-full;
+}
+.searchInput:focus {
+  @apply outline-0;
+}
+.searchBox:focus-within {
+  @apply outline outline-black;
+}
+
+.slide-location-leave-active,
+.slide-location-search-leave-active,
+.slide-location-enter-active,
+.slide-location-search-enter-active {
+  transition: 0.3s;
+}
+.slide-location-enter-from {
+  transform: translate(-100%, 0);
+}
+.slide-location-search-enter-from {
+  transform: translate(100%, 0);
+}
+.slide-location-leave-to {
+  transform: translate(-100%, 0);
+}
+.slide-location-search-leave-to {
+  transform: translate(100%, 0);
+}
+</style>

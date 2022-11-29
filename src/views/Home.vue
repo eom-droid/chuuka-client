@@ -25,7 +25,7 @@ onMounted(() => {
 
   document
     .getElementById("homeScrollEle")
-    ?.addEventListener("scroll", throttle(calcScrollAndGetDocs, 50));
+    ?.addEventListener("scroll", throttle(calcScrollAndGetDocs, 100));
 });
 
 async function calcScrollAndGetDocs() {

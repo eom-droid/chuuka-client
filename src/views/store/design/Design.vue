@@ -12,7 +12,7 @@
       >
         <img
           :src="product.photos[0].link"
-          class="w-full h-full object-cover"
+          class="w-full h-full object-cover relative"
           @click="showModal[index] = true"
         />
         <Modal
@@ -26,11 +26,11 @@
           <template v-slot:image
             ><img
               :src="product.photos[0].link"
-              class="w-full h-full max-h-96 object-cover border border-mid-gray rounded-md"
+              class="w-full imgRatio object-contain border border-mid-gray rounded-md"
           /></template>
           <template v-slot:description>
             <div
-              class="whitespace-pre-line text-sm h-36 max-h-48 font-medium overflow-y-auto"
+              class="whitespace-pre-line text-sm h-28 max-h-44 font-medium overflow-y-auto"
             >
               {{ product.description }}
             </div>
