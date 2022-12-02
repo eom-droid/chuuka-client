@@ -1,7 +1,24 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+function isMobile() {
+  if (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+</script>
 
 <template>
-  <div class="bg-main h-100v flex w-full">
+  <router-view v-slot="{ Component }" v-if="isMobile()">
+    <keep-alive :include="['Home', 'Location']" :max="10">
+      <component :is="Component" />
+    </keep-alive>
+  </router-view>
+  <div v-else class="flex w-full h-full relative bg-main">
     <div class="w-1/12 disnone"></div>
     <div class="mx-auto mt-20 disnone">
       <div class="text-xl text-left mb-auto font-semibold">
@@ -45,7 +62,10 @@
         </div>
       </div>
     </div>
-    <div class="cusShadow w-page-sm bg-white customWidth mx-auto">
+    <div
+      class="cusShadow w-page-sm bg-white customWidth mx-auto relative h-100v overflow-y-auto noScroll"
+      id="mainWrapper"
+    >
       <router-view v-slot="{ Component }" class="">
         <keep-alive :include="['Home', 'Location']" :max="10">
           <component :is="Component" />

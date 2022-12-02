@@ -5,10 +5,11 @@ import {
   IStore,
   getStoreInfoByField,
 } from "@/api/m1/store";
-import { ref, onMounted, onUnmounted, onActivated } from "vue";
+import { ref, onMounted, onUnmounted, onActivated, onDeactivated } from "vue";
 import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
 import { useStoreInfoStore } from "@/stores/storeInfo";
+import { getEventListeners } from "events";
 
 const pinia = useStoreInfoStore();
 const { getStoreInfo, setStoreInfo } = pinia;
@@ -19,28 +20,36 @@ const lastVisible = ref(null as any);
 const isEnd = ref(false);
 const isRunning = ref(false);
 const savedScrollHeight = ref(0);
+const listeningFunc = throttle(calcScrollAndGetDocs, 100);
 
 onMounted(() => {
   init();
 
   document
-    .getElementById("homeScrollEle")
-    ?.addEventListener("scroll", throttle(calcScrollAndGetDocs, 100));
+    .getElementById("mainWrapper")
+    ?.addEventListener("scroll", listeningFunc);
+  window.addEventListener("scroll", listeningFunc);
 });
 
 async function calcScrollAndGetDocs() {
-  var scrollTop = document.getElementById("homeScrollEle")?.scrollTop;
-  var scrollHeight = document.getElementById("homeScrollEle")?.scrollHeight; // added
-  var offsetHeight = document.getElementById("homeScrollEle")?.offsetHeight;
+  if (document.getElementById("homeScrollEle") === null) {
+    removeListners();
 
-  if (
-    scrollTop === undefined ||
-    scrollHeight === undefined ||
-    offsetHeight === undefined
-  )
     return;
-  savedScrollHeight.value = scrollTop;
-  if (!isRunning.value && scrollHeight - scrollTop - offsetHeight < 400) {
+  }
+  var scrollTop = document
+    .getElementById("homeScrollEle")
+    ?.getBoundingClientRect().top;
+  var wholeHeight = document
+    .getElementById("homeScrollEle")
+    ?.getBoundingClientRect().height;
+
+  console.log(scrollTop);
+  if (scrollTop === undefined || wholeHeight === undefined) return;
+
+  let tempShit = -scrollTop;
+  savedScrollHeight.value = tempShit;
+  if (!isRunning.value && wholeHeight - tempShit < 2000) {
     isRunning.value = true;
     await initAllStore();
     isRunning.value = false;
@@ -49,11 +58,19 @@ async function calcScrollAndGetDocs() {
 onActivated(() => {
   let tempLoc = window.localStorage.getItem("location");
 
-  if (document.getElementById("homeScrollEle") != null) {
+  // mobile에서는 mainWrapper가 없음
+  if (document.getElementById("mainWrapper") != null) {
     //@ts-ignore
-    document.getElementById("homeScrollEle").scrollTop =
-      savedScrollHeight.value;
+    document.getElementById("mainWrapper").scrollTop = savedScrollHeight.value;
   }
+  // mobile scroll
+  window.scrollTo(0, savedScrollHeight.value);
+  // event listner 다시 달기
+  document
+    .getElementById("mainWrapper")
+    ?.addEventListener("scroll", listeningFunc);
+  window.addEventListener("scroll", listeningFunc);
+
   if (tempLoc != null && location.value != tempLoc) {
     // 적용하기로 나온경우 && 다른 선택을 했을 시
     location.value = tempLoc;
@@ -61,17 +78,30 @@ onActivated(() => {
     initAllStore();
   }
 });
+
 function initValues() {
   tempAllStore.value = [];
   isEnd.value = false;
   isRunning.value = false;
   lastVisible.value = null;
 }
+
 onUnmounted(() => {
-  document
-    .getElementById("homeScrollEle")
-    ?.removeEventListener("scroll", (event) => {});
+  removeListners();
 });
+onDeactivated(() => {
+  removeListners();
+});
+
+function removeListners() {
+  document.getElementById("mainWrapper")?.scrollTo(0, 0);
+  window.scrollTo(0, 0);
+  document
+    .getElementById("mainWrapper")
+    ?.removeEventListener("scroll", listeningFunc);
+  window.removeEventListener("scroll", listeningFunc);
+}
+
 function init() {
   initLocation();
   initAllStore();
@@ -134,24 +164,7 @@ function onClickStore(store: IStore) {
   // window.localStorage.setItem("tempStoreInfo", JSON.stringify(store));
   router.push("/store/" + store.id);
 }
-async function getNextDoc() {
-  if (!isEnd.value) {
-    let tempResult = await getStoreInfoByField(
-      lastVisible.value,
-      "location",
-      location.value
-    );
-    tempResult.docs.map((ele, index) => {
-      const data = ele.data() as IStore;
-      data.id = ele.id;
-      tempAllStore.value.push(data);
-    });
-    lastVisible.value = tempResult.docs[tempResult.docs.length - 1];
-    if (tempResult.docs.length != 20) {
-      isEnd.value = true;
-    }
-  }
-}
+
 function locationBlur(tempLoc: string) {
   if (tempLoc.length > 20) {
     return [tempLoc.substring(0, 16), tempLoc.substring(16, tempLoc.length)];
@@ -161,17 +174,17 @@ function locationBlur(tempLoc: string) {
 </script>
 
 <template>
-  <main class="x-basic-padding w-full" id="homeScrollEle">
+  <main class="x-basic-padding" id="homeScrollEle">
     <div>
       <!-- {{ lastVisible }} -->
-      <div class="mt-4 text-lg font-bold logo">CHUUKA!</div>
+      <p class="logo text-lg font-bold py-4">CHUUKA!</p>
       <a
         href="https://www.instagram.com/chuuka.official/"
         target="_blank"
         class="h-14"
         ><img
           src="@/assets/img/banner/banner.png"
-          class="rounded-md mt-3 h-14 w-full object-cover"
+          class="rounded-md h-14 w-full object-cover"
       /></a>
       <button
         @click="onlickLocation(location)"
@@ -181,6 +194,7 @@ function locationBlur(tempLoc: string) {
         <div class="ml-3 my-auto">{{ location }}</div>
       </button>
     </div>
+
     <div class="mt-3">
       <div
         v-for="(store, index) in tempAllStore"
@@ -188,18 +202,20 @@ function locationBlur(tempLoc: string) {
         class="border-b border-neutral-200 mb-2 flex pb-2"
         @click="onClickStore(store)"
       >
-        <img
-          v-if="store.profileImage != undefined"
-          :src="store.profileImage.link"
-          class="imgWidth rounded-lg border object-cover thumnail"
-          @error="getImgUrl"
-        />
-        <img
-          v-else
-          src="@/assets/img/default/chuuka.png"
-          class="imgWidth rounded-lg border object-cover thumnail"
-          @error="getImgUrl"
-        />
+        <div class="imgContainer" v-if="store.profileImage != undefined">
+          <img
+            :src="store.profileImage.link"
+            class="rounded-lg border object-cover"
+            @error="getImgUrl"
+          />
+        </div>
+        <div class="imgContainer" v-else>
+          <img
+            src="@/assets/img/default/chuuka.png"
+            class="rounded-lg border object-cover"
+            @error="getImgUrl"
+          />
+        </div>
         <div class="text-left">
           <div class="py-1.5 px-3">
             <div class="flex text-base font-semibold">
@@ -239,9 +255,6 @@ function locationBlur(tempLoc: string) {
 </template>
 
 <style>
-.thumnail {
-  aspect-ratio: 1 / 1;
-}
 .custom_textsize {
   font-size: 10px;
 }
@@ -255,7 +268,37 @@ function locationBlur(tempLoc: string) {
   -webkit-background-clip: text;
 }
 
-.imgWidth {
-  width: 28%;
+.imgContainer {
+  position: relative;
+  width: 28%; /* The size you want */
+  padding: 0;
+  margin: 0;
+}
+.imgContainer::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%; /* The padding depends on the width, not on the height, so with a padding-bottom of 100% you will get a square */
+}
+
+.imgContainer img {
+  position: absolute; /* Take your picture out of the flow */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0; /* Make the picture taking the size of it's parent */
+  width: 100%; /* This if for the object-fit */
+  height: 100%; /* This if for the object-fit */
+  object-fit: cover; /* Equivalent of the background-size: cover; of a background-image */
+  object-position: center;
+}
+
+main {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  @apply overflow-y-auto
+  /* height: 100vh; */;
 }
 </style>

@@ -26,9 +26,7 @@ function onclickLocation(location: string) {
   router.replace({ name: "location" });
 }
 
-onMounted(() => {
-  console.log("LocationSearch");
-});
+onMounted(() => {});
 </script>
 
 <template>

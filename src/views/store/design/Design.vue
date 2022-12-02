@@ -8,13 +8,16 @@
       <div
         v-for="(product, index) in getProduct"
         :key="index"
-        class="w-full h-full imgRatio border border-mid-gray relative"
+        class="border border-mid-gray relative"
       >
-        <img
-          :src="product.photos[0].link"
-          class="w-full h-full object-cover relative"
-          @click="showModal[index] = true"
-        />
+        <div class="imgContainer">
+          <img
+            :src="product.photos[0].link"
+            class="w-full h-full object-cover relative"
+            @click="showModal[index] = true"
+          />
+        </div>
+
         <Modal
           v-if="showModal[index]"
           @close="showModal[index] = false"
@@ -101,7 +104,27 @@ function onClickUrl(url: string | undefined) {
 }
 </script>
 <style>
-.imgRatio {
-  aspect-ratio: 1/1;
+.imgContainer {
+  position: relative;
+  width: 100%; /* The size you want */
+  padding: 0;
+  margin: 0;
+}
+.imgContainer::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%; /* The padding depends on the width, not on the height, so with a padding-bottom of 100% you will get a square */
+}
+
+.imgContainer img {
+  position: absolute; /* Take your picture out of the flow */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0; /* Make the picture taking the size of it's parent */
+  width: 100%; /* This if for the object-fit */
+  height: 100%; /* This if for the object-fit */
+  object-fit: cover; /* Equivalent of the background-size: cover; of a background-image */
+  object-position: center;
 }
 </style>

@@ -129,10 +129,10 @@ function onClickXBtn() {
 </script>
 
 <template>
-  <main class="w-full font-medium relative">
+  <main class="w-full h-full font-medium">
     <Transition name="slide-location">
       <!-- 위치 -->
-      <div class="w-full z-0 absolute" v-show="innerRoute === 0">
+      <div class="w-full absolute z-0" v-show="innerRoute === 0">
         <div class="x-basic-padding mb-6">
           <div class="flex relative my-4">
             <img
@@ -206,7 +206,7 @@ function onClickXBtn() {
     <Transition name="slide-location-search">
       <!-- 위치 검색 -->
       <div
-        class="x-basic-padding mt-14 z-10 absolute w-full"
+        class="x-basic-padding mt-14 w-full absolute z-10"
         v-show="innerRoute === 1"
       >
         <div class="flex">

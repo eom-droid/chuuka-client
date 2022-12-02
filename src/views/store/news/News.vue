@@ -5,6 +5,7 @@
       v-if="isLoading"
       class="w-40 mx-auto"
     />
+
     <div
       v-for="(news, index) in getNews"
       :key="news.id"
@@ -66,6 +67,7 @@
         </div>
       </div>
     </div>
+
     <div
       class="mt-5 text-neutral-500 text-center text-base"
       v-if="getNews.length <= 0"
@@ -83,6 +85,7 @@ import { storeToRefs } from "pinia";
 import { ref, onMounted, onUnmounted, onUpdated } from "vue";
 import { throttle } from "lodash";
 import { router } from "@/router/router";
+import { connectStorageEmulator } from "@firebase/storage";
 
 const pinia = useStoreInfoStore();
 const piniaNews = useNewsStore();
@@ -90,22 +93,37 @@ const { getNews, getInitStoreId, getSavedTop } = storeToRefs(piniaNews);
 const { getStoreInfo } = storeToRefs(pinia);
 const { setInitStoreId, setNews, setSelectedNews, setSavedTop } = piniaNews;
 const isLoading = ref(true);
+const listnerFunc = throttle(scrollFunc, 300);
 
 onMounted(() => {
   document
-    .getElementById("storeScrollEle")
-    ?.addEventListener("scroll", throttle(scrollFunc, 300));
+    .getElementById("mainWrapper")
+    ?.addEventListener("scroll", listnerFunc);
+  window.addEventListener("scroll", listnerFunc);
   init();
 });
 
 onUpdated(() => {
-  setScroll();
+  if (getInitStoreId.value === getStoreInfo.value.id) {
+    setScroll();
+  }
+});
+onUnmounted(() => {
+  document.getElementById("mainWrapper")?.scrollTo(0, 0);
+  window.scrollTo(0, 0);
+  document
+    .getElementById("mainWrapper")
+    ?.removeEventListener("scroll", listnerFunc);
+  window.removeEventListener("scroll", listnerFunc);
 });
 
 function scrollFunc() {
-  var scrollTop = document.getElementById("storeScrollEle")?.scrollTop;
+  let scrollTop = document
+    .getElementById("storeScrollEle")
+    ?.getBoundingClientRect().y;
   if (scrollTop != undefined) {
-    setSavedTop(scrollTop);
+    setSavedTop(-scrollTop);
+  } else {
   }
 }
 
@@ -121,10 +139,18 @@ async function init() {
 }
 
 function setScroll() {
-  if (document.getElementById("storeScrollEle") != null) {
+  // mobile에서는 mainWrapper가 없음
+  if (document.getElementById("mainWrapper") != null) {
     //@ts-ignore
-    document.getElementById("storeScrollEle").scrollTop = getSavedTop.value;
+    document.getElementById("mainWrapper").scrollTop = getSavedTop.value;
   }
+  // mobile scroll
+  window.scrollTo(0, getSavedTop.value);
+  // event listner 다시 달기
+  document
+    .getElementById("mainWrapper")
+    ?.addEventListener("scroll", listnerFunc);
+  window.addEventListener("scroll", listnerFunc);
 }
 
 function onClickNews(selectedNews: INews) {

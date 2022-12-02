@@ -3,7 +3,7 @@ import NavigationBar from "@/components/NavigationBar.vue";
 </script>
 
 <template>
-  <div class="h-100v mx-auto">
+  <div class="mx-auto">
     <NavigationBar></NavigationBar>
     <main class="w-page-sm bg-white">
       <!-- <div class="flex text-base font-bold">
