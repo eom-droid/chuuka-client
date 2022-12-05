@@ -10,12 +10,17 @@ import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
 import { useStoreInfoStore } from "@/stores/storeInfo";
 import { getEventListeners } from "events";
+import { usePersonalStore } from "@/stores/personal";
+import { storeToRefs } from "pinia";
+import { entireRegion } from "@/constant/constant";
 
-const pinia = useStoreInfoStore();
-const { getStoreInfo, setStoreInfo } = pinia;
+const piniaStore = useStoreInfoStore();
+const piniaPersonal = usePersonalStore();
+const { setStoreInfo } = piniaStore;
+const { getSelectedLocation } = storeToRefs(piniaPersonal);
 
 const tempAllStore = ref([] as Array<IStore>);
-const location = ref("");
+const tempLocation = ref("");
 const lastVisible = ref(null as any);
 const isEnd = ref(false);
 const isRunning = ref(false);
@@ -24,7 +29,6 @@ const listeningFunc = throttle(calcScrollAndGetDocs, 100);
 
 onMounted(() => {
   init();
-
   document
     .getElementById("mainWrapper")
     ?.addEventListener("scroll", listeningFunc);
@@ -44,7 +48,6 @@ async function calcScrollAndGetDocs() {
     .getElementById("homeScrollEle")
     ?.getBoundingClientRect().height;
 
-  console.log(scrollTop);
   if (scrollTop === undefined || wholeHeight === undefined) return;
 
   let tempShit = -scrollTop;
@@ -56,8 +59,6 @@ async function calcScrollAndGetDocs() {
   }
 }
 onActivated(() => {
-  let tempLoc = window.localStorage.getItem("location");
-
   // mobile에서는 mainWrapper가 없음
   if (document.getElementById("mainWrapper") != null) {
     //@ts-ignore
@@ -71,9 +72,12 @@ onActivated(() => {
     ?.addEventListener("scroll", listeningFunc);
   window.addEventListener("scroll", listeningFunc);
 
-  if (tempLoc != null && location.value != tempLoc) {
+  if (
+    getSelectedLocation != null &&
+    tempLocation.value != getSelectedLocation.value
+  ) {
     // 적용하기로 나온경우 && 다른 선택을 했을 시
-    location.value = tempLoc;
+    tempLocation.value = getSelectedLocation.value;
     initValues();
     initAllStore();
   }
@@ -106,19 +110,18 @@ function init() {
   initLocation();
   initAllStore();
 }
-const a = ref(0);
 
 async function initAllStore() {
   if (isEnd.value) return;
   let tempResult;
   let mixedResult = [] as Array<IStore>;
-  if (location.value === "지역 전체") {
+  if (tempLocation.value === entireRegion) {
     tempResult = await getStoreInfoWithLimit(lastVisible.value);
   } else {
     tempResult = await getStoreInfoByField(
       lastVisible.value,
       "location",
-      location.value
+      tempLocation.value
     );
   }
 
@@ -143,20 +146,7 @@ function getImgUrl(e: any) {
 }
 
 function initLocation() {
-  let tempLoc = window.localStorage.getItem("location");
-  if (tempLoc != null) {
-    location.value = tempLoc;
-  } else {
-    location.value = "지역 전체";
-  }
-}
-
-function onlickLocation(location: string) {
-  if (location === "지역 전체") {
-    router.push({ name: "location" });
-  } else {
-    router.push({ name: "location" });
-  }
+  tempLocation.value = getSelectedLocation.value;
 }
 
 function onClickStore(store: IStore) {
@@ -187,11 +177,11 @@ function locationBlur(tempLoc: string) {
           class="rounded-md h-14 w-full object-cover"
       /></a>
       <button
-        @click="onlickLocation(location)"
+        @click="router.push('/location')"
         class="flex text-base w-full border border-neutral-400 rounded-md px-2 py-1 mt-3 h-10"
       >
         <img src="@/assets/img/icon/location.svg" class="w-3 my-auto" />
-        <div class="ml-3 my-auto">{{ location }}</div>
+        <div class="ml-3 my-auto">{{ tempLocation }}</div>
       </button>
     </div>
 
@@ -199,17 +189,17 @@ function locationBlur(tempLoc: string) {
       <div
         v-for="(store, index) in tempAllStore"
         :key="index"
-        class="border-b border-neutral-200 mb-2 flex pb-2"
+        class="border-b border-neutral-200 mb-2 flex pb-2 relative"
         @click="onClickStore(store)"
       >
-        <div class="imgContainer" v-if="store.profileImage != undefined">
+        <div class="homeImgContainer" v-if="store.profileImage != undefined">
           <img
             :src="store.profileImage.link"
             class="rounded-lg border object-cover"
             @error="getImgUrl"
           />
         </div>
-        <div class="imgContainer" v-else>
+        <div class="homeImgContainer" v-else>
           <img
             src="@/assets/img/default/chuuka.png"
             class="rounded-lg border object-cover"
@@ -268,19 +258,19 @@ function locationBlur(tempLoc: string) {
   -webkit-background-clip: text;
 }
 
-.imgContainer {
+.homeImgContainer {
   position: relative;
   width: 28%; /* The size you want */
   padding: 0;
   margin: 0;
 }
-.imgContainer::after {
+.homeImgContainer::after {
   content: "";
   display: block;
   padding-bottom: 100%; /* The padding depends on the width, not on the height, so with a padding-bottom of 100% you will get a square */
 }
 
-.imgContainer img {
+.homeImgContainer img {
   position: absolute; /* Take your picture out of the flow */
   top: 0;
   bottom: 0;

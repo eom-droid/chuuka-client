@@ -51,8 +51,13 @@
               </div>
 
               <div
-                class="w-full font-medium h-1/2 bg-usual-black opacity-50 text-white text-2xl flex"
+                class="w-full font-medium h-1/2 bg-usual-black opacity-70 text-white text-2xl flex relative"
               >
+                <img
+                  :src="news.photos[2].link"
+                  class="object-contain w-full h-full opacity-40 absolute"
+                  v-if="news.photos.length >= 3"
+                />
                 <span class="m-auto"> +{{ news.photos.length - 2 }} </span>
               </div>
             </div>

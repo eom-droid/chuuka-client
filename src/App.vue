@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { usePersonalStore } from "@/stores/personal";
+const pinia = usePersonalStore();
+const { init } = pinia;
+
 function isMobile() {
   if (
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -10,6 +16,10 @@ function isMobile() {
     return false;
   }
 }
+
+onMounted(() => {
+  init();
+});
 </script>
 
 <template>

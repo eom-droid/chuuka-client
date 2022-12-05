@@ -10,7 +10,7 @@
         :key="index"
         class="border border-mid-gray relative"
       >
-        <div class="imgContainer">
+        <div class="designImgContainer">
           <img
             :src="product.photos[0].link"
             class="w-full h-full object-cover relative"
@@ -104,19 +104,19 @@ function onClickUrl(url: string | undefined) {
 }
 </script>
 <style>
-.imgContainer {
+.designImgContainer {
   position: relative;
   width: 100%; /* The size you want */
   padding: 0;
   margin: 0;
 }
-.imgContainer::after {
+.designImgContainer::after {
   content: "";
   display: block;
   padding-bottom: 100%; /* The padding depends on the width, not on the height, so with a padding-bottom of 100% you will get a square */
 }
 
-.imgContainer img {
+.designImgContainer img {
   position: absolute; /* Take your picture out of the flow */
   top: 0;
   bottom: 0;

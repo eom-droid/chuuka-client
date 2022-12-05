@@ -43,19 +43,31 @@ export const routes = [
     path: "/store/:storeId/news/:newsId",
     name: "newsDetail",
     component: () => import("@/views/store/news/NewsDetail.vue"),
-    meta: { keepAlive: true },
   },
   {
     path: "/location",
     name: "location",
     component: () => import("@/views/location/Location.vue"),
     meta: { keepAlive: true },
-  },
-  {
-    path: "/location/search",
-    name: "location-search",
-    component: () => import("@/views/location/search/LocationSearch.vue"),
-    meta: { keepAlive: false },
+    children: [
+      {
+        path: "/location",
+        // component: () => import("@/views/location/setting/LocationSetting.vue"),
+        // meta: { transition: "slide-left" },
+        redirect: "/location/setting",
+        meta: { transition: "slide-left" },
+      },
+      {
+        path: "setting",
+        component: () => import("@/views/location/setting/LocationSetting.vue"),
+        meta: { transition: "slide-left" },
+      },
+      {
+        path: "search",
+        component: () => import("@/views/location/search/LocationSearch.vue"),
+        meta: { transition: "slide-right" },
+      },
+    ],
   },
 ];
 
