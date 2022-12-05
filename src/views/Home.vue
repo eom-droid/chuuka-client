@@ -244,7 +244,7 @@ function locationBlur(tempLoc: string) {
   </main>
 </template>
 
-<style>
+<style scoped>
 .custom_textsize {
   font-size: 10px;
 }

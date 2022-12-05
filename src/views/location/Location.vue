@@ -24,7 +24,7 @@ onDeactivated(() => {
   </main>
 </template>
 
-<style>
+<style scoped>
 .slide-right-leave-active,
 .slide-left-leave-active,
 .slide-right-enter-active,

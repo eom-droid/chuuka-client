@@ -67,7 +67,7 @@ function onlickLocation(location: string) {
   </main>
 </template>
 
-<style>
+<style scoped>
 .custom_textsize {
   font-size: 12px;
 }

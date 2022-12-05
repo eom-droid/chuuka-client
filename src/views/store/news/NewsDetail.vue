@@ -161,7 +161,7 @@ function onClickUrl(url: string | undefined) {
 }
 </script>
 
-<style>
+<style scoped>
 .vueperslides__arrow {
   @apply text-main text-xs;
 }

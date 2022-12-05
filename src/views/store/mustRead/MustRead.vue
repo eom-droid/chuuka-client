@@ -206,7 +206,7 @@ function iosCopyToClipboard(el: any) {
   document.body.removeChild(textarea);
 }
 </script>
-<style>
+<style scoped>
 .clipboardCss {
   opacity: 0.01;
   /* height: 1; */

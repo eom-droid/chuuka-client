@@ -100,7 +100,7 @@ function onClickBackword() {
   </div>
 </template>
 
-<style>
+<style scoped>
 .searchInput {
   @apply bg-light-gray text-base ml-2.5 w-full outline-0 border-0;
   -webkit-appearance: none;

@@ -103,7 +103,7 @@ function onClickUrl(url: string | undefined) {
   }
 }
 </script>
-<style>
+<style scoped>
 .designImgContainer {
   position: relative;
   width: 100%; /* The size you want */

@@ -33,7 +33,7 @@ import { ref } from "vue";
 const isOpen = ref(false);
 </script>
 
-<style>
+<style scoped>
 .modal-mask {
   position: fixed;
   z-index: 10000001;
