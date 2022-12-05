@@ -17,4 +17,4 @@ function onClickHome() {
   router.push({ path: "/" });
 }
 </script>
-<style></style>
+<style scoped></style>

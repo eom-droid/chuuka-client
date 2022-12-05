@@ -260,7 +260,7 @@ function onClickXBtn() {
   </main>
 </template>
 
-<style>
+<style scoped>
 /* .slide-up {
   transition: all 3s;
 }

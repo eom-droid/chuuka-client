@@ -98,7 +98,9 @@ onMounted(() => {});
   </transition>
 </template>
 
-<style>
+<style scoped>
+scoped>
+scoped>
 /* .slide-leave-active,
 .slide-enter-active {
   transition: 1s;
