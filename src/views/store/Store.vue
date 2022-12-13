@@ -5,6 +5,11 @@ import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
 import { useStoreInfoStore } from "@/stores/storeInfo";
 import { storeToRefs } from "pinia";
+import { useClipboard } from "@vueuse/core";
+import { toastSuccess } from "@/utils/toast";
+
+const source = ref("Hello");
+const { text, copy, copied, isSupported } = useClipboard({ source });
 
 const pinia = useStoreInfoStore();
 const { getStoreInfo } = storeToRefs(pinia);
@@ -127,9 +132,17 @@ function onClickHome() {
 
         <div class="flex text-base font-medium mt-3">
           <img src="@/assets/img/icon/location.svg" class="w-4 mx-0.5" />
-          <span class="text-sm ml-2 mt-1 text-left text-neutral-500">{{
-            getStoreInfo.location
-          }}</span>
+          <span
+            class="text-sm ml-2 mt-1 text-left text-neutral-500 cursor-pointer"
+            @click="
+              () => {
+                source = getStoreInfo.location;
+                copy();
+                if (copied) toastSuccess('주소를 복사했어요');
+              }
+            "
+            >{{ getStoreInfo.location }}</span
+          >
           <div class="flex mt-0.5">
             <a
               class="map-font"
