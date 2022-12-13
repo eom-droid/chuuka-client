@@ -15,7 +15,7 @@
 
     <div class="my-2"><hr /></div>
     <div class="my-3 grid gap-3">
-      <!-- 필독사항/주문방법 -->
+      <!-- 필독사항 : 주문방법 -->
       <div class="store-content-block">
         <div
           @click="mustRead.orderMethod.isOpen = !mustRead.orderMethod.isOpen"
@@ -44,36 +44,41 @@
           <div v-else class="">주문방법이 없습니다. 금방 추가할게요 ㅠㅠ.</div>
         </div>
       </div>
-      <!-- 필독사항/크기시트 -->
+
+      <!-- 필독사항 : 크기시트 -->
       <div class="store-content-block">
         <div
-          @click="mustRead.sizeAndSheet.isOpen = !mustRead.sizeAndSheet.isOpen"
+          @click="mustRead.size.isOpen = !mustRead.size.isOpen"
           class="flex justify-between cursor-pointer"
         >
-          <div>
-            {{ sections.sizeAndSheet }}
-          </div>
-          <div v-show="!mustRead.sizeAndSheet.isOpen">
+          <div>크기/맛</div>
+          <div v-show="!mustRead.size.isOpen">
             펼치기<font-awesome-icon
               icon="chevron-down"
               class="text-main ml-2"
             />
           </div>
-          <div v-show="mustRead.sizeAndSheet.isOpen">
+          <div v-show="mustRead.size.isOpen">
             접기<font-awesome-icon icon="chevron-up" class="text-main ml-2" />
           </div>
         </div>
         <div
-          v-show="mustRead.sizeAndSheet.isOpen"
-          class="my-3 text-sm whitespace-pre-line"
+          v-show="mustRead.size.isOpen"
+          class="my-3 text-sm whitespace-pre-line grid gap-2"
         >
-          <div v-if="mustRead.sizeAndSheet.content != ''">
-            {{ mustRead.sizeAndSheet.content }}
+          <div v-if="mustRead.size.content != ''" class="grid">
+            <div>{{ mustRead.size.content }}</div>
           </div>
-          <div v-else class="">크기/맛이 없습니다. 금방 추가할게요 ㅠㅠ.</div>
+          <div v-else class="">크기가 없습니다. 금방 추가할게요 ㅠㅠ.</div>
+          <hr />
+          <div v-if="mustRead.taste.content != ''" class="grid">
+            <div>{{ mustRead.taste.content }}</div>
+          </div>
+          <div v-else class="">맛 정보가 없습니다. 금방 추가할게요 ㅠㅠ.</div>
         </div>
       </div>
-      <!-- 필독사항/유의사항 -->
+
+      <!-- 필독사항 : 유의사항 -->
       <div class="store-content-block">
         <div
           @click="mustRead.notice.isOpen = !mustRead.notice.isOpen"
@@ -100,6 +105,36 @@
           <div v-else>유의사항이 없습니다. 금방 추가할게요 ㅠㅠ.</div>
         </div>
       </div>
+
+      <!-- 필독사항 : 교환 및 환불 -->
+      <div class="store-content-block">
+        <div
+          @click="
+            mustRead.exchangeRefund.isOpen = !mustRead.exchangeRefund.isOpen
+          "
+          class="flex justify-between cursor-pointer"
+        >
+          <div>{{ sections.exchangeRefund }}</div>
+          <div v-show="!mustRead.exchangeRefund.isOpen">
+            펼치기<font-awesome-icon
+              icon="chevron-down"
+              class="text-main ml-2"
+            />
+          </div>
+          <div v-show="mustRead.exchangeRefund.isOpen">
+            접기<font-awesome-icon icon="chevron-up" class="text-main ml-2" />
+          </div>
+        </div>
+        <div
+          v-show="mustRead.exchangeRefund.isOpen"
+          class="my-3 text-sm whitespace-pre-line"
+        >
+          <div v-if="mustRead.exchangeRefund.content != ''">
+            {{ mustRead.exchangeRefund.content }}
+          </div>
+          <div v-else>교환 및 환불이 없습니다. 금방 추가할게요 ㅠㅠ.</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -113,15 +148,19 @@ const { getStoreInfo } = pinia;
 const mustRead = ref({
   orderForm: { isOpen: false, content: "" },
   orderMethod: { isOpen: false, content: "" },
-  sizeAndSheet: { isOpen: false, content: "" },
+  size: { isOpen: false, content: "" },
+  taste: { isOpen: false, content: "" },
   notice: { isOpen: false, content: "" },
+  exchangeRefund: { isOpen: false, content: "" },
 });
 
 const sections = {
   orderForm: "주문양식",
   orderMethod: "주문방법",
-  sizeAndSheet: "크기/맛",
+  size: "크기",
+  taste: "맛",
   notice: "유의사항",
+  exchangeRefund: "교환 및 환불",
 };
 
 onMounted(() => {
@@ -133,10 +172,15 @@ function init() {
       mustRead.value.orderForm.content = getStoreInfo.mustRead.orderForm;
     if (getStoreInfo.mustRead.orderMethod != undefined)
       mustRead.value.orderMethod.content = getStoreInfo.mustRead.orderMethod;
-    if (getStoreInfo.mustRead.sizeAndSheet != undefined)
-      mustRead.value.sizeAndSheet.content = getStoreInfo.mustRead.sizeAndSheet;
+    if (getStoreInfo.mustRead.size != undefined)
+      mustRead.value.size.content = getStoreInfo.mustRead.size;
+    if (getStoreInfo.mustRead.taste != undefined)
+      mustRead.value.taste.content = getStoreInfo.mustRead.taste;
     if (getStoreInfo.mustRead.notice != undefined)
       mustRead.value.notice.content = getStoreInfo.mustRead.notice;
+    if (getStoreInfo.mustRead.exchangeRefund != undefined)
+      mustRead.value.exchangeRefund.content =
+        getStoreInfo.mustRead.exchangeRefund;
   }
 }
 

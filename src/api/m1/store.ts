@@ -65,8 +65,10 @@ export interface IStore {
 export interface IMustRead {
   orderForm: string;
   orderMethod: string;
-  sizeAndSheet: string;
+  size: string;
+  taste: string;
   notice: string;
+  exchangeRefund: string;
 }
 
 export interface IStoreButton {
