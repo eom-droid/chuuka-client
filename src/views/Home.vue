@@ -13,6 +13,7 @@ import { getEventListeners } from "events";
 import { usePersonalStore } from "@/stores/personal";
 import { storeToRefs } from "pinia";
 import { entireRegion } from "@/constant/constant";
+import { scrollUp } from "@/utils/common";
 
 const piniaStore = useStoreInfoStore();
 const piniaPersonal = usePersonalStore();
@@ -239,6 +240,12 @@ function locationBlur(tempLoc: string) {
     </div>
     <div class="text-neutral-400 text-base" v-show="isEnd">
       더 이상의 업체가 없습니다.
+    </div>
+    <div
+      class="top-button fixed bottom-5 right-5 bg-sub rounded-full px-3 py-1"
+      @click="scrollUp"
+    >
+      <font-awesome-icon icon="arrow-up" />
     </div>
     <div class="h-28"></div>
   </main>
