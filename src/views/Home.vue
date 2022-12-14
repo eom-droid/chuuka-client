@@ -1,102 +1,127 @@
 <script setup lang="ts">
-import { concat, throttle } from "lodash";
+import { throttle } from "lodash";
 import {
   getStoreInfoWithLimit,
   IStore,
   getStoreInfoByField,
 } from "@/api/m1/store";
-import {
-  ref,
-  onMounted,
-  getCurrentInstance,
-  onUnmounted,
-  onActivated,
-} from "vue";
+import { ref, onMounted, onUnmounted, onActivated, onDeactivated } from "vue";
 import defaultImg from "@/assets/img/logo/chuuka.png";
 import { router } from "@/router/router";
-import { reauthenticateWithRedirect } from "@firebase/auth";
+import { useStoreInfoStore } from "@/stores/storeInfo";
+import { getEventListeners } from "events";
+import { usePersonalStore } from "@/stores/personal";
+import { storeToRefs } from "pinia";
+import { entireRegion } from "@/constant/constant";
+
+const piniaStore = useStoreInfoStore();
+const piniaPersonal = usePersonalStore();
+const { setStoreInfo } = piniaStore;
+const { getSelectedLocation } = storeToRefs(piniaPersonal);
 
 const tempAllStore = ref([] as Array<IStore>);
-const location = ref("");
+const tempLocation = ref("");
 const lastVisible = ref(null as any);
 const isEnd = ref(false);
 const isRunning = ref(false);
 const savedScrollHeight = ref(0);
-const tempArray = ref([{ id: "10000" }] as Array<IStore>);
-
-//@ts-ignore
-const { proxy } = getCurrentInstance();
-const emitter = proxy.$emitter;
+const listeningFunc = throttle(calcScrollAndGetDocs, 100);
 
 onMounted(() => {
   init();
-
   document
-    .getElementById("scrollEle")
-    ?.addEventListener("scroll", throttle(calcScrollAndGetDocs, 200));
+    .getElementById("mainWrapper")
+    ?.addEventListener("scroll", listeningFunc);
+  window.addEventListener("scroll", listeningFunc);
 });
 
 async function calcScrollAndGetDocs() {
-  var scrollTop = document.getElementById("scrollEle")?.scrollTop;
-  var scrollHeight = document.getElementById("scrollEle")?.scrollHeight; // added
-  var offsetHeight = document.getElementById("scrollEle")?.offsetHeight;
+  if (document.getElementById("homeScrollEle") === null) {
+    removeListners();
 
-  if (
-    scrollTop === undefined ||
-    scrollHeight === undefined ||
-    offsetHeight === undefined
-  )
     return;
-  savedScrollHeight.value = scrollTop;
-  // console.log(scrollHeight - scrollTop - offsetHeight);
-  if (!isRunning.value && scrollHeight - scrollTop - offsetHeight < 150) {
+  }
+  var scrollTop = document
+    .getElementById("homeScrollEle")
+    ?.getBoundingClientRect().top;
+  var wholeHeight = document
+    .getElementById("homeScrollEle")
+    ?.getBoundingClientRect().height;
+
+  if (scrollTop === undefined || wholeHeight === undefined) return;
+
+  let tempShit = -scrollTop;
+  savedScrollHeight.value = tempShit;
+  if (!isRunning.value && wholeHeight - tempShit < 2000) {
     isRunning.value = true;
     await initAllStore();
     isRunning.value = false;
   }
 }
 onActivated(() => {
-  let tempLoc = window.localStorage.getItem("location");
-
-  if (document.getElementById("scrollEle") != null) {
+  // mobile에서는 mainWrapper가 없음
+  if (document.getElementById("mainWrapper") != null) {
     //@ts-ignore
-    document.getElementById("scrollEle").scrollTop = savedScrollHeight.value;
+    document.getElementById("mainWrapper").scrollTop = savedScrollHeight.value;
   }
-  if (tempLoc != null && location.value != tempLoc) {
+  // mobile scroll
+  window.scrollTo(0, savedScrollHeight.value);
+  // event listner 다시 달기
+  document
+    .getElementById("mainWrapper")
+    ?.addEventListener("scroll", listeningFunc);
+  window.addEventListener("scroll", listeningFunc);
+
+  if (
+    getSelectedLocation != null &&
+    tempLocation.value != getSelectedLocation.value
+  ) {
     // 적용하기로 나온경우 && 다른 선택을 했을 시
-    location.value = tempLoc;
+    tempLocation.value = getSelectedLocation.value;
     initValues();
     initAllStore();
   }
 });
+
 function initValues() {
   tempAllStore.value = [];
   isEnd.value = false;
   isRunning.value = false;
   lastVisible.value = null;
 }
+
 onUnmounted(() => {
-  document
-    .getElementById("scrollEle")
-    ?.removeEventListener("scroll", (event) => {});
+  removeListners();
 });
+onDeactivated(() => {
+  removeListners();
+});
+
+function removeListners() {
+  document.getElementById("mainWrapper")?.scrollTo(0, 0);
+  window.scrollTo(0, 0);
+  document
+    .getElementById("mainWrapper")
+    ?.removeEventListener("scroll", listeningFunc);
+  window.removeEventListener("scroll", listeningFunc);
+}
+
 function init() {
   initLocation();
   initAllStore();
 }
-const a = ref(0);
 
 async function initAllStore() {
   if (isEnd.value) return;
   let tempResult;
   let mixedResult = [] as Array<IStore>;
-  if (location.value === "지역 전체") {
+  if (tempLocation.value === entireRegion) {
     tempResult = await getStoreInfoWithLimit(lastVisible.value);
   } else {
     tempResult = await getStoreInfoByField(
       lastVisible.value,
       "location",
-      location.value
+      tempLocation.value
     );
   }
 
@@ -121,44 +146,15 @@ function getImgUrl(e: any) {
 }
 
 function initLocation() {
-  let tempLoc = window.localStorage.getItem("location");
-  if (tempLoc != null) {
-    location.value = tempLoc;
-  } else {
-    location.value = "지역 전체";
-  }
+  tempLocation.value = getSelectedLocation.value;
 }
 
-function onlickLocation(location: string) {
-  if (location === "지역 전체") {
-    router.push({ name: "location" });
-  } else {
-    router.push({ name: "location" });
-  }
-}
-
-function onClickEachStore(store: IStore) {
-  window.localStorage.setItem("tempStoreInfo", JSON.stringify(store));
+function onClickStore(store: IStore) {
+  setStoreInfo(store);
+  // window.localStorage.setItem("tempStoreInfo", JSON.stringify(store));
   router.push("/store/" + store.id);
 }
-async function getNextDoc() {
-  if (!isEnd.value) {
-    let tempResult = await getStoreInfoByField(
-      lastVisible.value,
-      "location",
-      location.value
-    );
-    tempResult.docs.map((ele, index) => {
-      const data = ele.data() as IStore;
-      data.id = ele.id;
-      tempAllStore.value.push(data);
-    });
-    lastVisible.value = tempResult.docs[tempResult.docs.length - 1];
-    if (tempResult.docs.length != 20) {
-      isEnd.value = true;
-    }
-  }
-}
+
 function locationBlur(tempLoc: string) {
   if (tempLoc.length > 20) {
     return [tempLoc.substring(0, 16), tempLoc.substring(16, tempLoc.length)];
@@ -168,45 +164,48 @@ function locationBlur(tempLoc: string) {
 </script>
 
 <template>
-  <main class="customWidth px-2 overflow-auto" id="scrollEle">
-    <div class="custom_shadow pb-4">
+  <main class="x-basic-padding" id="homeScrollEle">
+    <div>
       <!-- {{ lastVisible }} -->
-      <div class="mt-4 text-lg font-bold logo">CHUUKA!</div>
+      <p class="logo text-lg font-bold py-4">CHUUKA!</p>
       <a
         href="https://www.instagram.com/chuuka.official/"
         target="_blank"
         class="h-14"
         ><img
           src="@/assets/img/banner/banner.png"
-          class="rounded-md mt-3 h-14 w-full object-cover"
+          class="rounded-md h-14 w-full object-cover"
       /></a>
       <button
-        @click="onlickLocation(location)"
-        class="flex text-base w-full border border-neutral-400 rounded-md px-2 py-1 mt-3 h-8"
+        @click="router.push('/location')"
+        class="flex text-base w-full border border-neutral-400 rounded-md px-2 py-1 mt-3 h-10"
       >
         <img src="@/assets/img/icon/location.svg" class="w-3 my-auto" />
-        <div class="ml-3">{{ location }}</div>
+        <div class="ml-3 my-auto">{{ tempLocation }}</div>
       </button>
     </div>
-    <div class="mt-5">
+
+    <div class="mt-3">
       <div
         v-for="(store, index) in tempAllStore"
         :key="index"
-        class="border-b border-neutral-200 mb-2 flex pb-2"
-        @click="onClickEachStore(store)"
+        class="border-b border-neutral-200 mb-2 flex pb-2 relative"
+        @click="onClickStore(store)"
       >
-        <img
-          v-if="store.profileImage != undefined"
-          :src="store.profileImage.link"
-          class="imgWidth rounded-lg border object-cover thumnail"
-          @error="getImgUrl"
-        />
-        <img
-          v-else
-          src="@/assets/img/default/chuuka.png"
-          class="imgWidth rounded-lg border object-cover thumnail"
-          @error="getImgUrl"
-        />
+        <div class="homeImgContainer" v-if="store.profileImage != undefined">
+          <img
+            :src="store.profileImage.link"
+            class="rounded-lg border object-cover"
+            @error="getImgUrl"
+          />
+        </div>
+        <div class="homeImgContainer" v-else>
+          <img
+            src="@/assets/img/default/chuuka.png"
+            class="rounded-lg border object-cover"
+            @error="getImgUrl"
+          />
+        </div>
         <div class="text-left">
           <div class="py-1.5 px-3">
             <div class="flex text-base font-semibold">
@@ -229,7 +228,7 @@ function locationBlur(tempLoc: string) {
               <div
                 v-for="(hashTag, index) in store.hashTags"
                 :key="index"
-                class="custom_textsize border border-color-main px-1.5 py-0.5 rounded-md mr-1.5"
+                class="custom_textsize border border-main px-1.5 py-0.5 rounded-md mr-1.5"
               >
                 #{{ hashTag }}
               </div>
@@ -238,19 +237,14 @@ function locationBlur(tempLoc: string) {
         </div>
       </div>
     </div>
-    <div class="text-neutral-400 text-base mb-2" v-show="isEnd">
+    <div class="text-neutral-400 text-base" v-show="isEnd">
       더 이상의 업체가 없습니다.
     </div>
+    <div class="h-28"></div>
   </main>
 </template>
 
-<style>
-.thumnail {
-  aspect-ratio: 1 / 1;
-}
-.custom_shadow {
-  box-shadow: 0 4px 2px -1px rgba(0, 0, 0, 0.1);
-}
+<style scoped>
 .custom_textsize {
   font-size: 10px;
 }
@@ -264,17 +258,37 @@ function locationBlur(tempLoc: string) {
   -webkit-background-clip: text;
 }
 
-@media (max-width: 448px) {
-  .customWidth {
-    width: 100vw;
-  }
+.homeImgContainer {
+  position: relative;
+  width: 28%; /* The size you want */
+  padding: 0;
+  margin: 0;
 }
-@media (min-width: 448px) {
-  .customWidth {
-    width: 448px;
-  }
+.homeImgContainer::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%; /* The padding depends on the width, not on the height, so with a padding-bottom of 100% you will get a square */
 }
-.imgWidth {
-  width: 28%;
+
+.homeImgContainer img {
+  position: absolute; /* Take your picture out of the flow */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0; /* Make the picture taking the size of it's parent */
+  width: 100%; /* This if for the object-fit */
+  height: 100%; /* This if for the object-fit */
+  object-fit: cover; /* Equivalent of the background-size: cover; of a background-image */
+  object-position: center;
+}
+
+main {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  @apply overflow-y-auto
+  /* height: 100vh; */;
 }
 </style>

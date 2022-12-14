@@ -47,7 +47,7 @@ function onlickLocation(location: string) {
 </script>
 
 <template>
-  <main class="customWidth">
+  <main class="">
     <div class="flex">
       <img
         src="@/assets/img/icon/backword.svg"
@@ -67,46 +67,22 @@ function onlickLocation(location: string) {
   </main>
 </template>
 
-<style>
-.instagram {
-  color: rgba(4, 151, 249, 1);
-}
+<style scoped>
 .custom_textsize {
   font-size: 12px;
 }
-.custom_textarea {
-  border: none;
-  overflow: auto;
-  outline: none;
 
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-
-  resize: none; /*remove the resize handle on the bottom right*/
-}
 .logo {
   font-style: italic;
   font-family: "Montserrat", sans-serif;
 }
 
 .mapFont {
-  @apply instagram ml-2 mt-auto inline-block align-bottom w-10 text-base;
+  @apply text-usual-blue ml-2 mt-auto inline-block align-bottom w-10 text-base;
 }
 
 .btnFont {
   font-family: "Noto Sans KR", Avenir;
-}
-
-@media (max-width: 448px) {
-  .customWidth {
-    width: 100vw;
-  }
-}
-@media (min-width: 448px) {
-  .customWidth {
-    width: 448px;
-  }
 }
 
 .locationBtn {

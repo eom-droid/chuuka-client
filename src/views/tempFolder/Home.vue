@@ -3,11 +3,11 @@ import NavigationBar from "@/components/NavigationBar.vue";
 </script>
 
 <template>
-  <div class="h-100v mx-auto overflow-auto customWidth">
+  <div class="mx-auto">
     <NavigationBar></NavigationBar>
     <main class="w-page-sm bg-white">
       <!-- <div class="flex text-base font-bold">
-        <div class="mt-3 p-1 border-b-4 border-color-main w-16">홈</div>
+        <div class="mt-3 p-1 border-b-4 border-main w-16">홈</div>
         <div class="mt-3 p-1 ml-8">컨텐츠</div>
       </div> -->
       <div class="relative flex justify-center align-middle">
@@ -108,7 +108,7 @@ import NavigationBar from "@/components/NavigationBar.vue";
 }
 
 .mainIcon {
-  @apply border border-color-main p-2.5 rounded-md;
+  @apply border border-main p-2.5 rounded-md;
 }
 .mainIconDisable {
   @apply p-2.5 rounded-md;
@@ -121,16 +121,5 @@ import NavigationBar from "@/components/NavigationBar.vue";
 
 .subTitle {
   @apply text-base font-normal mt-4;
-}
-
-@media (max-width: 448px) {
-  .customWidth {
-    width: 100vw;
-  }
-}
-@media (min-width: 448px) {
-  .customWidth {
-    width: 448px;
-  }
 }
 </style>

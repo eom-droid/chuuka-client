@@ -1,7 +1,34 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { usePersonalStore } from "@/stores/personal";
+const pinia = usePersonalStore();
+const { init } = pinia;
+
+function isMobile() {
+  if (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+onMounted(() => {
+  init();
+});
+</script>
 
 <template>
-  <div class="bg-color-main h-100v flex">
+  <router-view v-slot="{ Component }" v-if="isMobile()">
+    <keep-alive :include="['Home', 'Location']" :max="10">
+      <component :is="Component" />
+    </keep-alive>
+  </router-view>
+  <div v-else class="flex w-full h-full relative bg-main">
     <div class="w-1/12 disnone"></div>
     <div class="mx-auto mt-20 disnone">
       <div class="text-xl text-left mb-auto font-semibold">
@@ -31,7 +58,7 @@
             >입점안내</a
           >
         </div>
-        <div class="text-color-sub font-light">
+        <div class="text-sub font-light">
           <div class="mt-3">
             <span>(주)추카</span>
             <span class="ml-3">대표 : 송준호</span>
@@ -45,15 +72,17 @@
         </div>
       </div>
     </div>
-
-    <router-view
-      v-slot="{ Component }"
-      class="cusShadow w-page-sm bg-white h-100v"
+    <div
+      class="cusShadow w-page-sm bg-white customWidth mx-auto relative h-100v overflow-y-auto noScroll"
+      id="mainWrapper"
     >
-      <keep-alive include="Home,Location" :max="10">
-        <component :is="Component" />
-      </keep-alive>
-    </router-view>
+      <router-view v-slot="{ Component }" class="">
+        <keep-alive :include="['Home', 'Location']" :max="10">
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
+    </div>
+
     <div class="w-1/12 disnone"></div>
   </div>
 </template>
@@ -62,9 +91,20 @@
 .cusShadow {
   box-shadow: 0 0 22px -2px rgb(0 0 0 / 75%);
 }
-@media (max-width: 900px) {
+@media (max-width: 950px) {
   .disnone {
     display: none;
+  }
+}
+
+@media (max-width: 448px) {
+  .customWidth {
+    width: 100vw;
+  }
+}
+@media (min-width: 448px) {
+  .customWidth {
+    width: 448px;
   }
 }
 </style>

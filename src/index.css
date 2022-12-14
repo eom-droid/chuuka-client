@@ -4,31 +4,56 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 컴포넌트 */
+.btn-main {
+  @apply bg-main text-white w-full mt-3 font-semibold  rounded-md;
+  height: 48px;
+}
+.btn-main-short {
+  @apply bg-main text-white w-full mt-3 font-semibold h-11 rounded-md;
+}
+
+.btn-sub {
+  @apply bg-sub text-main w-full mt-3 font-semibold rounded-md;
+  height: 48px;
+}
+.btn-sub-short {
+  @apply bg-sub text-main w-full mt-3 font-semibold h-11 rounded-md;
+}
+
 /* 페이지 여백 조절 */
-/* 기존 md:px-0 제거 */
 .w-page-sm {
   @apply max-w-md;
 }
-.w-page-md {
-  @apply max-w-2xl px-2 md:px-0;
+
+.x-basic-padding {
+  @apply px-3;
 }
-.w-page-lg {
-  @apply max-w-4xl px-2 md:px-0;
-}
-.w-page-xl {
-  @apply max-w-6xl px-2 md:px-0;
-}
-.w-page-flex {
-  @apply max-w-2xl px-2 md:px-0;
-  @apply xl:max-w-4xl;
+.x-basic-margin {
+  @apply mx-3;
 }
 
-/* 애니메이션 */
-.anime-pop {
-  @apply transition duration-300 ease-in-out transform hover:-translate-y-0.5 hover:scale-125;
+html {
+  height: 100%;
 }
-.animate-css {
-  --animate-duration: 1s;
+body {
+  min-height: 100%;
+}
+
+main {
+  @apply overflow-x-hidden noScroll w-full;
+}
+
+.noScroll::-webkit-scrollbar {
+  display: none;
+}
+.noscroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+body {
+  padding: 0;
+  margin: 0;
 }
 
 /* body */
@@ -36,6 +61,15 @@ body {
   @apply bg-white text-font; /* 라이트모드 */
   overscroll-behavior: none;
   -webkit-user-select: none;
+  width: 100%;
+  /* position: fixed;
+  overflow: hidden; */
+  /* height: 100%;
+  margin: 0px; */
+  padding: constant(safe-area-inset-top) constant(safe-area-inset-right)
+    constant(safe-area-inset-bottom) constant(safe-area-inset-left);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 main {
@@ -59,7 +93,18 @@ hr {
   -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent; /* for removing the highlight */
+  height: 100%;
 }
+
+#app {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -78,6 +123,21 @@ hr {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+#app {
+  /* overflow: auto; */
+}
+#app::-webkit-scrollbar {
+  width: 8px;
+}
+#app::-webkit-scrollbar-thumb {
+  background-color: grey;
+  border-radius: 10px;
+}
+#app::-webkit-scrollbar-track {
+  background-color: light-grey;
+}
+
 body {
   -ms-overflow-style: none;
 }

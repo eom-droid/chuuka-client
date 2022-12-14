@@ -29,7 +29,6 @@ const cakeResultList = ref([]);
 
 // const storeResultList = computed(() => {
 //   debounce(function () {
-//     console.log(keyword.value);
 //   }, 1000);
 // });
 
@@ -42,7 +41,7 @@ function changeKeyword(e: any) {
 
 <template>
   <main class="w-page-sm bg-white">
-    <div class="mt-4 customWidth px-2">
+    <div class="mt-4  px-2">
       <div class="flex">
         <img
           src="@/assets/img/icon/backword.svg"
@@ -72,8 +71,8 @@ function changeKeyword(e: any) {
         가게 검색결과 {{ storeResultList.length }}개
       </div>
       <div>
-        <div v-for="eachStore in storeResultList">
-          {{ eachStore.name }}
+        <div v-for="store in storeResultList">
+          {{ store.name }}
         </div>
       </div>
     </div>
@@ -85,14 +84,5 @@ function changeKeyword(e: any) {
 </template>
 
 <style scoped>
-@media (max-width: 448px) {
-  .customWidth {
-    width: 100vw;
-  }
-}
-@media (min-width: 448px) {
-  .customWidth {
-    width: 448px;
-  }
-}
+
 </style> -->
