@@ -207,6 +207,7 @@ function onClickHome() {
             class="w-full h-full py-2.5"
             :class="innerRoute === 0 ? 'border-b-main border-b-4' : ''"
             @click="innerRoute = 0"
+            replace
           >
             가게 소개
           </router-link>
@@ -215,6 +216,7 @@ function onClickHome() {
             class="w-full h-full py-2.5"
             :class="innerRoute === 1 ? 'border-b-main border-b-4' : ''"
             @click="innerRoute = 1"
+            replace
           >
             디자인
           </router-link>
