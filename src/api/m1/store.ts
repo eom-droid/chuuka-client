@@ -16,10 +16,12 @@ import {
   DocumentData,
   QueryDocumentSnapshot,
   startAfter,
+  endBefore,
 } from "firebase/firestore";
 import { firebaseApp, firestore } from "@/plugins/firebase.js";
 import { firebaseDevPath } from "../tempdev";
 import { IPhoto } from "./photo";
+import { cloneDeep, random } from "lodash";
 
 // export interface IOpenAndCloseHour {
 //   open: string;
@@ -106,6 +108,7 @@ export async function getAllStoreInfo(): Promise<Array<IStore>> {
   return result;
 }
 
+// 2022-12-15 이후 getStoreInfoWithRandomLimit() 함수로 대체됨
 export async function getStoreInfoWithLimit(
   document: QueryDocumentSnapshot<DocumentData> | null
 ): Promise<QuerySnapshot<DocumentData>> {
@@ -124,6 +127,89 @@ export async function getStoreInfoWithLimit(
   const tempInfos = await getDocs(q);
 
   return tempInfos;
+}
+
+interface IStoreInfoWithRandomLimit {
+  result: QuerySnapshot<DocumentData>;
+  random: number;
+  isReachedEnd: boolean;
+  isEnd: boolean;
+  isStartedZero: boolean;
+}
+export async function getStoreInfoWithRandomLimit(
+  document: QueryDocumentSnapshot<DocumentData> | null,
+  random: number,
+  isReachedEnd: boolean,
+  isStartedZero: boolean
+): Promise<IStoreInfoWithRandomLimit> {
+  let q;
+  if (random === -1) random = Math.random();
+  const NUMBER = 20;
+  let isEnd = false;
+
+  if (!isReachedEnd) {
+    if (document === null) {
+      // 처음
+      q = query(
+        collection(firestore, firebaseDevPath + "store"),
+        orderBy("random"),
+        startAt(random),
+        limit(NUMBER)
+      );
+    } else {
+      // 이어서
+      q = query(
+        collection(firestore, firebaseDevPath + "store"),
+        // startAfter(document),
+        orderBy("random"),
+        startAfter(document),
+        limit(NUMBER)
+      );
+    }
+  } else {
+    if (!isStartedZero) {
+      // 도달 후 처음
+      isStartedZero = true;
+      q = query(
+        collection(firestore, firebaseDevPath + "store"),
+        // startAfter(document),
+        orderBy("random"),
+        endBefore(random),
+        limit(NUMBER)
+      );
+    } else {
+      // 도달 후 이어서
+      q = query(
+        collection(firestore, firebaseDevPath + "store"),
+        orderBy("random"),
+        startAfter(document),
+        endBefore(random),
+        limit(NUMBER)
+      );
+    }
+  }
+
+  const result = await getDocs(q);
+  const length = result.docs.length;
+  // 테스트
+  // console.log(length);
+  // await result.docs.map((item) => console.log(item.data().random));
+  // console.log("random", random);
+
+  if (length !== NUMBER) {
+    if (!isReachedEnd) {
+      // 전체문서의 마지막 커서에 도달
+      isReachedEnd = true;
+    } else isEnd = true;
+  }
+
+  return {
+    result: result,
+    random: random,
+    isReachedEnd: isReachedEnd,
+    isEnd: isEnd,
+    isStartedZero: isStartedZero,
+  };
 }
 
 export async function getStoreInfoByField(

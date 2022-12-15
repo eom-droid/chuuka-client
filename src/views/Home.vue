@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { throttle } from "lodash";
 import {
-  getStoreInfoWithLimit,
+  getStoreInfoWithRandomLimit,
   IStore,
   getStoreInfoByField,
 } from "@/api/m1/store";
@@ -112,18 +112,35 @@ function init() {
   initAllStore();
 }
 
+const random = ref(-1);
+const isReachedEnd = ref(false);
+const isStartedZero = ref(false);
+
 async function initAllStore() {
   if (isEnd.value) return;
   let tempResult;
   let mixedResult = [] as Array<IStore>;
   if (tempLocation.value === entireRegion) {
-    tempResult = await getStoreInfoWithLimit(lastVisible.value);
+    const queryResult = await getStoreInfoWithRandomLimit(
+      lastVisible.value,
+      random.value,
+      isReachedEnd.value,
+      isStartedZero.value
+    );
+    random.value = queryResult.random;
+    isReachedEnd.value = queryResult.isReachedEnd;
+    tempResult = queryResult.result;
+    isEnd.value = queryResult.isEnd;
+    isStartedZero.value = queryResult.isStartedZero;
   } else {
     tempResult = await getStoreInfoByField(
       lastVisible.value,
       "location",
       tempLocation.value
     );
+    if (tempResult.docs.length != 20) {
+      isEnd.value = true;
+    }
   }
 
   tempResult.docs.map((ele) => {
@@ -137,9 +154,6 @@ async function initAllStore() {
   mixedResult.sort(() => Math.random() - 0.5);
   // 이어붙이기
   tempAllStore.value = tempAllStore.value.concat(mixedResult);
-  if (tempResult.docs.length != 20) {
-    isEnd.value = true;
-  }
 }
 
 function getImgUrl(e: any) {
