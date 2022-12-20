@@ -39,19 +39,18 @@
             </div>
           </template>
           <template v-slot:bottom-btn>
-            <button
+            <a
               class="text-lg justify-center flex btn-main"
-              @click="
-                onClickUrl(
-                  'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk + '/chat'
-                )
+              target="_blank"
+              :href="
+                'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk + '/chat'
               "
             >
               <div class="flex my-auto">
                 <img src="@/assets/img/icon/kakao.svg" class="w-7 mr-4" />
                 <span>카카오 채널 상담하기</span>
               </div>
-            </button>
+            </a>
           </template>
         </Modal>
       </div>
