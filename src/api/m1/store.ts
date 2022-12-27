@@ -55,6 +55,7 @@ export interface IStore {
   hashTags: Array<string>;
   // goUrl: Array<IUrl>;
   storeButtons: Array<IStoreButton>;
+  joinLevel: number;
   locationUrl: {
     kakao: string;
     naver: string;
@@ -92,17 +93,17 @@ export async function getStoreInfoById(id: string): Promise<IStore | null> {
   return resultStore;
 }
 
-export async function getAllStoreInfo(): Promise<Array<IStore>> {
-  let result = [] as Array<IStore>;
-  const q = collection(firestore, firebaseDevPath + "store");
-  const tempInfos = await getDocs(q);
-  tempInfos.docs.map((ele) => {
-    let data = ele.data() as IStore;
-    data.id = ele.id;
-    result.push(data);
-  });
-  return result;
-}
+// export async function getAllStoreInfo(): Promise<Array<IStore>> {
+//   let result = [] as Array<IStore>;
+//   const q = collection(firestore, firebaseDevPath + "store");
+//   const tempInfos = await getDocs(q);
+//   tempInfos.docs.map((ele) => {
+//     let data = ele.data() as IStore;
+//     data.id = ele.id;
+//     result.push(data);
+//   });
+//   return result;
+// }
 
 export async function getStoreInfoWithLimit(
   document: QueryDocumentSnapshot<DocumentData> | null
@@ -113,10 +114,15 @@ export async function getStoreInfoWithLimit(
     q = query(
       collection(firestore, firebaseDevPath + "store"),
       startAfter(document),
+      where("joinLevel", ">=", 1),
       limit(20)
     );
   } else {
-    q = query(collection(firestore, firebaseDevPath + "store"), limit(20));
+    q = query(
+      collection(firestore, firebaseDevPath + "store"),
+      limit(20),
+      where("joinLevel", ">=", 1)
+    );
   }
 
   const tempInfos = await getDocs(q);
@@ -156,17 +162,17 @@ export async function getStoreInfoByField(
 
 //UPDATE
 
-export async function updateStoreInfo(storeId: string, updateObject: object) {
-  await updateDoc(
-    doc(
-      //@ts-ignore
-      firestore,
-      firebaseDevPath + "store",
-      storeId
-    ),
-    updateObject
-  );
-}
+// export async function updateStoreInfo(storeId: string, updateObject: object) {
+//   await updateDoc(
+//     doc(
+//       //@ts-ignore
+//       firestore,
+//       firebaseDevPath + "store",
+//       storeId
+//     ),
+//     updateObject
+//   );
+// }
 
 // export async function getStoreLandingInfoByLoc(
 //   document: QueryDocumentSnapshot<DocumentData>,
