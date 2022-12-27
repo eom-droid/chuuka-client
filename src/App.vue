@@ -6,11 +6,6 @@ const pinia = usePersonalStore();
 const { init } = pinia;
 
 function isMobile() {
-  console.log(
-    /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    )
-  );
   if (
     /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
@@ -59,9 +54,9 @@ onMounted(() => {
             target="_blank"
             >회사소개</a
           >
-          <!-- <a class="ml-7" href="https://x170w.channel.io/lounge" target="_blank"
+          <a class="ml-7" href="https://x170w.channel.io/lounge" target="_blank"
             >입점안내</a
-          > -->
+          >
         </div>
         <div class="text-sub font-light">
           <div class="mt-3">
