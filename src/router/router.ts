@@ -22,13 +22,15 @@ export const routes = [
     children: [
       {
         path: "/store/:storeId",
-        component: () =>
-          import("@/views/store/tempIntroduction/Introduction.vue"),
+        component: () => import("@/views/store/Introduction/Introduction.vue"),
       },
       {
         path: "introduction",
-        component: () =>
-          import("@/views/store/tempIntroduction/Introduction.vue"),
+        component: () => import("@/views/store/Introduction/Introduction.vue"),
+      },
+      {
+        path: "mustRead",
+        component: () => import("@/views/store/mustRead/MustRead.vue"),
       },
       // {
       //   path: "/store/:storeId",
@@ -42,10 +44,10 @@ export const routes = [
       //   path: "news",
       //   component: () => import("@/views/store/news/News.vue"),
       // },
-      {
-        path: "design",
-        component: () => import("@/views/store/design/Design.vue"),
-      },
+      // {
+      //   path: "design",
+      //   component: () => import("@/views/store/design/Design.vue"),
+      // },
     ],
   },
   {

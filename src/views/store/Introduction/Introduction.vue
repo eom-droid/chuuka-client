@@ -11,10 +11,18 @@
   </div>
 </template>
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { useStoreInfoStore } from "@/stores/storeInfo";
+import { storeToRefs } from "pinia";
+import { router } from "@/router/router";
+onMounted(() => {
+  if (getStoreInfo.value.isJoined && getStoreInfo.value.isManaged) {
+    router.replace("/store/" + getStoreInfo.value.id + "/mustRead");
+  }
+});
 
 const pinia = useStoreInfoStore();
-const { getStoreInfo } = pinia;
+const { getStoreInfo } = storeToRefs(pinia);
 </script>
 <style scoped>
 .clipboardCss {

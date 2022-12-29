@@ -27,6 +27,8 @@ const isRunning = ref(false);
 const savedScrollHeight = ref(0);
 const listeningFunc = throttle(calcScrollAndGetDocs, 100);
 
+const checkedNotJoining = ref(false);
+
 onMounted(() => {
   init();
   document
@@ -116,12 +118,16 @@ async function initAllStore() {
   let tempResult;
   let mixedResult = [] as Array<IStore>;
   if (tempLocation.value === entireRegion) {
-    tempResult = await getStoreInfoWithLimit(lastVisible.value);
+    tempResult = await getStoreInfoWithLimit(
+      lastVisible.value,
+      checkedNotJoining.value
+    );
   } else {
     tempResult = await getStoreInfoByField(
       lastVisible.value,
       "location",
-      tempLocation.value
+      tempLocation.value,
+      checkedNotJoining.value
     );
   }
 
@@ -161,6 +167,15 @@ function locationBlur(tempLoc: string) {
   }
   return [tempLoc];
 }
+
+async function onChangeIsJoining(checkBoxEvent: Event) {
+  //@ts-ignore
+  checkBoxEvent.target.disabled = true;
+  //@ts-ignore
+  setTimeout(() => (checkBoxEvent.target.disabled = false), 1200);
+  initValues();
+  await initAllStore();
+}
 </script>
 
 <template>
@@ -183,16 +198,35 @@ function locationBlur(tempLoc: string) {
         <img src="@/assets/img/icon/location.svg" class="w-3 my-auto" />
         <div class="ml-3 my-auto">{{ tempLocation }}</div>
       </button>
+      <div class="flex py-4">
+        <input
+          type="checkbox"
+          id="isJoining"
+          class="w-6 h-6 rounded-full"
+          v-model="checkedNotJoining"
+          @change="onChangeIsJoining($event)"
+        />
+        <label for="isJoining" class="text-base font-normal pl-2.5"
+          >추카 미입점 업체 보기</label
+        >
+      </div>
     </div>
 
-    <div class="mt-3">
+    <div class="mt-1">
       <div
         v-for="(store, index) in tempAllStore"
         :key="index"
         class="border-b border-neutral-200 mb-2 flex pb-2 relative"
         @click="onClickStore(store)"
       >
-        <div class="homeImgContainer" v-if="store.profileImage != undefined">
+        <div
+          class="homeImgContainer"
+          v-if="
+            store.profileImage != undefined &&
+            store.profileImage.link != '' &&
+            store.isJoined
+          "
+        >
           <img
             :src="store.profileImage.link"
             class="rounded-lg border object-cover"
@@ -200,11 +234,13 @@ function locationBlur(tempLoc: string) {
           />
         </div>
         <div class="homeImgContainer" v-else>
-          <img
-            src="@/assets/img/default/chuuka.png"
-            class="rounded-lg border object-cover"
-            @error="getImgUrl"
-          />
+          <div class="rounded-lg w-full h-full bg-light-gray flex">
+            <img
+              src="@/assets/img/default/chuuka_bold_gray.svg"
+              class="rounded-lg w-4/5 m-auto"
+              @error="getImgUrl"
+            />
+          </div>
         </div>
         <div class="text-left">
           <div class="py-1.5 px-3">
@@ -270,7 +306,19 @@ function locationBlur(tempLoc: string) {
   padding-bottom: 100%; /* The padding depends on the width, not on the height, so with a padding-bottom of 100% you will get a square */
 }
 
-.homeImgContainer img {
+.homeImgContainer > img {
+  position: absolute; /* Take your picture out of the flow */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0; /* Make the picture taking the size of it's parent */
+  width: 100%; /* This if for the object-fit */
+  height: 100%; /* This if for the object-fit */
+  object-fit: cover; /* Equivalent of the background-size: cover; of a background-image */
+  object-position: center;
+}
+
+.homeImgContainer div {
   position: absolute; /* Take your picture out of the flow */
   top: 0;
   bottom: 0;

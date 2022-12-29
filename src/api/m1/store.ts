@@ -16,6 +16,7 @@ import {
   DocumentData,
   QueryDocumentSnapshot,
   startAfter,
+  QueryConstraint,
 } from "firebase/firestore";
 import { firebaseApp, firestore } from "@/plugins/firebase.js";
 import { firebaseDevPath } from "../tempdev";
@@ -55,7 +56,9 @@ export interface IStore {
   hashTags: Array<string>;
   // goUrl: Array<IUrl>;
   storeButtons: Array<IStoreButton>;
-  joinLevel: number;
+  // joinLevel: number;
+  isJoined: boolean;
+  isManaged: boolean;
   locationUrl: {
     kakao: string;
     naver: string;
@@ -66,8 +69,10 @@ export interface IStore {
 export interface IMustRead {
   orderForm: string;
   orderMethod: string;
-  sizeAndSheet: string;
+  size: string;
+  taste: string;
   notice: string;
+  exchangeRefund: string;
 }
 
 export interface IStoreButton {
@@ -106,54 +111,50 @@ export async function getStoreInfoById(id: string): Promise<IStore | null> {
 // }
 
 export async function getStoreInfoWithLimit(
-  document: QueryDocumentSnapshot<DocumentData> | null
+  document: QueryDocumentSnapshot<DocumentData> | null,
+  filterNotJoining: boolean
 ): Promise<QuerySnapshot<DocumentData>> {
   let q;
-
+  let constraints = [] as QueryConstraint[];
+  // 추카 가입 여부 체크에 따라
+  if (!filterNotJoining) {
+    constraints.push(where("isJoined", "==", true));
+  }
   if (document != null) {
-    q = query(
-      collection(firestore, firebaseDevPath + "store"),
-      startAfter(document),
-      where("joinLevel", ">=", 1),
-      limit(20)
-    );
-  } else {
-    q = query(
-      collection(firestore, firebaseDevPath + "store"),
-      limit(20),
-      where("joinLevel", ">=", 1)
-    );
+    constraints.push(startAfter(document));
   }
 
+  constraints.push(limit(20));
+  q = query(collection(firestore, firebaseDevPath + "store"), ...constraints);
   const tempInfos = await getDocs(q);
-
   return tempInfos;
 }
 
 export async function getStoreInfoByField(
   document: QueryDocumentSnapshot<DocumentData> | null,
   key: string,
-  value: string
+  value: string,
+  filterOnlyJoining: boolean
 ): Promise<QuerySnapshot<DocumentData>> {
   let q;
+  let constraints = [] as QueryConstraint[];
 
+  constraints.push(orderBy(key));
+  // 이전 항목 존재 여부에 따라
   if (document != null) {
-    q = query(
-      collection(firestore, firebaseDevPath + "store"),
-      orderBy(key),
-      startAfter(document),
-      limit(20),
-      endAt(value + "\uf8ff")
-    );
+    constraints.push(startAfter(document));
   } else {
-    q = query(
-      collection(firestore, firebaseDevPath + "store"),
-      orderBy(key),
-      startAt(value),
-      limit(20),
-      endAt(value + "\uf8ff")
-    );
+    constraints.push(where(key, ">=", value));
   }
+  constraints.push(where(key, "<", value + "\uf88f"));
+  // constraints.push(endAt(value + "\uf88f"));
+  // 추카 가입 여부 체크에 따라
+  if (!filterOnlyJoining) {
+    constraints.push(where("isJoined", "==", true));
+  }
+  constraints.push(limit(20));
+
+  q = query(collection(firestore, firebaseDevPath + "store"), ...constraints);
 
   const tempInfos = await getDocs(q);
 

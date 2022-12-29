@@ -40,6 +40,7 @@ async function init() {
     loading.value = false;
   }
 }
+// 변경필요
 function initInnerRoute() {
   let tempPathList = history.state.current.split("/");
   if (tempPathList.length >= 4) {
@@ -87,17 +88,30 @@ function onClickHome() {
           @click="onClickBack()"
         />
         <img
-          v-if="getStoreInfo.profileImage != undefined"
+          v-if="
+            getStoreInfo.profileImage != undefined &&
+            getStoreInfo.profileImage.link != '' &&
+            getStoreInfo.isJoined
+          "
           :src="getStoreInfo.profileImage.link"
           class="w-full object-cover h-25v flex-none"
           @error="getImgUrl"
         />
-        <img
-          v-else
-          src="@/assets/img/default/chuuka.png"
-          class="w-full object-cover h-25v"
-          @error="getImgUrl"
-        />
+        <div v-else class="h-25v w-full flex bg-light-gray">
+          <div class="m-auto w-full">
+            <img
+              src="@/assets/img/default/chuuka_bold_gray.svg"
+              class="w-2/5 mx-auto"
+              @error="getImgUrl"
+            />
+            <p
+              class="font-bold text-text-gray text-base mt-4"
+              v-show="!getStoreInfo.isJoined"
+            >
+              해당 업체는 미입점되어 사진이 없습니다.
+            </p>
+          </div>
+        </div>
       </div>
       <div class="x-basic-padding pt-4 pb-2 relative">
         <div class="absolute flex -top-6">
@@ -175,12 +189,17 @@ function onClickHome() {
             class="text-lg justify-center flex btn-main"
             target="_blank"
             :href="
-              'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk + '/chat'
+              'https://pf.kakao.com/' +
+              getStoreInfo.sns.kakaoTalk +
+              (getStoreInfo.isJoined ? '/chat' : '')
             "
           >
             <div class="flex my-auto">
               <img src="@/assets/img/icon/kakao.svg" class="w-7 mr-4" />
-              <span>카카오 채널 상담하기</span>
+              <span v-show="getStoreInfo.isJoined">카카오 채널 상담하기</span>
+              <span v-show="!getStoreInfo.isJoined"
+                >카카오 채널로 이동하기</span
+              >
             </div>
           </a>
           <button
@@ -200,7 +219,26 @@ function onClickHome() {
 
       <!-- NOTE 탭 -->
       <div class="">
-        <div class="text-base font-medium flex mx-3">
+        <div
+          class="text-base font-medium flex mx-3"
+          v-if="!getStoreInfo.isJoined"
+        >
+          <p
+            class="w-full h-full py-2.5 border-b-4 border-b-text-gray text-text-gray"
+          >
+            소개
+          </p>
+        </div>
+        <div
+          class="text-base font-medium flex mx-3"
+          v-else-if="!getStoreInfo.isManaged"
+        >
+          <p class="w-full h-full py-2.5 border-b-4 border-b-main">소개</p>
+        </div>
+        <div
+          class="text-base font-medium flex mx-3"
+          v-else-if="getStoreInfo.isManaged"
+        >
           <router-link
             :to="'/store/' + getStoreInfo.id + '/introduction'"
             class="w-full h-full py-2.5"
@@ -208,21 +246,20 @@ function onClickHome() {
             @click="innerRoute = 0"
             replace
           >
-            가게 소개
-          </router-link>
-          <router-link
-            :to="'/store/' + getStoreInfo.id + '/design'"
-            class="w-full h-full py-2.5"
-            :class="innerRoute === 1 ? 'border-b-main border-b-4' : ''"
-            @click="innerRoute = 1"
-            replace
-          >
-            디자인
+            필독사항
           </router-link>
         </div>
 
         <div class="text-base text-left x-basic-padding">
-          <router-view></router-view>
+          <router-view v-if="getStoreInfo.isJoined"></router-view>
+          <div v-else class="mt-4 bg-light-gray rounded-lg p-3">
+            <img src="@/assets/img/icon/lock.svg" class="mx-auto" />
+            <p
+              class="text-text-gray font-medium text-base text-center mt-4 mb-2"
+            >
+              해당 가게는 추카에 가입한 가게가 아니에요
+            </p>
+          </div>
         </div>
       </div>
     </div>
