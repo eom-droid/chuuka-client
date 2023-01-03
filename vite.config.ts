@@ -10,6 +10,11 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       injectRegister: "auto",
+      workbox: {
+        navigateFallbackDenylist: [
+          /^(\/robots\.txt|\/sitemap\.xml|\/naver9f40a6f0092181f2a9d348ea37f8cb1e\.html)$/,
+        ],
+      },
     }),
   ],
   resolve: {

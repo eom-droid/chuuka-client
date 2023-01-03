@@ -33,7 +33,7 @@ onMounted(() => {
     <div class="mx-auto mt-20 disnone">
       <div class="text-xl text-left mb-auto font-semibold">
         <p>전국 주문 제작 케이크</p>
-        <p>정보를 한곳에서!</p>
+        <p>정보를 한눈에!</p>
       </div>
       <div class="text-white text-5xl font-semibold text-left mb-auto mt-7">
         <p>너의</p>
@@ -43,6 +43,7 @@ onMounted(() => {
           <img
             src="@/assets/img/logo/logo_firework_white.svg"
             class="w-3/4"
+            alt="chuukaLogo"
           /><span class="my-auto ml-2">해!</span>
         </div>
       </div>

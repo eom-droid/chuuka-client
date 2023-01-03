@@ -207,7 +207,7 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
           @change="onChangeIsJoining($event)"
         />
         <label for="isJoining" class="text-base font-normal pl-2.5"
-          >추카 미입점 업체 보기</label
+          >추카 미입점 업체 포함</label
         >
       </div>
     </div>
