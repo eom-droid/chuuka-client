@@ -36,13 +36,20 @@
                 />
               </div>
               <div v-else>
-                <vueper-slides class="no-shadow" fixed-height="25vh" fractions>
+                <vueper-slides
+                  class="no-shadow"
+                  fixed-height="25vh"
+                  fractions
+                  :dragging-distance="70"
+                  prevent-y-scroll
+                >
                   <vueper-slide
                     v-for="(slide, i) in getSelectedNews.photos"
                     :key="i"
                   >
                     <template #content>
                       <div class="w-full">
+                        <!-- <div>{{ i }}}</div> -->
                         <img
                           :src="slide.link"
                           class="object-contain h-25v mx-auto"
