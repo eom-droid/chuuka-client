@@ -54,7 +54,7 @@ onMounted(() => {
             target="_blank"
             >회사소개</a
           >
-          <a class="ml-7" href="https://x170w.channel.io/lounge" target="_blank"
+          <a class="ml-7" href="https://pf.kakao.com/_TxnGvb" target="_blank"
             >입점안내</a
           >
         </div>
