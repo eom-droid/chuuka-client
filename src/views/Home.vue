@@ -215,7 +215,7 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
         <input
           type="checkbox"
           id="isJoining"
-          class="w-6 h-6 rounded-full"
+          class="w-6 h-6 input-checkbox"
           v-model="checkedNotJoining"
           @change="onChangeIsJoining($event)"
         />

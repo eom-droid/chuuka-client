@@ -21,6 +21,12 @@
   @apply bg-sub text-main w-full mt-3 font-semibold h-11 rounded-md;
 }
 
+.input-checkbox {
+  @apply rounded-full border-gray-300;
+  @apply text-main  w-6 h-6 shadow-sm;
+  @apply focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50;
+}
+
 /* 페이지 여백 조절 */
 .w-page-sm {
   @apply max-w-md;
