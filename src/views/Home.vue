@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { throttle } from "lodash";
 import {
-  getStoreInfoWithLimit,
+  getStoreInfoWithRandomLimit,
   IStore,
   getStoreInfoByField,
 } from "@/api/m1/store";
@@ -13,6 +13,7 @@ import { getEventListeners } from "events";
 import { usePersonalStore } from "@/stores/personal";
 import { storeToRefs } from "pinia";
 import { entireRegion } from "@/constant/constant";
+import { scrollUp } from "@/utils/common";
 
 const piniaStore = useStoreInfoStore();
 const piniaPersonal = usePersonalStore();
@@ -113,15 +114,27 @@ function init() {
   initAllStore();
 }
 
+const random = ref(-1);
+const isReachedEnd = ref(false);
+const isStartedZero = ref(false);
+
 async function initAllStore() {
   if (isEnd.value) return;
   let tempResult;
   let mixedResult = [] as Array<IStore>;
   if (tempLocation.value === entireRegion) {
-    tempResult = await getStoreInfoWithLimit(
+    const queryResult = await getStoreInfoWithRandomLimit(
       lastVisible.value,
+      random.value,
+      isReachedEnd.value,
+      isStartedZero.value,
       checkedNotJoining.value
     );
+    random.value = queryResult.random;
+    isReachedEnd.value = queryResult.isReachedEnd;
+    tempResult = queryResult.result;
+    isEnd.value = queryResult.isEnd;
+    isStartedZero.value = queryResult.isStartedZero;
   } else {
     tempResult = await getStoreInfoByField(
       lastVisible.value,
@@ -129,6 +142,9 @@ async function initAllStore() {
       tempLocation.value,
       checkedNotJoining.value
     );
+    if (tempResult.docs.length != 20) {
+      isEnd.value = true;
+    }
   }
 
   tempResult.docs.map((ele) => {
@@ -142,9 +158,6 @@ async function initAllStore() {
   mixedResult.sort(() => Math.random() - 0.5);
   // 이어붙이기
   tempAllStore.value = tempAllStore.value.concat(mixedResult);
-  if (tempResult.docs.length != 20) {
-    isEnd.value = true;
-  }
 }
 
 function getImgUrl(e: any) {
@@ -212,7 +225,7 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
       </div>
     </div>
 
-    <div class="mt-1">
+    <div class="mt-3">
       <div
         v-for="(store, index) in tempAllStore"
         :key="index"
@@ -275,6 +288,12 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
     </div>
     <div class="text-neutral-400 text-base" v-show="isEnd">
       더 이상의 업체가 없습니다.
+    </div>
+    <div
+      class="top-button fixed bottom-5 right-5 bg-sub rounded-full px-3 py-1"
+      @click="scrollUp"
+    >
+      <font-awesome-icon icon="arrow-up" />
     </div>
     <div class="h-28"></div>
   </main>
