@@ -229,7 +229,7 @@ export async function getStoreInfoByField(
   if (!filterOnlyJoining) {
     constraints.push(where("isJoined", "==", true));
   }
-  constraints.push(limit(20));
+  // constraints.push(limit(20));
 
   q = query(collection(firestore, firebaseDevPath + "store"), ...constraints);
 

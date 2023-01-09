@@ -142,9 +142,7 @@ async function initAllStore() {
       tempLocation.value,
       checkedNotJoining.value
     );
-    if (tempResult.docs.length != 20) {
-      isEnd.value = true;
-    }
+    isEnd.value = true;
   }
 
   tempResult.docs.map((ele) => {
