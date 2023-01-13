@@ -2,7 +2,10 @@
   <!-- NOTE 필독 사항 -->
   <div class="">
     <div class="text-sm font-medium flex">
-      <button class="btn-main-short text-base" @click="onClickCopyOrderFrom()">
+      <button
+        class="btn-sub-sub text-base font-bold"
+        @click="onClickCopyOrderFrom()"
+      >
         주문 양식 복사
       </button>
       <textarea
@@ -41,7 +44,7 @@
           <div v-if="mustRead.orderMethod.content != ''">
             {{ mustRead.orderMethod.content }}
           </div>
-          <div v-else class="">주문방법이 없습니다</div>
+          <div v-else class="text-mid-gray">주문방법이 없습니다</div>
         </div>
       </div>
 
@@ -69,12 +72,12 @@
           <div v-if="mustRead.size.content != ''" class="grid">
             <div>{{ mustRead.size.content }}</div>
           </div>
-          <div v-else class="">크기가 없습니다</div>
+          <div v-else class="text-mid-gray">크기가 없습니다</div>
           <hr />
           <div v-if="mustRead.taste.content != ''" class="grid">
             <div>{{ mustRead.taste.content }}</div>
           </div>
-          <div v-else class="">맛 정보가 없습니다</div>
+          <div v-else class="text-mid-gray">맛 정보가 없습니다</div>
         </div>
       </div>
 
@@ -102,7 +105,7 @@
           <div v-if="mustRead.notice.content != ''">
             {{ mustRead.notice.content }}
           </div>
-          <div v-else>유의사항이 없습니다</div>
+          <div v-else class="text-mid-gray">유의사항이 없습니다</div>
         </div>
       </div>
       <!-- 교환 및 환불 -->
@@ -131,7 +134,7 @@
           <div v-if="mustRead.exchangeRefund.content != ''">
             {{ mustRead.exchangeRefund.content }}
           </div>
-          <div v-else>교환 및 환불 정보가 없습니다</div>
+          <div v-else class="text-mid-gray">교환 및 환불 정보가 없습니다</div>
         </div>
       </div>
     </div>

@@ -20,10 +20,15 @@
 .btn-sub-short {
   @apply bg-sub text-main w-full mt-3 font-semibold h-11 rounded-md;
 }
+/* 제작필요 */
+.btn-sub-sub {
+  @apply bg-white text-main w-full mt-3 font-semibold rounded-md border border-main h-11;
+}
 
 .input-checkbox {
   @apply rounded-full border-gray-300;
-  @apply text-main  w-6 h-6 shadow-sm;
+  /* @apply text-main  w-6 h-6 shadow-sm; */
+  @apply text-main  shadow-sm;
   @apply focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50;
 }
 

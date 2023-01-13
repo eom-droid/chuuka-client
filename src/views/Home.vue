@@ -30,6 +30,8 @@ const listeningFunc = throttle(calcScrollAndGetDocs, 100);
 
 const checkedNotJoining = ref(false);
 
+const questionShow = ref(false);
+
 onMounted(() => {
   init();
   document
@@ -168,15 +170,36 @@ function initLocation() {
 
 function onClickStore(store: IStore) {
   setStoreInfo(store);
-  // window.localStorage.setItem("tempStoreInfo", JSON.stringify(store));
-  router.push("/store/" + store.id);
 }
 
 function locationBlur(tempLoc: string) {
+  const locArray = tempLoc.split(" ");
+  if (locArray[0] === "세종") {
+    locArray.shift();
+  } else {
+    locArray.shift();
+    locArray.shift();
+  }
+  tempLoc = locArray.join(" ");
+
   if (tempLoc.length > 20) {
+    console.log([
+      tempLoc.substring(0, 16),
+      tempLoc.substring(16, tempLoc.length),
+    ]);
+
     return [tempLoc.substring(0, 16), tempLoc.substring(16, tempLoc.length)];
   }
+  console.log(tempLoc);
   return [tempLoc];
+}
+function getMunicipality(tempLoc: string) {
+  const locArray = tempLoc.split(" ");
+  if (locArray[0] === "세종") {
+    return locArray[0];
+  } else {
+    return locArray[0] + " " + locArray[1];
+  }
 }
 
 async function onChangeIsJoining(checkBoxEvent: Event) {
@@ -193,7 +216,27 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
   <main class="x-basic-padding" id="homeScrollEle">
     <div>
       <!-- {{ lastVisible }} -->
-      <p class="logo text-lg font-bold py-4">CHUUKA!</p>
+      <div class="relative">
+        <p class="text-xl font-bold py-4">추카</p>
+        <div class="absolute right-0 top-5 text-base text-right font-bold">
+          <button
+            @click="questionShow = !questionShow"
+            class="underline underline-offset-2"
+          >
+            문의
+          </button>
+          <div
+            v-show="questionShow"
+            class="text-right bg-white px-4 py-2.5 questionBox border border-mid-gray"
+          >
+            <a href="https://pf.kakao.com/_TxnGvb" target="_blank">입점 문의</a>
+            <hr class="bg-mid-gray my-2.5" />
+            <a href="https://pf.kakao.com/_TxnGvb" target="_blank"
+              >불편사항 접수</a
+            >
+          </div>
+        </div>
+      </div>
       <a
         href="https://www.instagram.com/chuuka.official/"
         target="_blank"
@@ -213,7 +256,7 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
         <input
           type="checkbox"
           id="isJoining"
-          class="w-6 h-6 input-checkbox"
+          class="w-5 h-5 input-checkbox my-auto"
           v-model="checkedNotJoining"
           @change="onChangeIsJoining($event)"
         />
@@ -224,11 +267,12 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
     </div>
 
     <div class="mt-3">
-      <div
+      <router-link
         v-for="(store, index) in tempAllStore"
         :key="index"
         class="border-b border-neutral-200 mb-2 flex pb-2 relative"
         @click="onClickStore(store)"
+        :to="'/store/' + store.id"
       >
         <div
           class="homeImgContainer"
@@ -261,14 +305,18 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
                 >{{ store.name }}</span
               >
             </div>
-            <div class="text-neutral-600 text-xs mt-2">
-              <span>{{ locationBlur(store.location)[0] }}</span
-              ><span
+            <div class="text-neutral-600 text-xs mt-1.5">
+              <p>{{ getMunicipality(store.location) }}</p>
+              <p
                 class="customBlur"
                 v-if="locationBlur(store.location).length === 2"
               >
-                {{ locationBlur(store.location)[1].substring(0, 4) }}</span
-              >
+                {{ locationBlur(store.location)[0] }}
+                {{ locationBlur(store.location)[1].substring(0, 4) }}
+              </p>
+              <p v-else>
+                {{ locationBlur(store.location).toString() }}
+              </p>
             </div>
             <p class=" "></p>
             <div class="flex mt-2">
@@ -282,17 +330,21 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
             </div>
           </div>
         </div>
-      </div>
+      </router-link>
     </div>
     <div class="text-neutral-400 text-base" v-show="isEnd">
       더 이상의 업체가 없습니다.
     </div>
-    <div
-      class="top-button fixed bottom-5 right-5 bg-sub rounded-full px-3 py-1"
+    <button
+      class="top-button fixed bottom-5 right-5 rounded-full p-2.5"
+      style="background-color: rgba(0, 0, 0, 0.1)"
       @click="scrollUp"
     >
-      <font-awesome-icon icon="arrow-up" />
-    </div>
+      <div style="height: 30px; width: 30px">
+        <img src="@/assets/img/icon/arrowUpWithLine.svg" class="w-6 mx-auto" />
+      </div>
+      <!-- <font-awesome-icon icon="arrow-up" /> -->
+    </button>
     <div class="h-28"></div>
   </main>
 </template>
@@ -301,10 +353,7 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
 .custom_textsize {
   font-size: 10px;
 }
-.logo {
-  font-style: italic;
-  font-family: "Montserrat", sans-serif;
-}
+
 .customBlur {
   background: linear-gradient(to right, rgb(82, 82, 82), #b0b0b0);
   color: transparent;
@@ -355,5 +404,9 @@ main {
   width: 100%;
   @apply overflow-y-auto
   /* height: 100vh; */;
+}
+
+.questionBox {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 </style>

@@ -81,10 +81,23 @@ function onClickBackword() {
           />
         </button>
       </div>
-      <div class="mt-6 text-left ml-1 text-text-gray">
+      <div class="text-sm font-normal text-left mt-8" v-show="keyword === ''">
+        <p class="text-base font-medium">이렇게 검색해보세요</p>
+        <p class="mt-4">・도 + 군</p>
+        <p class="text-text-gray mt-1">예) 경기 양평군</p>
+        <p class="mt-2">・시 + 구</p>
+        <p class="text-text-gray mt-1">예) 대전 유성구</p>
+        <p class="mt-2" style="color: rgb(255, 0, 0)">
+          “시"는 검색어에서 제외해주세요
+        </p>
+      </div>
+      <div
+        class="mt-6 text-left ml-1 text-text-gray text-lg"
+        v-show="keyword !== ''"
+      >
         "{{ keyword }}" 검색 결과
       </div>
-      <div class="mt-5">
+      <div class="mt-3">
         <div v-for="loc in searchArray">
           <button
             class="text-base py-2 my-1 w-full text-left"

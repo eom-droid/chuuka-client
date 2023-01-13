@@ -4,6 +4,7 @@ import { storeToRefs } from "pinia";
 import { usePersonalStore } from "@/stores/personal";
 const pinia = usePersonalStore();
 const { init } = pinia;
+const varIsMobile = isMobile();
 
 function isMobile() {
   if (
@@ -19,11 +20,16 @@ function isMobile() {
 
 onMounted(() => {
   init();
+  // mobile이면 background color를 white로
+  if (varIsMobile) {
+    const body = document.getElementsByTagName("body");
+    body[0].style.background = "RGB(255,255,255)";
+  }
 });
 </script>
 
 <template>
-  <router-view v-slot="{ Component }" v-if="isMobile()">
+  <router-view v-slot="{ Component }" v-if="varIsMobile">
     <keep-alive :include="['Home', 'Location']" :max="10">
       <component :is="Component" />
     </keep-alive>
