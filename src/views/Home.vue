@@ -237,13 +237,10 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
           </div>
         </div>
       </div>
-      <a
-        href="https://www.instagram.com/chuuka.official/"
-        target="_blank"
-        class="h-14"
+      <a href="https://www.instagram.com/chuuka.official/" target="_blank"
         ><img
           src="@/assets/img/banner/banner.png"
-          class="rounded-md h-14 w-full object-cover"
+          class="rounded-md w-full object-cover"
       /></a>
       <button
         @click="router.push('/location')"
@@ -260,7 +257,7 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
           v-model="checkedNotJoining"
           @change="onChangeIsJoining($event)"
         />
-        <label for="isJoining" class="text-base font-normal pl-2.5"
+        <label for="isJoining" class="text-base font-normal pl-2"
           >추카 미입점 업체 포함</label
         >
       </div>

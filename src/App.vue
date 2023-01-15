@@ -29,7 +29,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <router-view v-slot="{ Component }" v-if="varIsMobile">
+  <router-view v-slot="{ Component }" v-if="varIsMobile" class="">
     <keep-alive :include="['Home', 'Location']" :max="10">
       <component :is="Component" />
     </keep-alive>
@@ -80,7 +80,7 @@ onMounted(() => {
       </div>
     </div>
     <div
-      class="cusShadow w-page-sm bg-white customWidth mx-auto relative h-100v overflow-y-auto noScroll"
+      class="main-view cusShadow w-page-sm bg-white customWidth mx-auto relative h-100v overflow-y-auto noScroll"
       id="mainWrapper"
     >
       <router-view v-slot="{ Component }" class="">
@@ -95,6 +95,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.main-view {
+  min-width: 480px;
+}
 .cusShadow {
   box-shadow: 0 0 22px -2px rgb(0 0 0 / 75%);
 }
