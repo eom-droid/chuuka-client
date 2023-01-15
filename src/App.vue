@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePersonalStore } from "@/stores/personal";
+import { Device } from "@capacitor/device";
+
+const platform = ref("");
 const pinia = usePersonalStore();
 const { init } = pinia;
 const varIsMobile = isMobile();
@@ -18,20 +21,21 @@ function isMobile() {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   init();
   // mobile이면 background color를 white로
   if (varIsMobile) {
     const body = document.getElementsByTagName("body");
     body[0].style.background = "RGB(255,255,255)";
   }
+  platform.value = (await Device.getInfo()).platform;
 });
 </script>
 
 <template>
   <router-view v-slot="{ Component }" v-if="varIsMobile" class="">
     <keep-alive :include="['Home', 'Location']" :max="10">
-      <component :is="Component" />
+      <component :is="Component" :class="{ 'pt-12': platform === 'ios' }" />
     </keep-alive>
   </router-view>
   <div v-else class="flex w-full h-full relative bg-main">
@@ -85,7 +89,7 @@ onMounted(() => {
     >
       <router-view v-slot="{ Component }" class="">
         <keep-alive :include="['Home', 'Location']" :max="10">
-          <component :is="Component" />
+          <component :is="Component" :class="{ 'pt-12': platform === 'ios' }" />
         </keep-alive>
       </router-view>
     </div>
