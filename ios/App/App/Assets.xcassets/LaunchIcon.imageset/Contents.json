@@ -20,11 +20,13 @@
     },
     {
       "filename" : "launch-256.png",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "unassigned" : true
     },
     {
       "filename" : "launch-512.png",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "unassigned" : true
     }
   ],
   "info" : {
