@@ -333,7 +333,7 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
       더 이상의 업체가 없습니다.
     </div>
     <button
-      class="top-button fixed bottom-5 right-5 rounded-full p-2.5"
+      class="top-button fixed bottom-11 right-5 rounded-full p-2.5"
       style="background-color: rgba(0, 0, 0, 0.1)"
       @click="scrollUp"
     >
