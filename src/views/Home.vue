@@ -183,11 +183,6 @@ function locationBlur(tempLoc: string) {
   tempLoc = locArray.join(" ");
 
   if (tempLoc.length > 20) {
-    console.log([
-      tempLoc.substring(0, 16),
-      tempLoc.substring(16, tempLoc.length),
-    ]);
-
     return [tempLoc.substring(0, 16), tempLoc.substring(16, tempLoc.length)];
   }
   console.log(tempLoc);
