@@ -6,7 +6,7 @@
 
     <div v-else class="grid grid-cols-3 gap-0.5 relative">
       <div
-        v-for="(product, index) in getProduct"
+        v-for="(product, index) in tempProductArray"
         :key="index"
         class="border border-mid-gray relative"
       >
@@ -69,8 +69,9 @@ import { useStoreInfoStore } from "@/stores/storeInfo";
 import { useProductStore } from "@/stores/design";
 import { storeToRefs } from "pinia";
 import { ref, onMounted } from "vue";
-import { getAllProduct } from "@/api/m1/product";
+import { IProduct, getAllProduct } from "@/api/m1/product";
 import Modal from "@/components/modal/Modal.vue";
+import { sortProductLinkedList } from "@/utils/common";
 
 const pinia = useStoreInfoStore();
 const piniaProduct = useProductStore();
@@ -79,8 +80,9 @@ const { getStoreInfo } = pinia;
 const { getInitStoreId, setInitStoreId, setProduct } = piniaProduct;
 const isLoading = ref(true);
 const showModal = ref([] as boolean[]);
+const tempProductArray = ref([] as IProduct[]);
 
-onMounted(() => {
+onMounted(async () => {
   init();
 });
 async function init() {
@@ -93,6 +95,11 @@ async function init() {
   setProduct(tempProductList);
   isLoading.value = false;
   showModal.value = new Array(getProduct.value.length).fill(false);
+
+  tempProductArray.value = sortProductLinkedList(
+    getProduct.value as IProduct[]
+  );
+  console.log(tempProductArray.value);
 }
 
 function onClickUrl(url: string | undefined) {

@@ -1,3 +1,6 @@
+import { IProduct } from "@/api/m1/product";
+import { LINKEDLIST_HEAD } from "@/constant/constant";
+
 export function scrollUp() {
   const tempIsMobile = isMobile();
   let upper = setInterval(function () {
@@ -26,5 +29,59 @@ function isMobile() {
     return true;
   } else {
     return false;
+  }
+}
+
+export function sortProductLinkedList(tempList: IProduct[]) {
+  if (tempList.length === 0) {
+    return [];
+  }
+  let copiedList: Array<IProduct> = JSON.parse(JSON.stringify(tempList));
+  let result: Array<IProduct> = [];
+  let index = 0;
+  // head를 찾고
+  const headProduct = copiedList.find(
+    (ele) => ele.beforeNodeId === LINKEDLIST_HEAD
+  ) as IProduct;
+  // 먼저 result에 push
+  result.push(headProduct);
+  // 계속 돌면서 result length와 copiedList length가 같으면 종료
+  while (1) {
+    if (result.length === copiedList.length) break;
+    // 다음 노드 찾기
+    const nextNode = copiedList.find(
+      (ele) => ele.beforeNodeId === result[index].id
+    ) as IProduct;
+    result.push(nextNode);
+    index++;
+  }
+  return result;
+}
+
+export function changeProductOrder(
+  tempList: IProduct[],
+  fromIndex: string,
+  toIndex: string
+) {
+  const from = parseInt(fromIndex);
+  const to = parseInt(toIndex);
+  tempList.splice(to, 0, tempList.splice(from, 1)[0]);
+
+  if (to === 0) {
+    tempList[to].beforeNodeId = LINKEDLIST_HEAD;
+  } else {
+    tempList[to].beforeNodeId = tempList[to - 1].id;
+  }
+  if (to != tempList.length - 1) {
+    tempList[to + 1].beforeNodeId = tempList[to].id;
+  }
+
+  if (from === 0) {
+    tempList[from].beforeNodeId = LINKEDLIST_HEAD;
+  } else {
+    tempList[from].beforeNodeId = tempList[from - 1].id;
+  }
+  if (from != tempList.length - 1) {
+    tempList[from + 1].beforeNodeId = tempList[from].id;
   }
 }
