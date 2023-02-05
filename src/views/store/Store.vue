@@ -7,7 +7,9 @@ import { useStoreInfoStore } from "@/stores/storeInfo";
 import { storeToRefs } from "pinia";
 import { useClipboard } from "@vueuse/core";
 import { toastSuccess } from "@/utils/toast";
+import { useRoute } from "vue-router";
 
+// ANCHOR 선언
 const source = ref("Hello");
 const { text, copy, copied, isSupported } = useClipboard({ source });
 
@@ -17,7 +19,9 @@ const { setStoreInfo } = pinia;
 
 const innerRoute = ref(0);
 const loading = ref(false);
+const route = useRoute();
 
+// ANCHOR 이벤트
 onMounted(async () => {
   await init();
   initInnerRoute();
@@ -30,6 +34,8 @@ watch(
   },
   { deep: true }
 );
+
+// ANCHOR 함수
 async function init() {
   if (getStoreInfo.value.id != undefined) {
     return;
@@ -47,16 +53,9 @@ async function init() {
 }
 // 변경필요
 function initInnerRoute() {
-  let tempPathList = history.state.current.split("/");
-  // if (tempPathList.length >= 4) {
-  //   if (tempPathList[3] === "design") {
-  //     innerRoute.value = 1;
-  //   } else {
-  //     innerRoute.value = 0;
-  //   }
-  // } else if (tempPathList.length === 3) {
-  //   innerRoute.value = 0;
-  // }
+  const path = route.path.split("/").reverse()[0];
+  if (path === "news") innerRoute.value = 1;
+  else if (path === "design") innerRoute.value = 2;
 }
 
 function getImgUrl(e: any) {
