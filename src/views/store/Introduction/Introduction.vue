@@ -17,7 +17,7 @@ import { storeToRefs } from "pinia";
 import { router } from "@/router/router";
 onMounted(() => {
   if (getStoreInfo.value.isJoined && getStoreInfo.value.isManaged) {
-    router.replace("/store/" + getStoreInfo.value.id + "/mustRead");
+    router.replace("/store/" + getStoreInfo.value.id + "/must-read");
   }
 });
 

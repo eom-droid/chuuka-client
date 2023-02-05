@@ -29,7 +29,7 @@ export const routes = [
         component: () => import("@/views/store/Introduction/Introduction.vue"),
       },
       {
-        path: "mustRead",
+        path: "must-read",
         component: () => import("@/views/store/mustRead/MustRead.vue"),
       },
       // {
@@ -40,14 +40,14 @@ export const routes = [
       //   path: "mustRead",
       //   component: () => import("@/views/store/mustRead/MustRead.vue"),
       // },
-      // {
-      //   path: "news",
-      //   component: () => import("@/views/store/news/News.vue"),
-      // },
-      // {
-      //   path: "design",
-      //   component: () => import("@/views/store/design/Design.vue"),
-      // },
+      {
+        path: "news",
+        component: () => import("@/views/store/news/News.vue"),
+      },
+      {
+        path: "design",
+        component: () => import("@/views/store/design/Design.vue"),
+      },
     ],
   },
   {

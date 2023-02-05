@@ -48,15 +48,15 @@ async function init() {
 // 변경필요
 function initInnerRoute() {
   let tempPathList = history.state.current.split("/");
-  if (tempPathList.length >= 4) {
-    if (tempPathList[3] === "design") {
-      innerRoute.value = 1;
-    } else {
-      innerRoute.value = 0;
-    }
-  } else if (tempPathList.length === 3) {
-    innerRoute.value = 0;
-  }
+  // if (tempPathList.length >= 4) {
+  //   if (tempPathList[3] === "design") {
+  //     innerRoute.value = 1;
+  //   } else {
+  //     innerRoute.value = 0;
+  //   }
+  // } else if (tempPathList.length === 3) {
+  //   innerRoute.value = 0;
+  // }
 }
 
 function getImgUrl(e: any) {
@@ -232,6 +232,7 @@ function onClickHome() {
 
       <!-- NOTE 탭 -->
       <div class="">
+        <!-- ANCHOR 소개 not Joined -->
         <div
           class="text-base font-medium flex mx-3"
           v-if="!getStoreInfo.isJoined"
@@ -242,14 +243,18 @@ function onClickHome() {
             소개
           </p>
         </div>
+
+        <!-- ANCHOR 소개 not Managed -->
         <div
           class="text-base font-medium flex mx-3"
           v-else-if="!getStoreInfo.isManaged"
         >
           <p class="w-full h-full py-2.5 border-b-4 border-b-main">소개</p>
         </div>
+
+        <!-- ANCHOR Joined & Managed -->
         <div
-          class="text-base font-medium flex mx-3"
+          class="text-base font-medium flex gap-3 mx-3 border-b"
           v-else-if="getStoreInfo.isManaged"
         >
           <router-link
@@ -261,8 +266,27 @@ function onClickHome() {
           >
             필독사항
           </router-link>
+          <router-link
+            :to="'/store/' + getStoreInfo.id + '/news'"
+            class="w-full h-full py-2.5"
+            :class="innerRoute === 1 ? 'border-b-main border-b-4' : ''"
+            @click="innerRoute = 1"
+            replace
+          >
+            일정/소식
+          </router-link>
+          <router-link
+            :to="'/store/' + getStoreInfo.id + '/design'"
+            class="w-full h-full py-2.5"
+            :class="innerRoute === 2 ? 'border-b-main border-b-4' : ''"
+            @click="innerRoute = 2"
+            replace
+          >
+            디자인
+          </router-link>
         </div>
 
+        <!-- ANCHOR alert -->
         <div class="text-base text-left x-basic-padding">
           <router-view v-if="getStoreInfo.isJoined"></router-view>
           <div v-else class="mt-4 bg-light-gray rounded-lg p-3">
