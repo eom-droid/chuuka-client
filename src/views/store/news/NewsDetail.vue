@@ -21,54 +21,6 @@
             <p class="text-sm text-text-gray mt-2.5">
               {{ getKoreanDateTime(getSelectedNews.modDtime.toDate()) }}
             </p>
-            <div
-              v-if="
-                getSelectedNews.photos != undefined &&
-                getSelectedNews.photos.length >= 1 &&
-                getSelectedNews.photos[0].link != ''
-              "
-              class="mt-5 border border-mid-gray"
-            >
-              <div v-if="getSelectedNews.photos.length === 1">
-                <img
-                  :src="getSelectedNews.photos[0].link"
-                  class="w-full h-25v object-contain"
-                />
-              </div>
-              <div v-else>
-                <vueper-slides
-                  class="no-shadow"
-                  fixed-height="25vh"
-                  fractions
-                  :dragging-distance="70"
-                  prevent-y-scroll
-                >
-                  <vueper-slide
-                    v-for="(slide, i) in getSelectedNews.photos"
-                    :key="i"
-                  >
-                    <template #content>
-                      <div class="w-full">
-                        <!-- <div>{{ i }}}</div> -->
-                        <img
-                          :src="slide.link"
-                          class="object-contain h-25v mx-auto"
-                        />
-                      </div>
-                    </template>
-                  </vueper-slide>
-                </vueper-slides>
-                <!-- <div
-                  v-for="(eachImg, index) in getSelectedNews.photos"
-                  :key="index"
-                >
-                  <img
-                    :src="eachImg.link"
-                    class="w-full h-25v object-contain"
-                  />
-                </div> -->
-              </div>
-            </div>
             <div class="whitespace-pre-line text-sm mt-5 font-normal">
               {{ getSelectedNews.content }}
             </div>
@@ -104,7 +56,6 @@
   </main>
 </template>
 <script setup lang="ts">
-import { getNewsById } from "@/api/m1/news";
 import { useNewsStore } from "@/stores/news";
 import { useStoreInfoStore } from "@/stores/storeInfo";
 import { getKoreanDateTime } from "@/utils/moment";
@@ -140,8 +91,8 @@ async function init() {
     let tempStore = await getStoreInfoById(storeId);
     if (tempStore != null) {
       setStoreInfo(tempStore);
-      let tempNews = await getNewsById(storeId, newsId);
-      setSelectedNews(tempNews);
+      // let tempNews = await getNewsById(storeId, newsId);
+      // setSelectedNews(tempNews);
     }
   }
   isLoading.value = false;
