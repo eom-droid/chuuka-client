@@ -111,7 +111,7 @@ SafeArea.getSafeAreaInsets().then(({ insets }) => {
     >
       <router-view v-slot="{ Component }" class="">
         <keep-alive :include="['Home', 'Location']" :max="10">
-          <component :is="Component" :class="{ 'pt-12': platform === 'ios' }" />
+          <component :is="Component" :style="appStyle" />
         </keep-alive>
       </router-view>
     </div>
