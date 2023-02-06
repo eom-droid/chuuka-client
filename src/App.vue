@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePersonalStore } from "@/stores/personal";
 import { Device } from "@capacitor/device";
+import { SafeArea } from "capacitor-plugin-safe-area";
 
 const platform = ref("");
 const pinia = usePersonalStore();
@@ -30,12 +31,33 @@ onMounted(async () => {
   }
   platform.value = (await Device.getInfo()).platform;
 });
+
+const appStyle = computed(() => {
+  return `margin-top: ${safeAreaInsets.value.top}px;
+          margin-right: ${safeAreaInsets.value.right}px;
+          margin-bottom: ${safeAreaInsets.value.bottom}px;
+          margin-left: ${safeAreaInsets.value.left}px;`;
+});
+
+// ANCHOR Safe Area for iOS Capacitorjs App
+interface ISafeArea {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
+
+const safeAreaInsets = ref<ISafeArea>({ top: 0, right: 0, bottom: 0, left: 0 });
+
+SafeArea.getSafeAreaInsets().then(({ insets }) => {
+  safeAreaInsets.value = insets;
+});
 </script>
 
 <template>
   <router-view v-slot="{ Component }" v-if="varIsMobile" class="">
     <keep-alive :include="['Home', 'Location']" :max="10">
-      <component :is="Component" :class="{ 'pt-12': platform === 'ios' }" />
+      <component :is="Component" :style="appStyle" />
     </keep-alive>
   </router-view>
   <div v-else class="flex w-full h-full relative bg-main">
