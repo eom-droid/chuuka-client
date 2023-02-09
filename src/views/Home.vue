@@ -15,6 +15,7 @@ import { storeToRefs } from "pinia";
 import { entireRegion } from "@/constant/constant";
 import { scrollToTop } from "@/utils/common";
 
+// ANCHOR 선언
 const piniaStore = useStoreInfoStore();
 const piniaPersonal = usePersonalStore();
 const { setStoreInfo } = piniaStore;
@@ -32,6 +33,11 @@ const checkedNotJoining = ref(false);
 
 const questionShow = ref(false);
 
+// 최상단 스크롤 FAB
+const fabClass = ref<"hidden" | "fixed">("hidden");
+const scrollY = ref(0);
+
+// ANCHOR 이벤트
 onMounted(() => {
   init();
   document
@@ -86,7 +92,19 @@ onActivated(() => {
     initValues();
     initAllStore();
   }
+
+  window.addEventListener("scroll", handleScrollEvent);
 });
+
+// 스크롤을 올릴 때 FAB 버튼을 보여준다
+function handleScrollEvent() {
+  if (window.scrollY > scrollY.value) {
+    fabClass.value = "hidden";
+  } else if (window.scrollY < scrollY.value) {
+    fabClass.value = "fixed";
+  }
+  scrollY.value = window.scrollY;
+}
 
 function initValues() {
   tempAllStore.value = [];
@@ -109,8 +127,10 @@ function removeListners() {
     .getElementById("mainWrapper")
     ?.removeEventListener("scroll", listeningFunc);
   window.removeEventListener("scroll", listeningFunc);
+  window.removeEventListener("scroll", handleScrollEvent);
 }
 
+// ANCHOR 함수
 function init() {
   initLocation();
   initAllStore();
@@ -185,7 +205,7 @@ function locationBlur(tempLoc: string) {
   if (tempLoc.length > 20) {
     return [tempLoc.substring(0, 16), tempLoc.substring(16, tempLoc.length)];
   }
-  console.log(tempLoc);
+  // console.log(tempLoc);
   return [tempLoc];
 }
 function getMunicipality(tempLoc: string) {
@@ -328,8 +348,9 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
       더 이상의 업체가 없습니다.
     </div>
     <button
-      class="top-button fixed bottom-11 right-5 rounded-full p-2.5"
+      class="top-button bottom-11 right-5 rounded-full p-2.5"
       style="background-color: rgba(0, 0, 0, 0.1)"
+      :class="fabClass"
       @click="() => scrollToTop()"
     >
       <div style="height: 30px; width: 30px">
