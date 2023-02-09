@@ -13,7 +13,7 @@ import { getEventListeners } from "events";
 import { usePersonalStore } from "@/stores/personal";
 import { storeToRefs } from "pinia";
 import { entireRegion } from "@/constant/constant";
-import { scrollUp } from "@/utils/common";
+import { scrollToTop } from "@/utils/common";
 
 const piniaStore = useStoreInfoStore();
 const piniaPersonal = usePersonalStore();
@@ -330,7 +330,7 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
     <button
       class="top-button fixed bottom-11 right-5 rounded-full p-2.5"
       style="background-color: rgba(0, 0, 0, 0.1)"
-      @click="scrollUp"
+      @click="() => scrollToTop()"
     >
       <div style="height: 30px; width: 30px">
         <img src="@/assets/img/icon/arrowUpWithLine.svg" class="w-6 mx-auto" />

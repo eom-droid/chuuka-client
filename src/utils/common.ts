@@ -1,22 +1,28 @@
 import { IProduct } from "@/api/m1/product";
 import { LINKEDLIST_HEAD } from "@/constant/constant";
 
-export function scrollUp() {
-  const tempIsMobile = isMobile();
-  let upper = setInterval(function () {
-    if (tempIsMobile) {
-      if (document.documentElement.scrollTop != 0) {
-        window.scrollBy(0, -30);
-      } else {
-        clearInterval(upper);
-      }
-    } else {
+export function scrollToTop() {
+  if (isMobile()) {
+    const c = document.documentElement.scrollTop || document.body.scrollTop;
+    if (c > 0) {
+      window.requestAnimationFrame(scrollToTop);
+      window.scrollTo(0, c - c / 8);
+    }
+  } else {
+    let upper = setInterval(function () {
       if (document.getElementById("mainWrapper")?.scrollTop != 0) {
         document.getElementById("mainWrapper")?.scrollBy(0, -30);
       } else {
         clearInterval(upper);
       }
-    }
+    });
+  }
+}
+
+export function scrollDown() {
+  window.scrollTo({
+    top: document.body.scrollHeight, // <- 페이지 총 Height
+    behavior: "smooth",
   });
 }
 
