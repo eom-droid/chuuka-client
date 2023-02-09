@@ -7,6 +7,7 @@ import { locations } from "@/assets/city/city";
 import { usePersonalStore } from "@/stores/personal";
 import { storeToRefs } from "pinia";
 import { entireRegion } from "@/constant/constant";
+import { toastWarning } from "@/utils/toast";
 
 //localStorage와 pinia 사용으로 전체 로직 변경필요
 // 준혁이가 디자인 끝내면 다시시작
@@ -44,7 +45,14 @@ function onClickSetLocation() {
       btnRunning.value = false;
       router.push("/");
     },
-    (error) => {
+    (PositionError) => {
+      // PositionError.code: 1 권한없음 / 2 사용불가능 / 3 타임아웃
+      if (PositionError.code === 1) toastWarning("위치 권한 설정이 필요해요");
+      else if (PositionError.code === 2)
+        toastWarning("위치 정보를 사용할 수 없어요");
+      else if (PositionError.code === 3)
+        toastWarning("잠시 후 다시 시도해주세요");
+      console.log(PositionError.message);
       setTimeout(() => (btnRunning.value = false), 5000);
     }
   );
