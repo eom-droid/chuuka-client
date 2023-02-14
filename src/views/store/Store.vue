@@ -8,6 +8,7 @@ import { storeToRefs } from "pinia";
 import { useClipboard } from "@vueuse/core";
 import { toastSuccess } from "@/utils/toast";
 import { useRoute } from "vue-router";
+import FixedBottomButton from "@/components/button/FixedBottomButton.vue";
 
 // ANCHOR 선언
 const source = ref("Hello");
@@ -85,6 +86,14 @@ function onClickHome() {
 <template>
   <main class="" id="storeScrollEle">
     <div v-if="getStoreInfo.id != undefined" class="">
+      <FixedBottomButton
+        name="케이크 주문/상담하러 가기"
+        :nav-link="
+          'https://pf.kakao.com/' +
+          getStoreInfo.sns.kakaoTalk +
+          (getStoreInfo.isJoined ? '/chat' : '')
+        "
+      ></FixedBottomButton>
       <div class="relative">
         <img
           src="@/assets/img/icon/backword.svg"
@@ -197,23 +206,6 @@ function onClickHome() {
       <!-- NOTE 가게링크 -->
       <div class="x-basic-padding pb-3">
         <div class="">
-          <a
-            class="text-lg justify-center flex btn-main"
-            target="_blank"
-            :href="
-              'https://pf.kakao.com/' +
-              getStoreInfo.sns.kakaoTalk +
-              (getStoreInfo.isJoined ? '/chat' : '')
-            "
-          >
-            <div class="flex my-auto">
-              <img src="@/assets/img/icon/kakao.svg" class="w-7 mr-4" />
-              <span v-show="getStoreInfo.isJoined">카카오 채널 상담하기</span>
-              <span v-show="!getStoreInfo.isJoined"
-                >카카오 채널로 이동하기</span
-              >
-            </div>
-          </a>
           <button
             class="text-lg justify-center flex btn-sub"
             v-for="(url, index) in getStoreInfo.storeButtons"
