@@ -1,13 +1,13 @@
 <template>
   <!-- NOTE 필독 사항 -->
   <div class="">
-    <div class="whitespace-pre-line font-medium text-sm mt-2">
+    <!-- <div class="whitespace-pre-line font-medium text-sm mt-2">
       {{
         getStoreInfo.introduction === undefined
           ? "가게 소개가 없어요.ㅠㅠ"
           : getStoreInfo.introduction
       }}
-    </div>
+    </div> -->
   </div>
 </template>
 <script setup lang="ts">

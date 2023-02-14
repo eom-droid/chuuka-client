@@ -97,7 +97,7 @@ function onClickHome() {
       <div class="relative">
         <img
           src="@/assets/img/icon/backword.svg"
-          class="absolute w-7 hover:cursor-pointer rounded-full bg-slate-200 p-1 ml-3 mt-4"
+          class="absolute w-10 hover:cursor-pointer rounded-full text-white p-1 ml-3 mt-4"
           @click="onClickBack()"
         />
         <img
@@ -201,9 +201,8 @@ function onClickHome() {
           </div>
         </div>
       </div>
-      <hr class="bg-mid-gray mt-2 x-basic-margin" />
 
-      <!-- NOTE 가게링크 -->
+      <!-- ANCHOR 가게링크 -->
       <div class="x-basic-padding pb-3">
         <div class="">
           <button
@@ -219,12 +218,21 @@ function onClickHome() {
         </div>
       </div>
 
-      <div class="bg-neutral-100 h-2.5"></div>
+      <!-- ANCHOR 소개 -->
+      <div>
+        <div
+          class="whitespace-pre-line font-medium text-sm mt-2 text-left px-3 mb-3"
+        >
+          {{ getStoreInfo.introduction }}
+        </div>
+      </div>
+
+      <!-- <div class="bg-neutral-100 h-2.5"></div> -->
 
       <!-- NOTE 탭 -->
       <div class="">
         <!-- ANCHOR 소개 not Joined -->
-        <div
+        <!-- <div
           class="text-base font-medium flex mx-3"
           v-if="!getStoreInfo.isJoined"
         >
@@ -233,20 +241,20 @@ function onClickHome() {
           >
             소개
           </p>
-        </div>
+        </div> -->
 
         <!-- ANCHOR 소개 not Managed -->
-        <div
+        <!-- <div
           class="text-base font-medium flex mx-3"
-          v-else-if="!getStoreInfo.isManaged"
+          v-if="!getStoreInfo.isManaged"
         >
           <p class="w-full h-full py-2.5 border-b-4 border-b-main">소개</p>
-        </div>
+        </div> -->
 
         <!-- ANCHOR Joined & Managed -->
         <div
           class="text-base font-medium flex gap-3 mx-3 border-b"
-          v-else-if="getStoreInfo.isManaged"
+          v-if="getStoreInfo.isManaged"
         >
           <router-link
             :to="'/store/' + getStoreInfo.id + '/introduction'"
