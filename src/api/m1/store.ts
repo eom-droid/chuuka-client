@@ -145,7 +145,7 @@ export async function getStoreInfoWithRandomLimit(
   random: number,
   isReachedEnd: boolean,
   isStartedZero: boolean,
-  filterNotJoining: boolean
+  isShownNotJoinedStore: boolean
 ): Promise<IStoreInfoWithRandomLimit> {
   let q;
   if (random === -1) random = Math.random();
@@ -155,7 +155,7 @@ export async function getStoreInfoWithRandomLimit(
   let constraints = [] as QueryConstraint[];
   // 추카 가입 여부 체크에 따라
 
-  if (!filterNotJoining) {
+  if (!isShownNotJoinedStore) {
     constraints.push(where("isJoined", "==", true));
   }
 

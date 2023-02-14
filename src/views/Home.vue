@@ -29,7 +29,7 @@ const isRunning = ref(false);
 const savedScrollHeight = ref(0);
 const listeningFunc = throttle(calcScrollAndGetDocs, 100);
 
-const checkedNotJoining = ref(false);
+const isShownNotJoinedStore = ref(false);
 
 const questionShow = ref(false);
 
@@ -65,7 +65,7 @@ async function calcScrollAndGetDocs() {
   savedScrollHeight.value = tempShit;
   if (!isRunning.value && wholeHeight - tempShit < 2000) {
     isRunning.value = true;
-    await initAllStore();
+    await search();
     isRunning.value = false;
   }
 }
@@ -90,7 +90,7 @@ onActivated(() => {
     // 적용하기로 나온경우 && 다른 선택을 했을 시
     tempLocation.value = getSelectedLocation.value;
     initValues();
-    initAllStore();
+    search();
   }
 
   window.addEventListener("scroll", handleScrollEvent);
@@ -131,16 +131,17 @@ function removeListners() {
 }
 
 // ANCHOR 함수
-function init() {
+async function init() {
   initLocation();
-  initAllStore();
+  await search();
 }
 
 const random = ref(-1);
 const isReachedEnd = ref(false);
 const isStartedZero = ref(false);
 
-async function initAllStore() {
+async function search() {
+  console.log("search");
   if (isEnd.value) return;
   let tempResult;
   let mixedResult = [] as Array<IStore>;
@@ -150,7 +151,7 @@ async function initAllStore() {
       random.value,
       isReachedEnd.value,
       isStartedZero.value,
-      checkedNotJoining.value
+      isShownNotJoinedStore.value
     );
     random.value = queryResult.random;
     isReachedEnd.value = queryResult.isReachedEnd;
@@ -162,7 +163,7 @@ async function initAllStore() {
       lastVisible.value,
       "location",
       tempLocation.value,
-      checkedNotJoining.value
+      isShownNotJoinedStore.value
     );
     isEnd.value = true;
   }
@@ -223,7 +224,7 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
   //@ts-ignore
   setTimeout(() => (checkBoxEvent.target.disabled = false), 1200);
   initValues();
-  await initAllStore();
+  await search();
 }
 </script>
 
@@ -269,7 +270,7 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
           type="checkbox"
           id="isJoining"
           class="w-5 h-5 input-checkbox my-auto"
-          v-model="checkedNotJoining"
+          v-model="isShownNotJoinedStore"
           @change="onChangeIsJoining($event)"
         />
         <label for="isJoining" class="text-base font-normal pl-2"
