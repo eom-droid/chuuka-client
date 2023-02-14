@@ -126,14 +126,17 @@ function onClickHome() {
           </div>
         </div>
       </div>
+
       <div class="x-basic-padding pt-4 pb-2 relative">
         <div class="absolute flex -top-6 right-3">
+          <!-- NOTE 카카오톡 버튼 -->
           <a
             :href="'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk"
             target="_blank"
           >
             <img src="@/assets/img/icon/kakaoBorder.svg" class="w-12" />
           </a>
+          <!-- NOTE 인스타그램 버튼 -->
           <a
             :href="'https://www.instagram.com/' + getStoreInfo.sns.instagram"
             target="_blank"
