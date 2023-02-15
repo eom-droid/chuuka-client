@@ -56,7 +56,7 @@ function onClickBackword() {
     <div class="x-basic-padding flex relative py-4">
       <img
         src="@/assets/img/icon/backword.svg"
-        class="absolute w-6 h-6 hover:cursor-pointer mt-0.5"
+        class="fixed top-6 left-6 w-6 cursor-pointer"
         @click="onClickBackword()"
       />
 

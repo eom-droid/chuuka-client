@@ -51,7 +51,7 @@ function onlickLocation(location: string) {
     <div class="flex">
       <img
         src="@/assets/img/icon/backword.svg"
-        class="fixed w-6 hover:cursor-pointer mt-4 ml-2"
+        class="fixed top-6 left-6 w-6 cursor-pointer"
         @click="onClickBack()"
       />
 

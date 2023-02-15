@@ -97,7 +97,7 @@ function onClickHome() {
       <div class="relative">
         <img
           src="@/assets/img/icon/backword.svg"
-          class="absolute w-10 hover:cursor-pointer rounded-full text-white p-1 ml-3 mt-4"
+          class="fixed top-6 left-6 w-6 cursor-pointer"
           @click="onClickBack()"
         />
         <img
