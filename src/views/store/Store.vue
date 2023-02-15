@@ -168,7 +168,7 @@ function onClickHome() {
             {{ getStoreInfo.location }}
           </div>
           <!-- ANCHOR 위치보기 버튼 -->
-          <div class="flex mt-0.5">
+          <div class="flex mt-0.5 min-w-fit mb-auto">
             <a
               class="location-link"
               v-if="getStoreInfo.locationUrl === undefined"
@@ -210,23 +210,23 @@ function onClickHome() {
       </div>
 
       <!-- ANCHOR 가게링크 -->
-      <div class="x-basic-padding pb-3">
-        <div class="">
-          <button
-            class="text-lg justify-center flex btn-sub"
-            v-for="(url, index) in getStoreInfo.storeButtons"
-            :key="index"
-            @click="onClickUrl(url.url)"
-          >
-            <div class="flex my-auto">
-              <span>{{ url.name }}</span>
-            </div>
-          </button>
-        </div>
+      <div class="x-basic-padding pb-3 grid gap-3">
+        <button
+          class="text-lg justify-center flex link-btn gap-2"
+          v-for="(url, index) in getStoreInfo.storeButtons"
+          :key="index"
+          @click="onClickUrl(url.url)"
+        >
+          <img src="@/assets/img/icon/link.svg" class="w-4 my-auto" />
+          <div class="flex my-auto">
+            <span>{{ url.name }}</span>
+          </div>
+        </button>
       </div>
 
       <!-- ANCHOR 소개 -->
-      <div>
+      <div v-if="getStoreInfo.introduction" class="flex mx-4">
+        <img src="@/assets/img/icon/home.svg" class="w-6 mt-4 mb-auto" />
         <div
           class="whitespace-pre-line font-medium text-sm mt-2 text-left px-3 mb-3"
         >
@@ -260,13 +260,15 @@ function onClickHome() {
 
         <!-- ANCHOR Joined & Managed -->
         <div
-          class="text-base font-medium flex gap-3 mx-3 border-b"
+          class="text-base font-medium flex mx-3"
           v-if="getStoreInfo.isManaged"
         >
           <router-link
             :to="'/store/' + getStoreInfo.id + '/introduction'"
-            class="w-full h-full py-2.5"
-            :class="innerRoute === 0 ? 'border-b-main border-b-4' : ''"
+            class="w-full h-full py-2.5 border-b-2"
+            :class="
+              innerRoute === 0 ? 'border-b-main text-main' : 'text-sub-gray'
+            "
             @click="innerRoute = 0"
             replace
           >
@@ -274,8 +276,10 @@ function onClickHome() {
           </router-link>
           <router-link
             :to="'/store/' + getStoreInfo.id + '/news'"
-            class="w-full h-full py-2.5"
-            :class="innerRoute === 1 ? 'border-b-main border-b-4' : ''"
+            class="w-full h-full py-2.5 border-b-2"
+            :class="
+              innerRoute === 1 ? 'border-b-main text-main' : 'text-sub-gray'
+            "
             @click="innerRoute = 1"
             replace
           >
@@ -283,8 +287,10 @@ function onClickHome() {
           </router-link>
           <router-link
             :to="'/store/' + getStoreInfo.id + '/design'"
-            class="w-full h-full py-2.5"
-            :class="innerRoute === 2 ? 'border-b-main border-b-4' : ''"
+            class="w-full h-full py-2.5 border-b-2"
+            :class="
+              innerRoute === 2 ? 'border-b-main text-main' : 'text-sub-gray'
+            "
             @click="innerRoute = 2"
             replace
           >
@@ -330,10 +336,18 @@ function onClickHome() {
 }
 
 .location-link {
-  @apply ml-2 mt-auto inline-block align-bottom text-base border border-gray-100 text-text-gray py-1.5 px-3 rounded-sm;
+  @apply ml-2 mt-auto inline-block align-bottom text-sm border border-gray-100 text-text-gray py-1.5 px-3 rounded-sm;
 }
 
 .store-content-block {
   @apply border border-mid-gray shadow-sm rounded-md p-3;
+}
+
+.link-btn {
+  height: 50px;
+
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
 }
 </style>
