@@ -1,7 +1,10 @@
 <template>
   <!-- NOTE 필독 사항 -->
   <div class="">
-    <div class="text-sm font-medium flex my-5">
+    <div
+      v-if="mustRead.orderForm.content !== ''"
+      class="text-sm font-medium flex my-5"
+    >
       <button
         class="btn-sub-sub text-base font-bold"
         @click="onClickCopyOrderFrom()"
