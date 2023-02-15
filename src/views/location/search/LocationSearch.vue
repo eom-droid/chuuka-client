@@ -54,12 +54,13 @@ function onClickBackword() {
 <template>
   <div class="absolute z-10 w-full">
     <div class="x-basic-padding flex relative py-4">
-      <img
-        src="@/assets/img/icon/backword.svg"
-        class="fixed top-6 left-6 w-6 cursor-pointer"
-        @click="onClickBackword()"
-      />
-
+      <div class="mt-1 tr-10">
+        <img
+          src="@/assets/img/icon/backword.svg"
+          class="w-6 cursor-pointer"
+          @click="onClickBackword()"
+        />
+      </div>
       <p class="font-semibold text-xl m-auto py">위치</p>
     </div>
     <div class="x-basic-padding mt-5 w-full">

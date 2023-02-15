@@ -95,11 +95,13 @@ function onClickHome() {
         "
       ></FixedBottomButton>
       <div class="relative">
-        <img
-          src="@/assets/img/icon/backword.svg"
-          class="fixed top-6 left-6 w-6 cursor-pointer"
-          @click="onClickBack()"
-        />
+        <div class="md:absolute">
+          <img
+            src="@/assets/img/icon/backword.svg"
+            class="fixed md:relative top-6 left-6 w-6 cursor-pointer"
+            @click="onClickBack()"
+          />
+        </div>
         <img
           v-if="
             getStoreInfo.profileImage != undefined &&
