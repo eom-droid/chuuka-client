@@ -85,7 +85,7 @@ function onClickHome() {
 
 <template>
   <main class="" id="storeScrollEle">
-    <div v-if="getStoreInfo.id != undefined" class="">
+    <div v-if="getStoreInfo.id != undefined" class="grid gap-5">
       <FixedBottomButton
         name="케이크 주문/상담하러 가기"
         :nav-link="
@@ -127,8 +127,8 @@ function onClickHome() {
         </div>
       </div>
 
-      <div class="x-basic-padding pt-4 pb-2 relative">
-        <div class="absolute flex -top-7 right-5">
+      <div class="x-basic-padding relative">
+        <div class="absolute flex -top-12 right-5">
           <!-- NOTE 카카오톡 버튼 -->
           <a
             :href="'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk"
@@ -145,8 +145,9 @@ function onClickHome() {
             <img src="@/assets/img/icon/instagramBorder.svg" class="w-14" />
           </a>
         </div>
-        <!-- 이름과 인스타그램 -->
-        <div class="flex mt-6">
+
+        <!-- ANCHOR 가게 이름 -->
+        <div class="flex">
           <!-- <div class="my-auto flex"> -->
           <div class="my-auto">
             <span class="text-xl font-bold">{{ getStoreInfo.name }}</span>
@@ -168,7 +169,7 @@ function onClickHome() {
             {{ getStoreInfo.location }}
           </div>
           <!-- ANCHOR 위치보기 버튼 -->
-          <div class="flex mt-0.5 min-w-fit mb-auto">
+          <div class="flex min-w-fit mb-auto">
             <a
               class="location-link"
               v-if="getStoreInfo.locationUrl === undefined"
@@ -197,7 +198,10 @@ function onClickHome() {
           </div>
         </div>
         <!-- ANCHOR 해시태그 -->
-        <div class="flex gap-3 p-1 mt-3">
+        <div
+          v-if="getStoreInfo.hashTags.length > 0"
+          class="flex gap-3 p-1 mt-3"
+        >
           <div
             v-for="(hashTag, index) in getStoreInfo.hashTags"
             :key="index"
@@ -210,7 +214,7 @@ function onClickHome() {
       </div>
 
       <!-- ANCHOR 가게링크 -->
-      <div class="x-basic-padding my-3 grid gap-3">
+      <div v-if="getStoreInfo.storeButtons" class="x-basic-padding grid gap-3">
         <button
           class="text-lg justify-center flex link-btn gap-2"
           v-for="(url, index) in getStoreInfo.storeButtons"
@@ -260,7 +264,7 @@ function onClickHome() {
 
         <!-- ANCHOR Joined & Managed -->
         <div
-          class="text-base font-medium flex mx-3 my-3"
+          class="text-base font-medium flex mx-3"
           v-if="getStoreInfo.isManaged"
         >
           <router-link
