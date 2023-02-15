@@ -16,7 +16,6 @@
       ></textarea>
     </div>
 
-    <div class="my-2"><hr /></div>
     <div class="my-3 grid gap-3">
       <!-- 필독사항 : 주문방법 -->
       <div class="store-content-block">
@@ -24,17 +23,15 @@
           @click="mustRead.orderMethod.isOpen = !mustRead.orderMethod.isOpen"
           class="flex justify-between cursor-pointer"
         >
-          <div>
-            {{ sections.orderMethod }}
+          <div class="flex gap-3">
+            <img src="@/assets/img/icon/pen.svg" class="w-5" />
+            <span>{{ sections.orderMethod }}</span>
           </div>
           <div v-show="!mustRead.orderMethod.isOpen">
-            펼치기<font-awesome-icon
-              icon="chevron-down"
-              class="text-main ml-2"
-            />
+            <font-awesome-icon icon="chevron-down" class="text-sub-gray" />
           </div>
           <div v-show="mustRead.orderMethod.isOpen">
-            접기<font-awesome-icon icon="chevron-up" class="text-main ml-2" />
+            <font-awesome-icon icon="chevron-up" class="text-sub-gray" />
           </div>
         </div>
         <div
@@ -54,15 +51,15 @@
           @click="mustRead.size.isOpen = !mustRead.size.isOpen"
           class="flex justify-between cursor-pointer"
         >
-          <div>크기/맛</div>
+          <div class="flex gap-3">
+            <img src="@/assets/img/icon/star.svg" class="w-5" />
+            <span>크기/맛</span>
+          </div>
           <div v-show="!mustRead.size.isOpen">
-            펼치기<font-awesome-icon
-              icon="chevron-down"
-              class="text-main ml-2"
-            />
+            <font-awesome-icon icon="chevron-down" class="text-sub-gray" />
           </div>
           <div v-show="mustRead.size.isOpen">
-            접기<font-awesome-icon icon="chevron-up" class="text-main ml-2" />
+            <font-awesome-icon icon="chevron-up" class="text-sub-gray" />
           </div>
         </div>
         <div
@@ -73,7 +70,6 @@
             <div>{{ mustRead.size.content }}</div>
           </div>
           <div v-else class="text-mid-gray">크기가 없습니다</div>
-          <hr />
           <div v-if="mustRead.taste.content != ''" class="grid">
             <div>{{ mustRead.taste.content }}</div>
           </div>
@@ -87,15 +83,15 @@
           @click="mustRead.notice.isOpen = !mustRead.notice.isOpen"
           class="flex justify-between cursor-pointer"
         >
-          <div>{{ sections.notice }}</div>
+          <div class="flex gap-3">
+            <img src="@/assets/img/icon/info.svg" class="w-5" />
+            <span>{{ sections.notice }}</span>
+          </div>
           <div v-show="!mustRead.notice.isOpen">
-            펼치기<font-awesome-icon
-              icon="chevron-down"
-              class="text-main ml-2"
-            />
+            <font-awesome-icon icon="chevron-down" class="text-sub-gray" />
           </div>
           <div v-show="mustRead.notice.isOpen">
-            접기<font-awesome-icon icon="chevron-up" class="text-main ml-2" />
+            <font-awesome-icon icon="chevron-up" class="text-sub-gray" />
           </div>
         </div>
         <div
@@ -116,15 +112,15 @@
           "
           class="flex justify-between cursor-pointer"
         >
-          <div>{{ sections.exchangeRefund }}</div>
+          <div class="flex gap-3">
+            <img src="@/assets/img/icon/tag.svg" class="w-5" />
+            <span>{{ sections.exchangeRefund }}</span>
+          </div>
           <div v-show="!mustRead.exchangeRefund.isOpen">
-            펼치기<font-awesome-icon
-              icon="chevron-down"
-              class="text-main ml-2"
-            />
+            <font-awesome-icon icon="chevron-down" class="text-sub-gray" />
           </div>
           <div v-show="mustRead.exchangeRefund.isOpen">
-            접기<font-awesome-icon icon="chevron-up" class="text-main ml-2" />
+            <font-awesome-icon icon="chevron-up" class="text-sub-gray" />
           </div>
         </div>
         <div
@@ -260,6 +256,6 @@ function iosCopyToClipboard(el: any) {
   z-index: -1;
 }
 .store-content-block {
-  @apply border border-mid-gray shadow-sm rounded-md p-3;
+  @apply rounded-md p-3;
 }
 </style>

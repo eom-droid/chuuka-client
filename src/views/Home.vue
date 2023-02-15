@@ -246,7 +246,7 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
             class="text-right bg-white px-4 py-2.5 questionBox border border-mid-gray"
           >
             <a href="https://pf.kakao.com/_TxnGvb" target="_blank">입점 문의</a>
-            <hr class="bg-mid-gray my-2.5" />
+            <!-- <hr class="bg-mid-gray my-2.5" /> -->
             <a href="https://pf.kakao.com/_TxnGvb" target="_blank"
               >불편사항 접수</a
             >

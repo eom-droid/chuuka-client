@@ -196,7 +196,7 @@ function onClickHistory(location: string) {
           @click="onClickHistory(searched)"
         >
           <p class="py-3">{{ searched }}</p>
-          <hr class="bg-mid-gray" />
+          <!-- <hr class="bg-mid-gray" /> -->
         </button>
       </div>
     </div>

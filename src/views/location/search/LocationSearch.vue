@@ -105,7 +105,7 @@ function onClickBackword() {
           >
             {{ loc }}
           </button>
-          <hr />
+          <!-- <hr /> -->
         </div>
       </div>
       <div class="h-28"></div>
