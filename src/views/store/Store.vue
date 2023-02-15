@@ -153,10 +153,10 @@ function onClickHome() {
           </div>
         </div>
 
-        <div class="flex text-base font-medium mt-3">
-          <img src="@/assets/img/icon/location.svg" class="w-4 mx-0.5" />
-          <span
-            class="text-sm ml-2 mt-1 text-left text-neutral-500 cursor-pointer"
+        <div class="flex text-base font-medium mt-3 justify-between">
+          <!-- <img src="@/assets/img/icon/location.svg" class="w-4 mx-0.5" /> -->
+          <div
+            class="text-base text-left text-neutral-500 cursor-pointer my-auto"
             @click="
               () => {
                 source = getStoreInfo.location;
@@ -164,43 +164,47 @@ function onClickHome() {
                 if (copied) toastSuccess('주소를 복사했어요');
               }
             "
-            >{{ getStoreInfo.location }}</span
           >
+            {{ getStoreInfo.location }}
+          </div>
+          <!-- ANCHOR 위치보기 버튼 -->
           <div class="flex mt-0.5">
             <a
-              class="map-font"
+              class="location-link"
               v-if="getStoreInfo.locationUrl === undefined"
               target="_blank"
             >
               <span> </span>
             </a>
             <a
-              class="map-font"
+              class="location-link"
               v-else-if="getStoreInfo.locationUrl.naver != undefined"
               :href="'https://naver.me/' + getStoreInfo.locationUrl.naver"
               target="_blank"
             >
-              <span class=""> 지도 </span>
+              <span class="">위치보기</span>
             </a>
             <a
-              class="map-font"
+              class="location-link"
               v-else-if="getStoreInfo.locationUrl.kakao != undefined"
               :href="
                 'https://place.map.kakao.com/' + getStoreInfo.locationUrl.kakao
               "
               target="_blank"
             >
-              <span> 지도 </span>
+              <span class="">위치보기</span>
             </a>
           </div>
         </div>
-        <div class="flex mt-4">
+        <!-- ANCHOR 해시태그 -->
+        <div class="flex gap-3 p-1 mt-3">
           <div
             v-for="(hashTag, index) in getStoreInfo.hashTags"
             :key="index"
-            class="text-xs font-medium border-main border py-2 px-2.5 rounded-md mr-2"
+            class="text-xs font-medium rounded-md"
           >
-            #{{ hashTag }}
+            <span class="text-main mr-0.5">#</span>
+            <span class="text-sub-gray">{{ hashTag }}</span>
           </div>
         </div>
       </div>
@@ -325,8 +329,8 @@ function onClickHome() {
   font-family: "Montserrat", sans-serif;
 }
 
-.map-font {
-  @apply text-usual-blue ml-2 mt-auto inline-block align-bottom w-10 text-base;
+.location-link {
+  @apply ml-2 mt-auto inline-block align-bottom text-base border border-gray-100 text-text-gray py-1.5 px-3 rounded-sm;
 }
 
 .store-content-block {
