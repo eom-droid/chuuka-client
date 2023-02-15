@@ -232,14 +232,13 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
   <main class="x-basic-padding" id="homeScrollEle">
     <div>
       <!-- {{ lastVisible }} -->
-      <div class="relative">
-        <p class="text-xl font-bold py-4">추카</p>
-        <div class="absolute right-0 top-5 text-base text-right font-bold">
-          <button
-            @click="questionShow = !questionShow"
-            class="underline underline-offset-2"
-          >
-            문의
+      <div class="grid grid-cols-3">
+        <!-- <p class="text-xl font-bold py-4">추카</p> -->
+        <div></div>
+        <img src="@/assets/img/icon/homeTitle.svg" class="mx-auto my-5" />
+        <div class="text-base text-right font-bold my-auto">
+          <button @click="questionShow = !questionShow" class="">
+            오류/문의
           </button>
           <div
             v-show="questionShow"
@@ -258,13 +257,16 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
           src="@/assets/img/banner/banner.png"
           class="rounded-md w-full object-cover"
       /></a>
+
+      <!-- ANCHOR 위치 -->
       <button
         @click="router.push('/location')"
-        class="flex text-base w-full border border-neutral-400 rounded-md px-2 py-1 mt-3 h-10"
+        class="search-location w-full flex gap-3 my-3"
       >
-        <img src="@/assets/img/icon/location.svg" class="w-3 my-auto" />
-        <div class="ml-3 my-auto">{{ tempLocation }}</div>
+        <img src="@/assets/img/icon/location.svg" class="ml-5 w-5 my-auto" />
+        <div class="my-auto text-sub-gray">{{ tempLocation }}</div>
       </button>
+
       <div class="flex py-4">
         <input
           type="checkbox"
@@ -279,11 +281,11 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
       </div>
     </div>
 
-    <div class="mt-3">
+    <div class="mt-3 grid gap-5">
       <router-link
         v-for="(store, index) in tempAllStore"
         :key="index"
-        class="border-b border-neutral-200 mb-2 flex pb-2 relative"
+        class="flex pb-2 relative"
         @click="onClickStore(store)"
         :to="'/store/' + store.id"
       >
@@ -312,11 +314,8 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
         </div>
         <div class="text-left">
           <div class="py-1.5 px-3">
-            <div class="flex text-base font-semibold">
-              <img src="@/assets/img/icon/storeIcon.svg" class="w-5" /><span
-                class="ml-1.5 text-base"
-                >{{ store.name }}</span
-              >
+            <div class="text-base font-semibold">
+              {{ store.name }}
             </div>
             <div class="text-neutral-600 text-xs mt-1.5">
               <p>{{ getMunicipality(store.location) }}</p>
@@ -332,20 +331,21 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
               </p>
             </div>
             <p class=" "></p>
-            <div class="flex mt-2">
+            <div class="flex gap-3 mt-2">
               <div
                 v-for="(hashTag, index) in store.hashTags"
                 :key="index"
-                class="custom_textsize border border-main px-1.5 py-0.5 rounded-md mr-1.5"
+                class="text-xs font-medium rounded-md"
               >
-                #{{ hashTag }}
+                <span class="text-main mr-0.5">#</span>
+                <span class="text-sub-gray">{{ hashTag }}</span>
               </div>
             </div>
           </div>
         </div>
       </router-link>
     </div>
-    <div class="text-neutral-400 text-base" v-show="isEnd">
+    <div class="text-neutral-400 text-base mt-5" v-show="isEnd">
       더 이상의 업체가 없습니다.
     </div>
     <button
@@ -422,5 +422,13 @@ main {
 
 .questionBox {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.search-location {
+  height: 50px;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
 }
 </style>
