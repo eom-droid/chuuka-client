@@ -10,7 +10,7 @@
   height: 48px;
 }
 .btn-main-short {
-  @apply bg-main text-white w-full mt-3 font-semibold h-11 rounded-md;
+  @apply bg-main text-white w-full mt-3 font-semibold h-12 rounded-md;
 }
 
 .btn-sub {
@@ -18,11 +18,11 @@
   height: 48px;
 }
 .btn-sub-short {
-  @apply bg-sub text-main w-full mt-3 font-semibold h-11 rounded-md;
+  @apply bg-sub text-main w-full mt-3 font-semibold h-12 rounded-md;
 }
 /* 제작필요 */
 .btn-sub-sub {
-  @apply bg-white text-main w-full mt-3 font-semibold rounded-md border border-main h-11;
+  @apply bg-white text-main w-full mt-3 font-semibold rounded-md border border-main h-12;
 }
 
 .input-checkbox {

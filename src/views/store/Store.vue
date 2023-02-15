@@ -128,21 +128,21 @@ function onClickHome() {
       </div>
 
       <div class="x-basic-padding pt-4 pb-2 relative">
-        <div class="absolute flex -top-6 right-3">
+        <div class="absolute flex -top-7 right-5">
           <!-- NOTE 카카오톡 버튼 -->
           <a
             :href="'https://pf.kakao.com/' + getStoreInfo.sns.kakaoTalk"
             target="_blank"
           >
-            <img src="@/assets/img/icon/kakaoBorder.svg" class="w-12" />
+            <img src="@/assets/img/icon/kakaoBorder.svg" class="w-14" />
           </a>
           <!-- NOTE 인스타그램 버튼 -->
           <a
             :href="'https://www.instagram.com/' + getStoreInfo.sns.instagram"
             target="_blank"
-            class="ml-4"
+            class="ml-2.5"
           >
-            <img src="@/assets/img/icon/instagramBorder.svg" class="w-12" />
+            <img src="@/assets/img/icon/instagramBorder.svg" class="w-14" />
           </a>
         </div>
         <!-- 이름과 인스타그램 -->
@@ -201,7 +201,7 @@ function onClickHome() {
           <div
             v-for="(hashTag, index) in getStoreInfo.hashTags"
             :key="index"
-            class="text-xs font-medium rounded-md"
+            class="text-base font-medium rounded-md"
           >
             <span class="text-main mr-0.5">#</span>
             <span class="text-sub-gray">{{ hashTag }}</span>
@@ -210,7 +210,7 @@ function onClickHome() {
       </div>
 
       <!-- ANCHOR 가게링크 -->
-      <div class="x-basic-padding pb-3 grid gap-3">
+      <div class="x-basic-padding my-3 grid gap-3">
         <button
           class="text-lg justify-center flex link-btn gap-2"
           v-for="(url, index) in getStoreInfo.storeButtons"
@@ -260,7 +260,7 @@ function onClickHome() {
 
         <!-- ANCHOR Joined & Managed -->
         <div
-          class="text-base font-medium flex mx-3"
+          class="text-base font-medium flex mx-3 my-3"
           v-if="getStoreInfo.isManaged"
         >
           <router-link
