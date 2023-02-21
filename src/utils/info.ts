@@ -1,1 +1,1 @@
-const modeList = ["dev", "stag", "production"];
+export const modeList = ["dev", "stag", "production"];
