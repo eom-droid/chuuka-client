@@ -141,7 +141,6 @@ const isReachedEnd = ref(false);
 const isStartedZero = ref(false);
 
 async function search() {
-  console.log("search");
   if (isEnd.value) return;
   let tempResult;
   let mixedResult = [] as Array<IStore>;

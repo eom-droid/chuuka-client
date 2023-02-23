@@ -21,6 +21,7 @@ const { setStoreInfo } = pinia;
 const innerRoute = ref(0);
 const loading = ref(false);
 const route = useRoute();
+const isIntroductionFold = ref(true);
 
 // ANCHOR 이벤트
 onMounted(async () => {
@@ -96,11 +97,6 @@ function onClickHome() {
       ></FixedBottomButton>
       <div class="relative">
         <img
-          src="@/assets/img/icon/backword.svg"
-          class="absolute w-10 hover:cursor-pointer rounded-full text-white p-1 ml-3 mt-4"
-          @click="onClickBack()"
-        />
-        <img
           v-if="
             getStoreInfo.profileImage != undefined &&
             getStoreInfo.profileImage.link != '' &&
@@ -113,7 +109,7 @@ function onClickHome() {
         <div v-else class="h-25v w-full flex bg-light-gray">
           <div class="m-auto w-full">
             <img
-              src="@/assets/img/default/chuuka_bold_gray.svg"
+              src="@/assets/img/default/chuuka_bold_gray.svg "
               class="w-2/5 mx-auto"
               @error="getImgUrl"
             />
@@ -125,6 +121,12 @@ function onClickHome() {
             </p>
           </div>
         </div>
+        <div class="w-full absolute top-0 top-shadow"></div>
+        <img
+          src="@/assets/img/icon/backword.svg"
+          class="absolute w-10 hover:cursor-pointer rounded-full text-white p-1 ml-3 mt-4 top-0 left-0"
+          @click="onClickBack()"
+        />
       </div>
       <div class="x-basic-padding pt-4 pb-2 relative">
         <div class="absolute flex -top-6 right-3">
@@ -219,11 +221,18 @@ function onClickHome() {
       </div>
 
       <!-- ANCHOR 소개 -->
-      <div>
+      <div class="flex mx-3 mt-4 mb-6">
+        <img src="@/assets/img/icon/home.svg" />
         <div
-          class="whitespace-pre-line font-medium text-sm mt-2 text-left px-3 mb-3"
+          class="whitespace-pre-line text-sm text-left ml-3 break-words inFoldIntroduction cursor-pointer"
+          :class="isIntroductionFold ? ' inFold' : ''"
+          @click="isIntroductionFold = !isIntroductionFold"
         >
-          {{ getStoreInfo.introduction }}
+          {{
+            getStoreInfo.introduction
+              ? getStoreInfo.introduction
+              : "소개글이 없습니다"
+          }}
         </div>
       </div>
 
@@ -328,5 +337,20 @@ function onClickHome() {
 
 .store-content-block {
   @apply border border-mid-gray shadow-sm rounded-md p-3;
+}
+.top-shadow {
+  box-shadow: 0px 0px 60px 40px black;
+  opacity: 80%;
+}
+
+.inFoldIntroduction {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+.inFold {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 </style>

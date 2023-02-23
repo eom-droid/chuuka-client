@@ -99,7 +99,6 @@ async function init() {
   tempProductArray.value = sortProductLinkedList(
     getProduct.value as IProduct[]
   );
-  console.log(tempProductArray.value);
 }
 
 function onClickUrl(url: string | undefined) {
