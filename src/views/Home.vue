@@ -110,6 +110,8 @@ function initValues() {
   tempAllStore.value = [];
   isEnd.value = false;
   isRunning.value = false;
+  isReachedEnd.value = false;
+  isStartedZero.value = false;
   lastVisible.value = null;
 }
 
@@ -167,13 +169,13 @@ async function search() {
     isEnd.value = true;
   }
 
-  tempResult.docs.map((ele) => {
+  tempResult.map((ele) => {
     let data = ele.data() as IStore;
     data.id = ele.id;
     mixedResult.push(data);
   });
   // 마지막 doc 저장
-  lastVisible.value = tempResult.docs[tempResult.docs.length - 1];
+  lastVisible.value = tempResult[tempResult.length - 1];
   // 임시에서 sort하고
   mixedResult.sort(() => Math.random() - 0.5);
   // 이어붙이기

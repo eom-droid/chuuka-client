@@ -134,7 +134,7 @@ export async function getStoreInfoWithLimit(
 }
 
 interface IStoreInfoWithRandomLimit {
-  result: QuerySnapshot<DocumentData>;
+  result: QueryDocumentSnapshot<DocumentData>[];
   random: number;
   isReachedEnd: boolean;
   isEnd: boolean;
@@ -162,7 +162,7 @@ export async function getStoreInfoWithRandomLimit(
   constraints.push(orderBy("random"));
 
   if (!isReachedEnd) {
-    if (document === null) {
+    if (document === null || document === undefined) {
       // 처음
       constraints.push(startAt(random));
     } else {
@@ -184,17 +184,30 @@ export async function getStoreInfoWithRandomLimit(
   constraints.push(limit(NUMBER));
   q = query(collection(firestore, firebaseDevPath + "store"), ...constraints);
 
-  const result = await getDocs(q);
-  const length = result.docs.length;
+  let result = (await getDocs(q)).docs;
+  const length = result.length;
+
   // 테스트
   // console.log(length);
   // await result.docs.map((item) => console.log(item.data().random));
   // console.log("random", random);
 
-  if (length !== NUMBER) {
+  if (length < NUMBER) {
     if (!isReachedEnd) {
       // 전체문서의 마지막 커서에 도달
       isReachedEnd = true;
+      const tempResult = await getStoreInfoWithRandomLimit(
+        result[result.length - 1],
+        random,
+        isReachedEnd,
+        isStartedZero,
+        isShownNotJoinedStore
+      );
+      result = result.concat(tempResult.result);
+      random = tempResult.random;
+      isReachedEnd = tempResult.isReachedEnd;
+      isEnd = tempResult.isEnd;
+      isStartedZero = tempResult.isStartedZero;
     } else isEnd = true;
   }
 
@@ -212,7 +225,7 @@ export async function getStoreInfoByField(
   key: string,
   value: string,
   filterOnlyJoining: boolean
-): Promise<QuerySnapshot<DocumentData>> {
+): Promise<QueryDocumentSnapshot<DocumentData>[]> {
   let q;
   let constraints = [] as QueryConstraint[];
 
@@ -233,7 +246,7 @@ export async function getStoreInfoByField(
 
   q = query(collection(firestore, firebaseDevPath + "store"), ...constraints);
 
-  const tempInfos = await getDocs(q);
+  const tempInfos = (await getDocs(q)).docs;
 
   return tempInfos;
 }
