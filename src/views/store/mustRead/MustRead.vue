@@ -1,6 +1,6 @@
 <template>
   <!-- NOTE 필독 사항 -->
-  <div class="">
+  <div class="x-basic-padding">
     <div class="text-sm font-medium flex">
       <button
         class="btn-sub-sub text-base font-bold"

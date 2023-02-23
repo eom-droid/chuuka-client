@@ -3,10 +3,10 @@
     <div class="modal-mask" @click="$emit('close')">
       <div class="modal-wrapper">
         <div class="modal-container" onclick="event.stopPropagation()">
-          <div>
+          <div class="relative">
             <slot name="header" class=""></slot>
             <button
-              class="modal-default-button text-base font-medium"
+              class="modal-default-button text-base font-medium absolute right-3 top-0"
               @click="$emit('close')"
             >
               닫기

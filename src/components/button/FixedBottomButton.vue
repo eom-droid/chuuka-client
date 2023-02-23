@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<IProps>(), {
 </script>
 
 <template>
-  <div class="fixed bottom-0 flex w-full">
+  <div class="fixed bottom-0 flex w-full z-40">
     <a
       v-if="navLink"
       v-show="isShown"

@@ -12,6 +12,7 @@ module.exports = {
         "light-gray": "#F5F5F5",
         "text-gray": "#616161",
         "usual-blue": "#0080FF",
+        "url-blue": "#0099FF",
         font: "#000000",
         orange: colors.orange,
         neutral: colors.neutral,

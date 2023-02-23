@@ -1,5 +1,5 @@
 <template>
-  <div class="my-3">
+  <div class="my-3 x-basic-padding">
     <div v-if="isLoading" class="flex">
       <img src="@/assets/gif/loadingIcon.gif" class="w-40 mx-auto" />
     </div>
@@ -24,7 +24,9 @@
           :key="index"
         >
           <template v-slot:header
-            ><span class="font-bold text-xl">{{ product.name }}</span></template
+            ><div class="font-bold text-xl my-5">
+              {{ product.name }}
+            </div></template
           >
           <template v-slot:image
             ><img
@@ -39,6 +41,9 @@
             </div>
           </template>
           <template v-slot:bottom-btn>
+            <div class="text-usual-blue mt-7 text-sm">
+              *캡쳐 후 상담 시 가게에 제공하면 원활한 상담이 가능합니다
+            </div>
             <a
               class="text-lg justify-center flex btn-main"
               target="_blank"
@@ -86,13 +91,12 @@ onMounted(async () => {
   init();
 });
 async function init() {
-  if (getInitStoreId === getStoreInfo.id) {
-    isLoading.value = false;
-    return;
+  if (getInitStoreId !== getStoreInfo.id) {
+    let tempProductList = await getAllProduct(getStoreInfo.id);
+    setInitStoreId(getStoreInfo.id);
+    setProduct(tempProductList);
   }
-  let tempProductList = await getAllProduct(getStoreInfo.id);
-  setInitStoreId(getStoreInfo.id);
-  setProduct(tempProductList);
+
   isLoading.value = false;
   showModal.value = new Array(getProduct.value.length).fill(false);
 

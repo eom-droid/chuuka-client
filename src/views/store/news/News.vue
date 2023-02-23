@@ -95,32 +95,36 @@ function cutLine(newLine: string) {
 </script>
 
 <template>
-  <div class="text-left my-3 whitespace-pre-line grid gap-3 text-sm">
-    <img
-      src="@/assets/gif/loadingIcon.gif"
-      v-if="isLoading"
-      class="w-40 mx-auto"
-    />
+  <div class="text-left whitespace-pre-line text-sm">
+    <div class="border-t border-mid-gray w-full bg-light-gray h-1.5"></div>
 
-    <div v-for="ele in newsArray" class="cursor-pointer">
-      <div class="border-t border-mid-gray w-full bg-light-gray h-1.5"></div>
-      <div class="mt-4">
-        <span class="ml-4">{{ ele.modDtime.toDate().toLocaleString() }}</span>
+    <div class="x-basic-padding">
+      <img
+        src="@/assets/gif/loadingIcon.gif"
+        v-if="isLoading"
+        class="w-40 mx-auto"
+      />
+
+      <div v-for="ele in newsArray">
         <NewsCard
           :title="ele.title"
           :content="ele.content"
           :og-image="ele.openGraph.ogImage"
           :og-title="ele.openGraph.ogTitle"
           :ogDescription="ele.openGraph.ogDescription"
+          :id-key="ele.id"
+          :mod-d-time="ele.modDtime"
         />
-      </div>
-    </div>
 
-    <div
-      class="mt-5 text-neutral-500 text-center text-base"
-      v-if="getNews.length <= 0"
-    >
-      일정/소식이 없습니다.
+        <div class="border-t border-mid-gray w-full bg-light-gray h-1.5"></div>
+      </div>
+
+      <div
+        class="mt-5 text-neutral-500 text-center text-base"
+        v-if="getNews.length <= 0"
+      >
+        일정/소식이 없습니다.
+      </div>
     </div>
   </div>
 </template>

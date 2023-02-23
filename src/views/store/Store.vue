@@ -262,7 +262,7 @@ function onClickHome() {
 
         <!-- ANCHOR Joined & Managed -->
         <div
-          class="text-base font-medium flex gap-3 mx-3 border-b"
+          class="text-base font-medium flex gap-3 px-3 border-b"
           v-if="getStoreInfo.isManaged"
         >
           <router-link
@@ -295,7 +295,7 @@ function onClickHome() {
         </div>
 
         <!-- ANCHOR alert -->
-        <div class="text-base text-left x-basic-padding">
+        <div class="text-base text-left">
           <router-view v-if="getStoreInfo.isJoined"></router-view>
           <div v-else class="mt-4 bg-light-gray rounded-lg p-3">
             <img src="@/assets/img/icon/lock.svg" class="mx-auto" />
