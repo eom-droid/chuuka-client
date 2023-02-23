@@ -14,6 +14,7 @@ import { usePersonalStore } from "@/stores/personal";
 import { storeToRefs } from "pinia";
 import { entireRegion } from "@/constant/constant";
 import { scrollToTop } from "@/utils/common";
+import FullScreenLoading from "@/components/FullScreenLoading.vue";
 
 // ANCHOR 선언
 const piniaStore = useStoreInfoStore();
@@ -36,6 +37,8 @@ const questionShow = ref(false);
 // 최상단 스크롤 FAB
 const fabClass = ref<"hidden" | "fixed">("hidden");
 const scrollY = ref(0);
+
+const isLoading = ref(true);
 
 // ANCHOR 이벤트
 onMounted(() => {
@@ -69,7 +72,7 @@ async function calcScrollAndGetDocs() {
     isRunning.value = false;
   }
 }
-onActivated(() => {
+onActivated(async () => {
   // mobile에서는 mainWrapper가 없음
   if (document.getElementById("mainWrapper") != null) {
     //@ts-ignore
@@ -87,10 +90,12 @@ onActivated(() => {
     getSelectedLocation != null &&
     tempLocation.value != getSelectedLocation.value
   ) {
+    isLoading.value = true;
     // 적용하기로 나온경우 && 다른 선택을 했을 시
     tempLocation.value = getSelectedLocation.value;
     initValues();
-    search();
+    await search();
+    isLoading.value = false;
   }
 
   window.addEventListener("scroll", handleScrollEvent);
@@ -134,8 +139,10 @@ function removeListners() {
 
 // ANCHOR 함수
 async function init() {
+  isLoading.value = true;
   initLocation();
   await search();
+  isLoading.value = false;
 }
 
 const random = ref(-1);
@@ -224,143 +231,153 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
   checkBoxEvent.target.disabled = true;
   //@ts-ignore
   setTimeout(() => (checkBoxEvent.target.disabled = false), 1200);
+  isLoading.value = true;
   initValues();
   await search();
+  isLoading.value = false;
 }
 </script>
 
 <template>
-  <main class="x-basic-padding" id="homeScrollEle">
-    <div>
-      <!-- {{ lastVisible }} -->
-      <div class="relative">
-        <p class="text-xl font-bold py-4">추카</p>
-        <div class="absolute right-0 top-5 text-base text-right font-bold">
-          <button
-            @click="questionShow = !questionShow"
-            class="underline underline-offset-2"
-          >
-            문의
-          </button>
-          <div
-            v-show="questionShow"
-            class="text-right bg-white px-4 py-2.5 questionBox border border-mid-gray"
-          >
-            <a href="https://pf.kakao.com/_TxnGvb" target="_blank">입점 문의</a>
-            <hr class="bg-mid-gray my-2.5" />
-            <a href="https://pf.kakao.com/_TxnGvb" target="_blank"
-              >불편사항 접수</a
+  <main class="" id="homeScrollEle">
+    <div class="x-basic-padding">
+      <div>
+        <!-- {{ lastVisible }} -->
+        <div class="relative">
+          <p class="text-xl font-bold py-4">추카</p>
+          <div class="absolute right-0 top-5 text-base text-right font-bold">
+            <button
+              @click="questionShow = !questionShow"
+              class="underline underline-offset-2"
             >
+              문의
+            </button>
+            <div
+              v-show="questionShow"
+              class="text-right bg-white px-4 py-2.5 questionBox border border-mid-gray"
+            >
+              <a href="https://pf.kakao.com/_TxnGvb" target="_blank"
+                >입점 문의</a
+              >
+              <hr class="bg-mid-gray my-2.5" />
+              <a href="https://pf.kakao.com/_TxnGvb" target="_blank"
+                >불편사항 접수</a
+              >
+            </div>
           </div>
         </div>
-      </div>
-      <a href="https://www.instagram.com/chuuka.official/" target="_blank"
-        ><img
-          src="@/assets/img/banner/banner.png"
-          class="rounded-md w-full object-cover"
-      /></a>
-      <button
-        @click="router.push('/location')"
-        class="flex text-base w-full border border-neutral-400 rounded-md px-2 py-1 mt-3 h-10"
-      >
-        <img src="@/assets/img/icon/location.svg" class="w-3 my-auto" />
-        <div class="ml-3 my-auto">{{ tempLocation }}</div>
-      </button>
-      <div class="flex py-4">
-        <input
-          type="checkbox"
-          id="isJoining"
-          class="w-5 h-5 input-checkbox my-auto"
-          v-model="isShownNotJoinedStore"
-          @change="onChangeIsJoining($event)"
-        />
-        <label for="isJoining" class="text-base font-normal pl-2"
-          >추카 미입점 업체 포함</label
+        <a href="https://www.instagram.com/chuuka.official/" target="_blank"
+          ><img
+            src="@/assets/img/banner/banner.png"
+            class="rounded-md w-full object-cover"
+        /></a>
+        <button
+          @click="router.push('/location')"
+          class="flex text-base w-full border border-neutral-400 rounded-md px-2 py-1 mt-3 h-10"
         >
-      </div>
-    </div>
-
-    <div class="mt-3">
-      <router-link
-        v-for="(store, index) in tempAllStore"
-        :key="index"
-        class="border-b border-neutral-200 mb-2 flex pb-2 relative"
-        @click="onClickStore(store)"
-        :to="'/store/' + store.id"
-      >
-        <div
-          class="homeImgContainer"
-          v-if="
-            store.profileImage != undefined &&
-            store.profileImage.link != '' &&
-            store.isJoined
-          "
-        >
-          <img
-            :src="store.profileImage.link"
-            class="rounded-lg border object-cover"
-            @error="getImgUrl"
+          <img src="@/assets/img/icon/location.svg" class="w-3 my-auto" />
+          <div class="ml-3 my-auto">{{ tempLocation }}</div>
+        </button>
+        <div class="flex py-4">
+          <input
+            type="checkbox"
+            id="isJoining"
+            class="w-5 h-5 input-checkbox my-auto"
+            v-model="isShownNotJoinedStore"
+            @change="onChangeIsJoining($event)"
           />
+          <label for="isJoining" class="text-base font-normal pl-2"
+            >추카 미입점 업체 포함</label
+          >
         </div>
-        <div class="homeImgContainer" v-else>
-          <div class="rounded-lg w-full h-full bg-light-gray flex">
+      </div>
+
+      <div class="mt-3">
+        <router-link
+          v-for="(store, index) in tempAllStore"
+          :key="index"
+          class="border-b border-neutral-200 mb-2 flex pb-2 relative"
+          @click="onClickStore(store)"
+          :to="'/store/' + store.id"
+        >
+          <div
+            class="homeImgContainer"
+            v-if="
+              store.profileImage != undefined &&
+              store.profileImage.link != '' &&
+              store.isJoined
+            "
+          >
             <img
-              src="@/assets/img/default/chuuka_bold_gray.svg"
-              class="rounded-lg w-4/5 m-auto"
+              :src="store.profileImage.link"
+              class="rounded-lg border object-cover"
               @error="getImgUrl"
             />
           </div>
-        </div>
-        <div class="text-left">
-          <div class="py-1.5 px-3">
-            <div class="flex text-base font-semibold">
-              <img src="@/assets/img/icon/storeIcon.svg" class="w-5" /><span
-                class="ml-1.5 text-base"
-                >{{ store.name }}</span
-              >
+          <div class="homeImgContainer" v-else>
+            <div class="rounded-lg w-full h-full bg-light-gray flex">
+              <img
+                src="@/assets/img/default/chuuka_bold_gray.svg"
+                class="rounded-lg w-4/5 m-auto"
+                @error="getImgUrl"
+              />
             </div>
-            <div class="text-neutral-600 text-xs mt-1.5">
-              <p>{{ getMunicipality(store.location) }}</p>
-              <p
-                class="customBlur"
-                v-if="locationBlur(store.location).length === 2"
-              >
-                {{ locationBlur(store.location)[0] }}
-                {{ locationBlur(store.location)[1].substring(0, 4) }}
-              </p>
-              <p v-else>
-                {{ locationBlur(store.location).toString() }}
-              </p>
-            </div>
-            <p class=" "></p>
-            <div class="flex mt-2">
-              <div
-                v-for="(hashTag, index) in store.hashTags"
-                :key="index"
-                class="custom_textsize border border-main px-1.5 py-0.5 rounded-md mr-1.5"
-              >
-                #{{ hashTag }}
+          </div>
+          <div class="text-left">
+            <div class="py-1.5 px-3">
+              <div class="flex text-base font-semibold">
+                <img src="@/assets/img/icon/storeIcon.svg" class="w-5" /><span
+                  class="ml-1.5 text-base"
+                  >{{ store.name }}</span
+                >
+              </div>
+              <div class="text-neutral-600 text-xs mt-1.5">
+                <p>{{ getMunicipality(store.location) }}</p>
+                <p
+                  class="customBlur"
+                  v-if="locationBlur(store.location).length === 2"
+                >
+                  {{ locationBlur(store.location)[0] }}
+                  {{ locationBlur(store.location)[1].substring(0, 4) }}
+                </p>
+                <p v-else>
+                  {{ locationBlur(store.location).toString() }}
+                </p>
+              </div>
+              <p class=" "></p>
+              <div class="flex mt-2">
+                <div
+                  v-for="(hashTag, index) in store.hashTags"
+                  :key="index"
+                  class="custom_textsize border border-main px-1.5 py-0.5 rounded-md mr-1.5"
+                >
+                  #{{ hashTag }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </router-link>
-    </div>
-    <div class="text-neutral-400 text-base" v-show="isEnd">
-      더 이상의 업체가 없습니다.
-    </div>
-    <button
-      class="top-button bottom-11 right-5 rounded-full p-2.5"
-      style="background-color: rgba(0, 0, 0, 0.1)"
-      :class="fabClass"
-      @click="() => scrollToTop()"
-    >
-      <div style="height: 30px; width: 30px">
-        <img src="@/assets/img/icon/arrowUpWithLine.svg" class="w-6 mx-auto" />
+        </router-link>
       </div>
-      <!-- <font-awesome-icon icon="arrow-up" /> -->
-    </button>
-    <div class="h-28"></div>
+      <div class="text-neutral-400 text-base" v-show="isEnd">
+        더 이상의 업체가 없습니다.
+      </div>
+      <button
+        class="top-button bottom-11 right-5 rounded-full p-2.5"
+        style="background-color: rgba(0, 0, 0, 0.1)"
+        :class="fabClass"
+        @click="() => scrollToTop()"
+      >
+        <div style="height: 30px; width: 30px">
+          <img
+            src="@/assets/img/icon/arrowUpWithLine.svg"
+            class="w-6 mx-auto"
+          />
+        </div>
+        <!-- <font-awesome-icon icon="arrow-up" /> -->
+      </button>
+      <div class="h-28"></div>
+    </div>
+    <full-screen-loading v-show="isLoading"></full-screen-loading>
   </main>
 </template>
 
