@@ -28,5 +28,6 @@ const props = withDefaults(defineProps<IProps>(), {
 <style scoped>
 .fbb-btn {
   @apply flex-1 py-4 text-center shadow-sm text-base md:text-lg bg-main text-white font-semibold;
+  max-width: 480px;
 }
 </style>
