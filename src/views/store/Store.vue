@@ -297,7 +297,7 @@ function onClickHome() {
         <!-- ANCHOR alert -->
         <div class="text-base text-left">
           <router-view v-if="getStoreInfo.isJoined"></router-view>
-          <div v-else class="mt-4 bg-light-gray rounded-lg p-3">
+          <div v-else class="mt-4 mx-3 bg-light-gray rounded-lg p-3 py-12">
             <img src="@/assets/img/icon/lock.svg" class="mx-auto" />
             <p
               class="text-text-gray font-medium text-base text-center mt-4 mb-2"
