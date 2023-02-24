@@ -69,7 +69,7 @@ function onClickBack() {
   // } else {
   //   router.back();
   // }
-  router.push("/");
+  router.replace("/");
 }
 
 function onClickUrl(url: string | undefined) {

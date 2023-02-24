@@ -4,16 +4,23 @@ import { IProduct } from "@/api/m1/product";
 
 export const useProductStore = defineStore("design", () => {
   const product = ref([] as IProduct[]);
+  const tempProduct = ref({} as IProduct);
   const initStoreId = ref("");
   //   const doubleCount = computed(() => count.value * 2);
   const getProduct = computed(() => {
     return product.value;
+  });
+  const getTempProduct = computed(() => {
+    return tempProduct.value;
   });
   const getInitStoreId = computed(() => {
     return initStoreId.value;
   });
   function setInitStoreId(newValue: string) {
     initStoreId.value = newValue;
+  }
+  function setTempProduct(newValue: IProduct) {
+    tempProduct.value = newValue;
   }
   function setProduct(newValue: IProduct[]) {
     product.value = newValue;
@@ -24,5 +31,7 @@ export const useProductStore = defineStore("design", () => {
     setProduct,
     setInitStoreId,
     getInitStoreId,
+    getTempProduct,
+    setTempProduct,
   };
 });

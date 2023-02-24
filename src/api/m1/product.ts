@@ -4,6 +4,8 @@ import {
   query,
   Timestamp,
   onSnapshot,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 import { firebaseDevPath } from "../tempdev";
 import { IPhoto } from "./photo";
@@ -54,9 +56,22 @@ export async function getAllProduct(storeId: string): Promise<Array<IProduct>> {
   });
   return result;
 }
-export function getProductById(id: string, productList: Array<IProduct>) {
-  return productList.find((ele) => ele.id === id);
+
+export async function getProductById(
+  storeId: string,
+  productId: string
+): Promise<IProduct> {
+  let result = {} as IProduct;
+  const snapShot = await getDoc(
+    doc(firestore, firebaseDevPath + "store/" + storeId + "/product", productId)
+  );
+  result = snapShot.data() as IProduct;
+  result.id = snapShot.id;
+  return result;
 }
+// export function getProductById(id: string, productList: Array<IProduct>) {
+//   return productList.find((ele) => ele.id === id);
+// }
 
 export function snapShotProduct(storeId: string, func: Function) {
   return onSnapshot(

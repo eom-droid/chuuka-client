@@ -4,7 +4,7 @@
       <img src="@/assets/gif/loadingIcon.gif" class="w-40 mx-auto" />
     </div>
 
-    <div v-else class="grid grid-cols-3 gap-0.5 relative">
+    <div v-else class="grid grid-cols-3 gap-2 relative">
       <div
         v-for="(product, index) in tempProductArray"
         :key="index"
@@ -13,8 +13,8 @@
         <div class="designImgContainer">
           <img
             :src="product.photos[0].link"
-            class="w-full h-full object-cover relative"
-            @click="showModal[index] = true"
+            class="w-full h-full object-cover relative cursor-pointer"
+            @click="onClickDesign(product)"
           />
         </div>
 
@@ -77,12 +77,14 @@ import { ref, onMounted } from "vue";
 import { IProduct, getAllProduct } from "@/api/m1/product";
 import Modal from "@/components/modal/Modal.vue";
 import { sortProductLinkedList } from "@/utils/common";
+import { router } from "@/router/router";
 
 const pinia = useStoreInfoStore();
 const piniaProduct = useProductStore();
 const { getProduct } = storeToRefs(piniaProduct);
 const { getStoreInfo } = pinia;
-const { getInitStoreId, setInitStoreId, setProduct } = piniaProduct;
+const { getInitStoreId, setInitStoreId, setProduct, setTempProduct } =
+  piniaProduct;
 const isLoading = ref(true);
 const showModal = ref([] as boolean[]);
 const tempProductArray = ref([] as IProduct[]);
@@ -110,6 +112,11 @@ function onClickUrl(url: string | undefined) {
     window.open(url, "_blank");
   } else {
   }
+}
+
+function onClickDesign(product: IProduct) {
+  setTempProduct(product);
+  router.push(`/store/${getStoreInfo.id}/design/${product.id}`);
 }
 </script>
 <style scoped>

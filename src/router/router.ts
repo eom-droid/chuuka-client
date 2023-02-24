@@ -56,6 +56,11 @@ export const routes = [
     component: () => import("@/views/store/news/NewsDetail.vue"),
   },
   {
+    path: "/store/:storeId/design/:designId",
+    name: "designDetail",
+    component: () => import("@/views/store/design/DesignDetail.vue"),
+  },
+  {
     path: "/location",
     name: "location",
     component: () => import("@/views/location/Location.vue"),
