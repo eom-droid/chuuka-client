@@ -4,6 +4,7 @@ import {
   getStoreInfoWithRandomLimit,
   IStore,
   getStoreInfoByField,
+  getAllStore,
 } from "@/api/m1/store";
 import { ref, onMounted, onUnmounted, onActivated, onDeactivated } from "vue";
 import defaultImg from "@/assets/img/logo/chuuka.png";
@@ -15,6 +16,7 @@ import { storeToRefs } from "pinia";
 import { entireRegion } from "@/constant/constant";
 import { scrollToTop } from "@/utils/common";
 import FullScreenLoading from "@/components/FullScreenLoading.vue";
+import { getDateTime } from "@/utils/moment";
 
 // ANCHOR 선언
 const piniaStore = useStoreInfoStore();
@@ -40,14 +42,142 @@ const scrollY = ref(0);
 
 const isLoading = ref(true);
 
+interface IMarker {
+  store: IStore;
+  marker: naver.maps.Marker;
+}
+const shit = ref([] as IMarker[]);
+const infowindow = ref(null as naver.maps.InfoWindow | null);
+
 // ANCHOR 이벤트
 onMounted(() => {
-  init();
+  initNaverMap();
+  getStores();
+
+  // init();
   document
     .getElementById("mainWrapper")
     ?.addEventListener("scroll", listeningFunc);
   window.addEventListener("scroll", listeningFunc);
 });
+
+// 로깅되어있는 값 보고 확인하기
+//
+//
+//
+//
+//
+///
+//
+//
+//
+//
+//
+async function getStores() {
+  const storeUpdateAt = window.localStorage.getItem("storeUpdateAt");
+  const storeInfos = window.localStorage.getItem("storeInfos");
+  let now = new Date();
+  if (storeUpdateAt) {
+    now.setHours(now.getHours() - 0.5);
+    const shit = now.toJSON();
+    console.log();
+    console.log(shit);
+    console.log(storeUpdateAt);
+  } else {
+    window.localStorage.setItem("storeUpdateAt", now.toJSON());
+  }
+
+  tempAllStore.value = await getAllStore();
+  window.localStorage.setItem("storeInfos", JSON.stringify(tempAllStore.value));
+}
+
+async function initNaverMap() {
+  let map: naver.maps.Map;
+
+  map = new naver.maps.Map("map", {
+    zoom: 15,
+  });
+  tempAllStore.value.map((ele, index) => {
+    shit.value.push({
+      store: ele,
+      marker: new naver.maps.Marker({
+        position: new naver.maps.LatLng(
+          ele.geoLocation.latitude,
+          ele.geoLocation.longitude
+        ),
+        map: map,
+      }),
+    });
+    naver.maps.Event.addListener(
+      shit.value[index].marker,
+      "click",
+      function (e) {
+        infowindow.value = {} as naver.maps.InfoWindow;
+        infowindow.value = new naver.maps.InfoWindow({
+          content: contentString(ele.name, ele.sns.kakaoTalk),
+          anchorSize: new naver.maps.Size(30, 30),
+          // pixelOffset: new naver.maps.Point(20, -20),
+        });
+        if (infowindow.value.getMap()) {
+          infowindow.value.close();
+        } else {
+          infowindow.value.open(map, shit.value[index].marker);
+        }
+      }
+    );
+  });
+
+  // var marker = new naver.maps.Marker({
+  //   position: new naver.maps.LatLng(37.3595704, 127.105399),
+  //   map: map,
+  // });
+  //중요
+  naver.maps.Event.addListener(map, "idle", function () {
+    updateMarkers(map, shit.value);
+  });
+}
+function contentString(name: string, kakao: string) {
+  return [
+    '<div class="p-5">',
+    `   <h3>${name}</h3>`,
+    `   <h3>${kakao}</h3>`,
+    // '   <p>서울특별시 중구 태평로1가 31 | 서울특별시 중구 세종대로 110 서울특별시청<br />',
+    // '       02-120 | 공공,사회기관 &gt; 특별,광역시청<br />',
+    // '       <a href="http://www.seoul.go.kr" target="_blank">www.seoul.go.kr/</a>',
+    // '   </p>',
+    "</div>",
+  ].join("");
+}
+
+function updateMarkers(map: naver.maps.Map, markers: IMarker[]) {
+  var mapBounds = map.getBounds();
+  var marker, position;
+
+  for (var i = 0; i < markers.length; i++) {
+    marker = markers[i].marker;
+    position = marker.getPosition();
+
+    if (mapBounds.hasPoint(position)) {
+      showMarker(map, marker);
+    } else {
+      hideMarker(map, marker);
+    }
+  }
+  // map 움직일때 infoWindow 없애기
+  if (infowindow.value !== null) {
+    infowindow.value.close();
+  }
+}
+
+function showMarker(map: naver.maps.Map, marker: naver.maps.Marker) {
+  if (marker.getMap()) return;
+  marker.setMap(map);
+}
+
+function hideMarker(map: naver.maps.Map, marker: naver.maps.Marker) {
+  if (!marker.getMap()) return;
+  marker.setMap(null);
+}
 
 async function calcScrollAndGetDocs() {
   if (document.getElementById("homeScrollEle") === null) {
@@ -240,9 +370,9 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
 
 <template>
   <main class="" id="homeScrollEle">
-    <div class="x-basic-padding">
+    <div id="map" style="width: 100%; height: 400px"></div>
+    <!-- <div class="x-basic-padding">
       <div>
-        <!-- {{ lastVisible }} -->
         <div class="relative">
           <p class="text-xl font-bold py-4">추카</p>
           <div class="absolute right-0 top-5 text-base text-right font-bold">
@@ -373,11 +503,10 @@ async function onChangeIsJoining(checkBoxEvent: Event) {
             class="w-6 mx-auto"
           />
         </div>
-        <!-- <font-awesome-icon icon="arrow-up" /> -->
       </button>
       <div class="h-28"></div>
     </div>
-    <full-screen-loading v-show="isLoading"></full-screen-loading>
+    <full-screen-loading v-show="isLoading"></full-screen-loading> -->
   </main>
 </template>
 
