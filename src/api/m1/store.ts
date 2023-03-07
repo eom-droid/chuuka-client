@@ -18,6 +18,7 @@ import {
   startAfter,
   QueryConstraint,
   endBefore,
+  GeoPoint,
 } from "firebase/firestore";
 import { firebaseApp, firestore } from "@/plugins/firebase.js";
 import { firebaseDevPath } from "../tempdev";
@@ -65,6 +66,7 @@ export interface IStore {
     kakao: string;
     naver: string;
   };
+  geoLocation: GeoPoint;
   mustRead: IMustRead;
 }
 
@@ -98,6 +100,18 @@ export async function getStoreInfoById(id: string): Promise<IStore | null> {
   if (resultStore === undefined) return null;
   resultStore.id = tempInfo.id;
   return resultStore;
+}
+
+export async function getAllStore(): Promise<Array<IStore>> {
+  const q = collection(firestore, firebaseDevPath + "store");
+  const tempInfo = await getDocs(q);
+  let result = [] as IStore[];
+  tempInfo.docs.map((ele) => {
+    const data = ele.data() as IStore;
+    data.id = ele.id;
+    result.push(data);
+  });
+  return result;
 }
 
 // export async function getAllStoreInfo(): Promise<Array<IStore>> {

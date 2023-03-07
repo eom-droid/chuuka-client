@@ -34,6 +34,7 @@
   "devDependencies": {
     "@capacitor/cli": "^4.6.1",
     "@tailwindcss/forms": "^0.5.3",
+    "@types/navermaps": "^3.6.3",
     "@vitejs/plugin-vue": "^3.1.2",
     "autoprefixer": "^10.4.10",
     "postcss": "^8.4.16",

@@ -3,6 +3,7 @@ import moment from "moment";
 const getDate = (): string => moment().format("YYYY-MM-DD");
 
 const getTime = (): string => moment().format("mm:ss");
+const getDateTime = (): string => moment().format("YYYY-MM-DD hh:mm:ss");
 
 const getParsedDate = (arg: Date): string => moment(arg).format("YYYY-MM-DD");
 
@@ -92,4 +93,5 @@ export {
   getParsedDate,
   weekNumberByMonth,
   getKoreanDateTime,
+  getDateTime,
 };
