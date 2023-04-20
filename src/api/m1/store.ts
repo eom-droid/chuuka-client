@@ -19,9 +19,10 @@ import {
   QueryConstraint,
   endBefore,
   GeoPoint,
+  Timestamp,
 } from "firebase/firestore";
 import { firebaseApp, firestore } from "@/plugins/firebase.js";
-import { firebaseDevPath } from "../tempdev";
+import { firebaseDevPath, firebaseDevPath2 } from "../tempdev";
 import { IPhoto } from "./photo";
 import { cloneDeep, random } from "lodash";
 
@@ -70,6 +71,53 @@ export interface IStore {
   mustRead: IMustRead;
 }
 
+export interface IStore2 {
+  id: string; // id : 가게 유일 id => docId
+
+  name: string; // name : 각 업체의 이름
+  sns: ISns; // sns : kakaoChanel & instagram
+  telephone: string; // storeTel : 가게 전화번호
+
+  address: string; // address : 주소
+  locationUrl: ILocationUrl; // locationUrl : kakao map & naver map locationUrl
+  geoCoord: GeoPoint; // geoCoord : 가게 latitude longitude
+
+  openCloseHour: IOpenCloseHours; // openCloseHour : 운영시간
+
+  theDayOrderAble: number; // theDayOrderAble : 당일 케이크 가능 여부
+
+  modUser: string; // modWirter : 변경 인원
+  regDTime: Timestamp; // regDTime : 최초 입력날짜
+  modDTime: Timestamp; // modDTime :  변경 날짜
+}
+
+export interface IOpenCloseHours {
+  sun: IOpenCloseHour;
+  mon: IOpenCloseHour;
+  tue: IOpenCloseHour;
+  wed: IOpenCloseHour;
+  thu: IOpenCloseHour;
+  fri: IOpenCloseHour;
+  sat: IOpenCloseHour;
+  description: string;
+}
+
+export interface IOpenCloseHour {
+  isClosed: boolean;
+  detail: {
+    openHour: string;
+    closeHour: string;
+    startBreakTime: string;
+    endBreakTime: string;
+    lastOrder: string;
+  };
+}
+
+export interface ILocationUrl {
+  kakao: string;
+  naver: string;
+}
+
 export interface IMustRead {
   orderForm: string;
   orderMethod: string;
@@ -100,6 +148,18 @@ export async function getStoreInfoById(id: string): Promise<IStore | null> {
   if (resultStore === undefined) return null;
   resultStore.id = tempInfo.id;
   return resultStore;
+}
+
+export async function getAllStore2(): Promise<Array<IStore2>> {
+  const q = collection(firestore, firebaseDevPath2 + "store");
+  const tempInfo = await getDocs(q);
+  let result = [] as IStore2[];
+  tempInfo.docs.map((ele) => {
+    const data = ele.data() as IStore2;
+    data.id = ele.id;
+    result.push(data);
+  });
+  return result;
 }
 
 export async function getAllStore(): Promise<Array<IStore>> {

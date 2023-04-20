@@ -5,8 +5,6 @@ import {
   IStore,
   getStoreInfoByField,
   getAllStore,
-  IStore2,
-  getAllStore2,
 } from "@/api/m1/store";
 import { ref, onMounted, onUnmounted, onActivated, onDeactivated } from "vue";
 import defaultImg from "@/assets/img/logo/chuuka.png";
@@ -20,25 +18,25 @@ import { scrollToTop } from "@/utils/common";
 import FullScreenLoading from "@/components/FullScreenLoading.vue";
 import { getDateTime } from "@/utils/moment";
 
-// 최상단 스크롤 FAB
-const fabClass = ref<"hidden" | "fixed">("hidden");
-const scrollY = ref(0);
+// ANCHOR 선언
+const piniaStore = useStoreInfoStore();
+const piniaPersonal = usePersonalStore();
+const { setStoreInfo } = piniaStore;
+const { getSelectedLocation } = storeToRefs(piniaPersonal);
 
-const isLoading = ref(true);
+const tempAllStore = ref([] as Array<IStore>);
 
 interface IMarker {
-  store: IStore2;
+  store: IStore;
   marker: naver.maps.Marker;
 }
-const markers = ref([] as IMarker[]);
-
-const store = ref([] as IStore2[]);
+const shit = ref([] as IMarker[]);
 const infowindow = ref(null as naver.maps.InfoWindow | null);
 
 // ANCHOR 이벤트
-onMounted(async () => {
-  await getStores();
+onMounted(() => {
   initNaverMap();
+  getStores();
 });
 
 // 로깅되어있는 값 보고 확인하기
@@ -54,21 +52,21 @@ onMounted(async () => {
 //
 //
 async function getStores() {
-  // const storeUpdateAt = window.localStorage.getItem("storeUpdateAt");
-  // const storeInfos = window.localStorage.getItem("storeInfos");
-  // let now = new Date();
-  // if (storeUpdateAt) {
-  //   now.setHours(now.getHours() - 0.5);
-  //   const shit = now.toJSON();
-  //   console.log();
-  //   console.log(shit);
-  //   console.log(storeUpdateAt);
-  // } else {
-  //   window.localStorage.setItem("storeUpdateAt", now.toJSON());
-  // }
+  const storeUpdateAt = window.localStorage.getItem("storeUpdateAt");
+  const storeInfos = window.localStorage.getItem("storeInfos");
+  let now = new Date();
+  if (storeUpdateAt) {
+    now.setHours(now.getHours() - 0.5);
+    const shit = now.toJSON();
+    console.log();
+    console.log(shit);
+    console.log(storeUpdateAt);
+  } else {
+    window.localStorage.setItem("storeUpdateAt", now.toJSON());
+  }
 
-  store.value = await getAllStore2();
-  // window.localStorage.setItem("storeInfos", JSON.stringify(tempAllStore.value));
+  tempAllStore.value = await getAllStore();
+  window.localStorage.setItem("storeInfos", JSON.stringify(tempAllStore.value));
 }
 
 async function initNaverMap() {
@@ -77,19 +75,19 @@ async function initNaverMap() {
   map = new naver.maps.Map("map", {
     zoom: 15,
   });
-  store.value.map((ele, index) => {
-    markers.value.push({
+  tempAllStore.value.map((ele, index) => {
+    shit.value.push({
       store: ele,
       marker: new naver.maps.Marker({
         position: new naver.maps.LatLng(
-          ele.geoCoord.latitude,
-          ele.geoCoord.longitude
+          ele.geoLocation.latitude,
+          ele.geoLocation.longitude
         ),
         map: map,
       }),
     });
     naver.maps.Event.addListener(
-      markers.value[index].marker,
+      shit.value[index].marker,
       "click",
       function (e) {
         infowindow.value = {} as naver.maps.InfoWindow;
@@ -101,15 +99,19 @@ async function initNaverMap() {
         if (infowindow.value.getMap()) {
           infowindow.value.close();
         } else {
-          infowindow.value.open(map, markers.value[index].marker);
+          infowindow.value.open(map, shit.value[index].marker);
         }
       }
     );
   });
 
+  // var marker = new naver.maps.Marker({
+  //   position: new naver.maps.LatLng(37.3595704, 127.105399),
+  //   map: map,
+  // });
   //중요
   naver.maps.Event.addListener(map, "idle", function () {
-    updateMarkers(map, markers.value);
+    updateMarkers(map, shit.value);
   });
 }
 function contentString(name: string, kakao: string) {
