@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
-import { usePersonalStore } from "@/stores/personal";
+// import { usePersonalStore } from "@/stores/personal";
 import { Device } from "@capacitor/device";
 import { SafeArea } from "capacitor-plugin-safe-area";
 
 const platform = ref("");
-const pinia = usePersonalStore();
-const { init } = pinia;
+// const pinia = usePersonalStore();
+// const { init } = pinia;
 const varIsMobile = isMobile();
 
 function isMobile() {
@@ -23,7 +23,7 @@ function isMobile() {
 }
 
 onMounted(async () => {
-  init();
+  // init();
   // mobile이면 background color를 white로
   if (varIsMobile) {
     const body = document.getElementsByTagName("body");
@@ -56,10 +56,11 @@ SafeArea.getSafeAreaInsets().then(({ insets }) => {
 
 <template>
   <router-view v-slot="{ Component }" v-if="varIsMobile" class="">
-    <keep-alive :include="['Home', 'Location']" :max="10">
+    <keep-alive :include="['map_screen']" :max="10">
       <component :is="Component" :style="appStyle" />
     </keep-alive>
   </router-view>
+  <!-- <router-view v-if="varIsMobile"></router-view> -->
   <div v-else class="flex w-full h-full relative bg-main">
     <div class="w-1/12 disnone"></div>
     <div class="mx-auto mt-20 disnone">
@@ -110,7 +111,7 @@ SafeArea.getSafeAreaInsets().then(({ insets }) => {
       id="mainWrapper"
     >
       <router-view v-slot="{ Component }" class="">
-        <keep-alive :include="['Home', 'Location']" :max="10">
+        <keep-alive :include="['map_screen']" :max="10">
           <component :is="Component" :style="appStyle" />
         </keep-alive>
       </router-view>

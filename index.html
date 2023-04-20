@@ -20,7 +20,6 @@
 
     <link rel="icon" href="/favicon.ico" />
     <link rel="manifest" href="/manifest.json" />
-    <script type="module" src="/registerSW.js"></script>
     <!-- SEO optimization-->
 
     <title>추카(CHUUKA!) - 주문제작 케이크 정보를 한눈에!</title>
@@ -87,53 +86,5 @@
   <body>
     <div id="app" class="noScroll"></div>
     <script type="module" src="/src/main.ts"></script>
-    <!-- Channel Plugin Scripts -->
-    <!-- <script>
-      if (window.innerWidth > 650) {
-        (function () {
-          var w = window;
-          if (w.ChannelIO) {
-            return (
-              window.console.error ||
-              window.console.log ||
-              function () {}
-            )("ChannelIO script included twice.");
-          }
-          var ch = function () {
-            ch.c(arguments);
-          };
-          ch.q = [];
-          ch.c = function (args) {
-            ch.q.push(args);
-          };
-          w.ChannelIO = ch;
-          function l() {
-            if (w.ChannelIOInitialized) {
-              return;
-            }
-            w.ChannelIOInitialized = true;
-            var s = document.createElement("script");
-            s.type = "text/javascript";
-            s.async = true;
-            s.src = "https://cdn.channel.io/plugin/ch-plugin-web.js";
-            s.charset = "UTF-8";
-            var x = document.getElementsByTagName("script")[0];
-            x.parentNode.insertBefore(s, x);
-          }
-          if (document.readyState === "complete") {
-            l();
-          } else if (window.attachEvent) {
-            window.attachEvent("onload", l);
-          } else {
-            window.addEventListener("DOMContentLoaded", l, false);
-            window.addEventListener("load", l, false);
-          }
-        })();
-        ChannelIO("boot", {
-          pluginKey: "31524e55-b332-4136-bbe3-0ef6f07f6a46",
-        });
-      }
-    </script> -->
-    <!-- End Channel Plugin -->
   </body>
 </html>

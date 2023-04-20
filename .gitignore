@@ -29,7 +29,7 @@ dist-ssr
 *.cache
 /firebaseConfig.js
 /urlConfig.ts
-/dist
+/dist*
 /dists
 
 # 빌드 스크립트 관련 파일

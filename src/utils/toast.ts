@@ -1,6 +1,6 @@
 import { createToast, withProps, ToastOptions } from "mosha-vue-toastify";
 import "mosha-vue-toastify/dist/style.css";
-// import CustomizedContent from "./CustomizedContent.vue";
+import CustomizedContent from "./toast/toast_custom.vue";
 
 const DEFAULT_SETTINGS: ToastOptions = {
   showIcon: true,
@@ -23,3 +23,14 @@ export const toastWarning = (content: string) =>
 
 export const toastSuccess = (content: string) =>
   createToast(content, { ...DEFAULT_SETTINGS, type: "success", timeout: 3000 });
+
+export const toastCustom = (msg: string) =>
+  createToast(withProps(CustomizedContent, { msg }), {
+    ...DEFAULT_SETTINGS,
+    timeout: 3000,
+    type: "default",
+    showIcon: false,
+    hideProgressBar: true,
+    useComponentContent: true,
+    toastBackgroundColor: "#595a63",
+  });

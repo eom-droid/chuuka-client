@@ -4,13 +4,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* card title */
+.card-title {
+  @apply font-bold text-base;
+}
+
 /* 컴포넌트 */
 .btn-main {
   @apply bg-main text-white w-full mt-3 font-semibold  rounded-md;
   height: 48px;
 }
 .btn-main-short {
-  @apply bg-main text-white w-full mt-3 font-semibold h-12 rounded-md;
+  @apply bg-main text-white w-full mt-3 font-semibold h-11 rounded-md;
 }
 
 .btn-sub {
@@ -18,11 +23,11 @@
   height: 48px;
 }
 .btn-sub-short {
-  @apply bg-sub text-main w-full mt-3 font-semibold h-12 rounded-md;
+  @apply bg-sub text-main w-full mt-3 font-semibold h-11 rounded-md;
 }
 /* 제작필요 */
 .btn-sub-sub {
-  @apply bg-white text-main w-full mt-3 font-semibold rounded-md border border-main h-12;
+  @apply bg-white text-main w-full mt-3 font-semibold rounded-md border border-main h-11;
 }
 
 .input-checkbox {
@@ -73,6 +78,7 @@ body {
   overscroll-behavior: none;
   -webkit-user-select: none;
   width: 100%;
+  height: 100%;
   /* position: fixed;
   overflow: hidden; */
   /* height: 100%;
@@ -88,7 +94,7 @@ main {
 }
 
 hr {
-  @apply dark:border-gray-400;
+  @apply border-light-gray;
 }
 
 /* 기본 */
@@ -113,11 +119,11 @@ hr {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 /* Track */

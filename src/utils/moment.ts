@@ -3,6 +3,9 @@ import moment from "moment";
 const getDate = (): string => moment().format("YYYY-MM-DD");
 
 const getTime = (): string => moment().format("mm:ss");
+const getDateTime = (): string => moment().format("YYYY-MM-DD hh:mm:ss");
+const getDateTimeByDate = (shit: Date): string =>
+  moment(shit).format("YYYY-MM-DD hh:mm:ss");
 
 const getParsedDate = (arg: Date): string => moment(arg).format("YYYY-MM-DD");
 
@@ -85,6 +88,17 @@ const weekNumberByMonth = (dateFormat: string): number => {
   return weekNo;
 };
 
+const daysBetween = function daysBetween(date1: Date, date2: Date): number {
+  // 24시간(1일)을 밀리초로 계산
+  const oneDay = 1000 * 60 * 60 * 24;
+
+  // 두 날짜 사이의 밀리초 차이를 계산
+  const diffInMs = Math.abs(date1.getTime() - date2.getTime());
+
+  // 밀리초 차이를 하루 단위로 변환하여 반환
+  return Math.floor(diffInMs / oneDay);
+};
+
 export {
   getDate,
   getTime,
@@ -92,4 +106,7 @@ export {
   getParsedDate,
   weekNumberByMonth,
   getKoreanDateTime,
+  getDateTime,
+  daysBetween,
+  getDateTimeByDate,
 };
