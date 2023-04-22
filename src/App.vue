@@ -33,10 +33,10 @@ onMounted(async () => {
 });
 
 const appStyle = computed(() => {
-  return `margin-top: ${safeAreaInsets.value.top}px;
-          margin-right: ${safeAreaInsets.value.right}px;
-          margin-bottom: ${safeAreaInsets.value.bottom}px;
-          margin-left: ${safeAreaInsets.value.left}px;`;
+  return `padding-top: ${safeAreaInsets.value.top}px;
+          padding-right: ${safeAreaInsets.value.right}px;
+          padding-bottom: ${safeAreaInsets.value.bottom}px;
+          padding-left: ${safeAreaInsets.value.left}px;`;
 });
 
 // ANCHOR Safe Area for iOS Capacitorjs App
@@ -126,7 +126,7 @@ SafeArea.getSafeAreaInsets().then(({ insets }) => {
   min-width: 480px;
 }
 .cusShadow {
-  box-shadow: 0 0 22px -2px rgb(0 0 0 / 75%);
+  /* box-shadow: 0 0 22px -2px rgb(0 0 0 / 75%); */
 }
 @media (max-width: 950px) {
   .disnone {

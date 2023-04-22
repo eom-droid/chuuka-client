@@ -10,24 +10,26 @@
       <div
         v-for="(openCloseHour, index) in arrangedOpenCloseHourArray"
         :class="index === 0 ? 'font-bold' : isExpanded ? ' ' : 'hidden'"
-        class="flex mb-1.5"
+        class="text-left mb-1.5"
       >
-        <div class="mr-2">
-          {{ arrangedKorDayOfWeek[index] }}
-        </div>
-        <div v-if="openCloseHour.isClosed === undefined">정보없음</div>
-        <div v-else-if="openCloseHour.isClosed === true">정기휴무</div>
-        <div v-else="openCloseHour.openHour && openCloseHour.closeHour">
-          {{ openCloseHour.openHour }} - {{ openCloseHour.closeHour }}
+        <div class="flex">
+          <div class="mr-2">
+            {{ arrangedKorDayOfWeek[index] }}
+          </div>
+          <div v-if="openCloseHour.isClosed === undefined">정보없음</div>
+          <div v-else-if="openCloseHour.isClosed === true">정기휴무</div>
+          <div v-else="openCloseHour.openHour && openCloseHour.closeHour">
+            {{ openCloseHour.openHour }} - {{ openCloseHour.closeHour }}
+          </div>
         </div>
         <div
           v-if="openCloseHour.startBreakTime && openCloseHour.endBreakTime"
-          class="mt-1"
+          class="mt-1 ml-[19px]"
         >
           {{ openCloseHour.startBreakTime }} -
           {{ openCloseHour.endBreakTime }} 브레이크타임
         </div>
-        <div v-if="openCloseHour.lastOrderTime" class="mt-1">
+        <div v-if="openCloseHour.lastOrderTime" class="mt-1 ml-[19px]">
           {{ openCloseHour.lastOrderTime }} 라스트오더
         </div>
       </div>

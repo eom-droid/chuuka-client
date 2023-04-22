@@ -1,7 +1,7 @@
 {
   "hosting": {
     "site": "chuuka-d",
-    "public": "dist-dev",
+    "public": "dist-development",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
