@@ -14,6 +14,7 @@ import { IMapDrawMarker } from "@/model/map_draw_marker_model";
 import { storeToRefs } from "pinia";
 import { useMarkerStore } from "@/store/marker_store";
 import { useStoreStore } from "@/store/store_store";
+import { useDefault } from "@/store/default";
 // Components import
 import top_menu_bar from "@/components/common/top_menu_bar.vue";
 import list_btn from "@/components/common/list_btn.vue";
@@ -44,6 +45,8 @@ const markersStore = useMarkerStore();
 const { getMarkers } = storeToRefs(markersStore);
 const storeStore = useStoreStore();
 const { getStoreByDocId, setInnerMapStore } = storeStore;
+const defaultStore = useDefault();
+const { getSafeAreaInsets } = defaultStore;
 
 // local variable
 const mapDrawMarker = ref([] as IMapDrawMarker[]);
@@ -310,31 +313,17 @@ function onClickGPSBtn() {
       async (position) => {
         // setTimeout(() => (gpsState.value = false), 10000);
         if (currentLocMarker.value === null) {
-          currentLocMarker.value = new naver.maps.Marker({
-            position: new naver.maps.LatLng(
-              position.coords.latitude,
-              position.coords.longitude
-            ),
-            zIndex: 30,
-
-            map: map.value,
-            icon: {
-              url: currentLocIcon,
-              anchor: new naver.maps.Point(12, 12),
-            },
-          });
-        }
-        console.log(currentLocMarker.value.getPosition());
-        if (gpsState.value !== GPS_STATUS.RUNNING) {
-          map.value!.setCenter(
-            new naver.maps.LatLng(
-              position.coords.latitude,
-              position.coords.longitude
-            )
+          currentLocMarker.value = createNewCurrentNaverMarker(
+            position.coords.latitude,
+            position.coords.longitude
           );
-          map.value!.setZoom(15);
         }
-
+        if (gpsState.value !== GPS_STATUS.RUNNING) {
+          setCurrentMapPositionCenter(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+        }
         gpsState.value = GPS_STATUS.RUNNING;
       },
       (PositionError) => {
@@ -357,6 +346,24 @@ function onClickGPSBtn() {
   }
 }
 
+function createNewCurrentNaverMarker(latitude: number, longitude: number) {
+  return new naver.maps.Marker({
+    position: new naver.maps.LatLng(latitude, longitude),
+    zIndex: 30,
+
+    map: map.value,
+    icon: {
+      url: currentLocIcon,
+      anchor: new naver.maps.Point(12, 12),
+    },
+  });
+}
+
+function setCurrentMapPositionCenter(latitude: number, longitude: number) {
+  map.value!.setCenter(new naver.maps.LatLng(latitude, longitude));
+  map.value!.setZoom(15);
+}
+
 function onClickListRouteBtn() {
   setInnerMapStore(
     mapDrawMarker.value.filter((ele) => ele.naverMarker.getMap())
@@ -367,15 +374,27 @@ function onClickListRouteBtn() {
 
 <template>
   <!-- <main class="" id="homeScrollEle"> -->
-  <main class="w-full h-full text-usual-black relative">
+  <main class="w-full h-full text-usual-black relative bg-white">
     <div class="relative h-full">
       <div id="map" style="width: 100%; height: 100%"></div>
-      <div class="w-full absolute z-30 left-0 top-2.5">
+      <div
+        class="w-full absolute z-30 left-0"
+        :style="
+          getSafeAreaInsets.top !== 0
+            ? `top:${getSafeAreaInsets.top}px;`
+            : 'top:10px;'
+        "
+      >
         <top_menu_bar></top_menu_bar>
       </div>
       <!-- @click="showMap = false" -->
       <list_btn
         class="absolute right-4 z-30"
+        :style="
+          getSafeAreaInsets.top !== 0
+            ? `top:${getSafeAreaInsets.top + 70}px;`
+            : 'top:70px;'
+        "
         @on-click="onClickListRouteBtn()"
       ></list_btn>
 
@@ -393,21 +412,17 @@ function onClickListRouteBtn() {
       <!-- eachStore -->
 
       <div
-        class="absolute bottom-0 left-0 w-full h-1/3"
+        class="absolute bottom-0 left-0 w-full h-1/3 pt-6 bg-white each-card rounded-t-lg px-4"
         v-if="selectedStore !== null"
         :style="'z-index: ' + CONTENT_Z_INDEX_OVER_MARKER"
       >
         <div
-          class="bg-white h-full flex each-card rounded-t-lg"
+          class="h-full flex rounded-t-lg"
           v-if="selectedStore.store === null"
         >
           <img src="@/assets/gif/loadingIcon_croped.gif" class="m-auto w-1/6" />
         </div>
-        <store_detail_info_card
-          v-else
-          :selectedStore="selectedStore"
-          class="pt-6 px-4 rounded-t-lg"
-        >
+        <store_detail_info_card v-else :selectedStore="selectedStore" class="">
           <template #sns-icon>
             <div class="flex absolute right-4 -top-5">
               <rounded_sns_btn
@@ -453,6 +468,16 @@ function onClickListRouteBtn() {
               </rounded_sns_btn>
             </div>
           </template>
+          <template #footer
+            ><div
+              class="flex-none"
+              :style="
+                getSafeAreaInsets.bottom !== 0
+                  ? `height:${getSafeAreaInsets.bottom}px;`
+                  : 'height:12px;'
+              "
+            ></div
+          ></template>
         </store_detail_info_card>
       </div>
     </div>
@@ -461,6 +486,7 @@ function onClickListRouteBtn() {
 
 <style scoped>
 .each-card {
-  box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px -5px 5px 2px rgba(0, 0, 0, 0.08);
+  /* box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1); */
 }
 </style>

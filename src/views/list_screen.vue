@@ -1,5 +1,12 @@
 <template>
-  <main class="w-full h-full text-usual-black relative">
+  <main
+    class="w-full h-full text-usual-black relative"
+    :style="
+      getSafeAreaInsets.top !== 0
+        ? `padding-top:${getSafeAreaInsets.top}px;`
+        : ''
+    "
+  >
     <div class="w-full bg-light-gray py-2.5">
       <top_menu_bar class=""></top_menu_bar>
     </div>
@@ -103,7 +110,15 @@
         v-show="isLoading"
       />
     </div>
-    <div class="w-full fixed" style="max-width: 480px; bottom: 56px">
+    <div
+      class="w-full fixed"
+      :style="
+        getSafeAreaInsets.bottom !== 0
+          ? `bottom:${getSafeAreaInsets.bottom * 1.5}px;`
+          : 'bottom:56px;'
+      "
+      style="max-width: 480px"
+    >
       <button
         class="bg-main rounded-[10px] flex px-4 py-1.5 mx-auto"
         @click="onClickMapRouteBtn()"
@@ -126,6 +141,8 @@ import {
 //pinia
 import { storeToRefs } from "pinia";
 import { useStoreStore } from "@/store/store_store";
+import { useDefault } from "@/store/default";
+
 // Components import
 import top_menu_bar from "@/components/common/top_menu_bar.vue";
 import store_detail_info_card from "@/components/common/store_detail_info_card.vue";
@@ -147,6 +164,9 @@ import { IMapDrawMarker } from "@/model/map_draw_marker_model";
 const storeStore = useStoreStore();
 const { getInnerMapStore } = storeToRefs(storeStore);
 const { getStoreByDocId } = storeStore;
+const defaultStore = useDefault();
+const { getSafeAreaInsets } = defaultStore;
+
 const mapDrawStore = ref([] as IMapDrawMarker[]);
 const page = ref(0);
 const isLoading = ref(false);

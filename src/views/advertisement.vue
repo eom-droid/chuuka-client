@@ -1,5 +1,12 @@
 <template>
-  <main class="w-full h-full text-usual-black relative overflow-y-auto">
+  <main
+    class="w-full h-full text-usual-black relative overflow-y-auto"
+    :style="
+      getSafeAreaInsets.top !== 0
+        ? `padding-top:${getSafeAreaInsets.top}px;`
+        : ''
+    "
+  >
     <top_basic_bar @on-on-go-back-click="onGoBackClick()"></top_basic_bar>
 
     <img
@@ -11,7 +18,7 @@
         :selected-store="GUM_BUNG_UH"
         :running-status-card-visible="false"
         :scheduleScrollAble="false"
-        class="pt-6 px-4"
+        class="pt-6 px-4 relative"
       >
         <template #sns-icon>
           <div class="flex absolute right-4 -top-5">
@@ -61,11 +68,22 @@
       </store_detail_info_card>
     </div>
     <div class="grid grid-cols-3 mt-6 pt-1 mx-4 gap-2">
-      <div v-for="ele in Array.from({ length: 9 }, (_, i) => i + 1)">
+      <div v-for="ele in imgArray" class="imgRatio">
         <img
-          src="@/assets/img/default/sample_cake/cake1.jpg"
-          class="rounded-[5px]"
+          v-bind:src="ele"
+          class="rounded-[5px] object-contain w-full max-h-full"
         />
+      </div>
+      <div class="bg-light-gray rounded-[5px] flex relative">
+        <div class="m-auto">
+          <img src="@/assets/img/icon/instagram.svg" class="w-1/3 m-auto" />
+          <p class="mt-1">More Design</p>
+        </div>
+        <a
+          class="absolute w-full h-full left-0 top-0 block bg-black opacity-20 rounded-[5px]"
+          :href="INSTAGRAM_URL_PREFIX + GUM_BUNG_UH.store!.sns.instagram"
+          target="_blank"
+        ></a>
       </div>
     </div>
 
@@ -74,24 +92,33 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
 import {
   INSTAGRAM_URL_PREFIX,
   KAKAO_URL_PREFIEX,
   TELEPHONE_PREFIEX,
-  LIMIT_PER_PAGE,
   GUM_BUNG_UH,
 } from "@/constant/constant";
-//pinia
-import { storeToRefs } from "pinia";
-import { useStoreStore } from "@/store/store_store";
+
 // Components import
-import top_menu_bar from "@/components/common/top_menu_bar.vue";
 import store_detail_info_card from "@/components/common/store_detail_info_card.vue";
-import hr_seperated_sns_btn from "@/components/common/hr_seperated_sns_btn.vue";
-import Observer from "@/utils/observer.vue";
+
 import rounded_sns_btn from "@/components/common/rounded_sns_btn.vue";
 import top_basic_bar from "@/components/common/top_basic_bar.vue";
+//image
+import cake1 from "@/assets/img/default/sample_cake/cake1.jpeg";
+import cake2 from "@/assets/img/default/sample_cake/cake2.jpeg";
+import cake3 from "@/assets/img/default/sample_cake/cake3.jpeg";
+import cake4 from "@/assets/img/default/sample_cake/cake4.jpeg";
+import cake5 from "@/assets/img/default/sample_cake/cake5.jpeg";
+import cake6 from "@/assets/img/default/sample_cake/cake6.jpeg";
+import cake7 from "@/assets/img/default/sample_cake/cake7.jpeg";
+import cake8 from "@/assets/img/default/sample_cake/cake8.jpeg";
+import cake9 from "@/assets/img/default/sample_cake/cake9.jpeg";
+import cake10 from "@/assets/img/default/sample_cake/cake10.jpeg";
+import cake11 from "@/assets/img/default/sample_cake/cake11.jpeg";
+import cake12 from "@/assets/img/default/sample_cake/cake12.jpeg";
+import cake13 from "@/assets/img/default/sample_cake/cake13.jpeg";
+import cake14 from "@/assets/img/default/sample_cake/cake14.jpeg";
 
 // icon
 import kakaoAvailable from "@/assets/img/icon/kakao.svg";
@@ -99,52 +126,63 @@ import kakaoDisAble from "@/assets/img/icon/kakao_disable.svg";
 import instaAvailable from "@/assets/img/icon/instagram.svg";
 import instaDisAble from "@/assets/img/icon/instagram_disable.svg";
 
-import { router } from "@/router/router";
-import { IMapDrawMarker } from "@/model/map_draw_marker_model";
+//pinia
+import { useDefault } from "@/store/default";
 
-//pinia part
-const storeStore = useStoreStore();
-const { getInnerMapStore } = storeToRefs(storeStore);
-const { getStoreByDocId } = storeStore;
-const mapDrawStore = ref([] as IMapDrawMarker[]);
-const page = ref(0);
-const isLoading = ref(false);
+import { router } from "@/router/router";
+
+const imgArray = [
+  cake1,
+  cake2,
+  cake3,
+  cake4,
+  cake5,
+  cake6,
+  cake7,
+  cake8,
+  cake9,
+  cake10,
+  cake11,
+  cake12,
+  cake13,
+  cake14,
+];
+
+const defaultStore = useDefault();
+const { getSafeAreaInsets } = defaultStore;
 
 function onGoBackClick() {
   if (router.getRoutes().length !== 0) {
     router.back();
   } else {
-    router.replace("/map");
+    router.replace("/list");
   }
 }
-const loadMore = async () => {
-  if (isLoading.value) return;
-
-  if (getInnerMapStore.value !== null) {
-    if (getInnerMapStore.value.length < LIMIT_PER_PAGE * page.value) return;
-
-    isLoading.value = true;
-    let temp = getInnerMapStore.value.slice(
-      LIMIT_PER_PAGE * page.value,
-      LIMIT_PER_PAGE * (page.value + 1)
-    );
-    await Promise.all(
-      temp.map(async (ele) => {
-        if (ele.store === null) {
-          ele.store = await getStoreByDocId(ele.marker.storeId);
-        }
-      })
-    ).catch((error) => (isLoading.value = false));
-
-    mapDrawStore.value = mapDrawStore.value.concat(
-      getInnerMapStore.value.slice(
-        LIMIT_PER_PAGE * page.value,
-        LIMIT_PER_PAGE * (page.value + 1)
-      )
-    );
-
-    page.value += 1;
-    isLoading.value = false;
-  }
-};
 </script>
+
+<style scoped>
+.imgRatio {
+  position: relative;
+  width: 100%; /* The size you want */
+
+  padding: 0;
+  margin: 0;
+}
+.imgRatio::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%; /* The padding depends on the width, not on the height, so with a padding-bottom of 100% you will get a square */
+}
+
+.imgRatio img {
+  position: absolute; /* Take your picture out of the flow */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0; /* Make the picture taking the size of it's parent */
+  width: 100%; /* This if for the object-fit */
+  height: 100%; /* This if for the object-fit */
+  object-fit: cover; /* Equivalent of the background-size: cover; of a background-image */
+  object-position: center;
+}
+</style>

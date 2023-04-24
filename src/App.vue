@@ -4,11 +4,14 @@ import { storeToRefs } from "pinia";
 // import { usePersonalStore } from "@/stores/personal";
 import { Device } from "@capacitor/device";
 import { SafeArea } from "capacitor-plugin-safe-area";
+import { useDefault } from "@/store/default";
 
 const platform = ref("");
 // const pinia = usePersonalStore();
 // const { init } = pinia;
 const varIsMobile = isMobile();
+const defaultPinia = useDefault();
+const { setSafeAreaInsets, setPlatform } = defaultPinia;
 
 function isMobile() {
   if (
@@ -29,35 +32,21 @@ onMounted(async () => {
     const body = document.getElementsByTagName("body");
     body[0].style.background = "RGB(255,255,255)";
   }
-  platform.value = (await Device.getInfo()).platform;
-});
-
-const appStyle = computed(() => {
-  return `padding-top: ${safeAreaInsets.value.top}px;
-          padding-right: ${safeAreaInsets.value.right}px;
-          padding-bottom: ${safeAreaInsets.value.bottom}px;
-          padding-left: ${safeAreaInsets.value.left}px;`;
+  setPlatform((await Device.getInfo()).platform);
 });
 
 // ANCHOR Safe Area for iOS Capacitorjs App
-interface ISafeArea {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
-const safeAreaInsets = ref<ISafeArea>({ top: 0, right: 0, bottom: 0, left: 0 });
 
 SafeArea.getSafeAreaInsets().then(({ insets }) => {
-  safeAreaInsets.value = insets;
+  setSafeAreaInsets(insets);
 });
 </script>
 
 <template>
+  <div class="text-left pl-28">{{ platform }}</div>
   <router-view v-slot="{ Component }" v-if="varIsMobile" class="">
     <keep-alive :include="['map_screen']" :max="10">
-      <component :is="Component" :style="appStyle" />
+      <component :is="Component" />
     </keep-alive>
   </router-view>
   <!-- <router-view v-if="varIsMobile"></router-view> -->
@@ -112,7 +101,7 @@ SafeArea.getSafeAreaInsets().then(({ insets }) => {
     >
       <router-view v-slot="{ Component }" class="">
         <keep-alive :include="['map_screen']" :max="10">
-          <component :is="Component" :style="appStyle" />
+          <component :is="Component" />
         </keep-alive>
       </router-view>
     </div>

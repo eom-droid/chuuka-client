@@ -1,5 +1,5 @@
 <template>
-  <div class="each-card bg-white relative h-full">
+  <div class="flex flex-col h-full">
     <slot name="sns-icon"></slot>
     <div class="flex">
       <span class="card-title">{{ props.selectedStore.store!.name }}</span>
@@ -17,7 +17,7 @@
     ></location_info_div>
     <hr class="mt-4 border-light-gray" v-show="hrVisible" />
     <div
-      class="text-xs h-3/5 mt-4"
+      class="text-xs mt-4 flex flex-col"
       :class="props.scheduleScrollAble ? 'overflow-y-scroll' : ''"
     >
       <the_day_order_able_div

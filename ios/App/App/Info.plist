@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-
-
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>가까운 가게를 찾기 위해 현재 위치를 요청합니다</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Capture Audio by user request</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

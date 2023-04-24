@@ -1,7 +1,6 @@
 <template>
   <button
     class="rounded-[10px] list-btn flex bg-white"
-    style="top: 70px"
     @click="$emit('onClick')"
   >
     <div class="flex my-1.5 mx-4">

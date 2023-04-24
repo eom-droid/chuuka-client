@@ -7,7 +7,7 @@
       >
         <img src="@/assets/img/icon/backword_black.svg" />
       </button>
-      <div class="my-auto leading-snug font-medium">위치</div>
+      <div class="my-auto leading-snug font-medium">Gum bung uh</div>
     </div>
   </div>
 </template>
