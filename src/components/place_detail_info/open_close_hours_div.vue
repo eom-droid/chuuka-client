@@ -53,9 +53,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { OpenCloseHoursModel } from "@/model/store/open_close_hours_model";
+import { OpenCloseHoursModel } from "@/model/place/open_close_hours_model";
 import { getDateTimeByDate } from "@/utils/moment";
-import { OpenCloseHourModel } from "@/model/store/open_close_hour_model";
+import { OpenCloseHourModel } from "@/model/place/open_close_hour_model";
 
 interface Props {
   openCloseHours: OpenCloseHoursModel;

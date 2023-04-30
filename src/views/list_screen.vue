@@ -29,17 +29,17 @@
     <div class="w-full bg-light-gray h-1.5"></div>
 
     <div
-      v-if="mapDrawStore === null || mapDrawStore.length === 0"
+      v-if="mapDrawPlace === null || mapDrawPlace.length === 0"
       class="bg-white pt-20 text-font-gray"
     >
       지도안에 가게가 없어요
     </div>
 
     <div v-else>
-      <div v-for="eachStore in mapDrawStore" :key="eachStore.marker.storeId">
-        <div v-if="eachStore.store !== null" class="h-full w-full">
-          <store_detail_info_card
-            :selectedStore="eachStore"
+      <div v-for="eachStore in mapDrawPlace" :key="eachStore.marker.placeId">
+        <div v-if="eachStore.place !== null" class="h-full w-full">
+          <place_detail_info_card
+            :selectedPlace="eachStore"
             :hrVisible="false"
             class="mt-6 mx-4"
             :schedule-scroll-able="false"
@@ -49,29 +49,29 @@
                 <hr class="w-full" />
               </div>
             </template>
-          </store_detail_info_card>
+          </place_detail_info_card>
           <div class="flex mt-2 h-full">
             <hr_seperated_sns_btn
               :hrefPrefix="TELEPHONE_PREFIEX"
-              :hrefValue="eachStore.store.telephone"
+              :hrefValue="eachStore.place.telephone"
               text="전화하기"
             >
               <template #icon>
                 <img
-                  :src="eachStore.store.telephone ? telAvailable : telDisAble"
+                  :src="eachStore.place.telephone ? telAvailable : telDisAble"
                 />
               </template>
             </hr_seperated_sns_btn>
             <div class="w-[1px] h-[20px] my-auto bg-light-gray"></div>
             <hr_seperated_sns_btn
               :hrefPrefix="KAKAO_URL_PREFIEX"
-              :hrefValue="eachStore.store.sns.kakaoTalk"
+              :hrefValue="eachStore.place.sns.kakaoTalk"
               text="카카오 채널"
             >
               <template #icon>
                 <img
                   :src="
-                    eachStore.store.sns.kakaoTalk
+                    eachStore.place.sns.kakaoTalk
                       ? kakaoAvailable
                       : kakaoDisAble
                   "
@@ -82,13 +82,13 @@
 
             <hr_seperated_sns_btn
               :hrefPrefix="INSTAGRAM_URL_PREFIX"
-              :hrefValue="eachStore.store.sns.instagram"
+              :hrefValue="eachStore.place.sns.instagram"
               text="인스타그램"
             >
               <template #icon>
                 <img
                   :src="
-                    eachStore.store.sns.instagram
+                    eachStore.place.sns.instagram
                       ? instaAvailable
                       : instaDisAble
                   "
@@ -140,12 +140,12 @@ import {
 } from "@/constant/constant";
 //pinia
 import { storeToRefs } from "pinia";
-import { useStoreStore } from "@/store/store_store";
+import { usePlaceStore } from "@/store/place_store";
 import { useDefault } from "@/store/default";
 
 // Components import
 import top_menu_bar from "@/components/common/top_menu_bar.vue";
-import store_detail_info_card from "@/components/common/store_detail_info_card.vue";
+import place_detail_info_card from "@/components/common/place_detail_info_card.vue";
 import hr_seperated_sns_btn from "@/components/common/hr_seperated_sns_btn.vue";
 import Observer from "@/utils/observer.vue";
 
@@ -161,13 +161,13 @@ import { router } from "@/router/router";
 import { IMapDrawMarker } from "@/model/map_draw_marker_model";
 
 //pinia part
-const storeStore = useStoreStore();
+const storeStore = usePlaceStore();
 const { getInnerMapStore } = storeToRefs(storeStore);
-const { getStoreByDocId } = storeStore;
+const { getPlaceByDocId: getStoreByDocId } = storeStore;
 const defaultStore = useDefault();
 const { getSafeAreaInsets } = defaultStore;
 
-const mapDrawStore = ref([] as IMapDrawMarker[]);
+const mapDrawPlace = ref([] as IMapDrawMarker[]);
 const page = ref(0);
 const isLoading = ref(false);
 function onClickMapRouteBtn() {
@@ -186,13 +186,13 @@ const loadMore = async () => {
     );
     await Promise.all(
       temp.map(async (ele) => {
-        if (ele.store === null) {
-          ele.store = await getStoreByDocId(ele.marker.storeId);
+        if (ele.place === null) {
+          ele.place = await getStoreByDocId(ele.marker.placeId);
         }
       })
     ).catch((error) => (isLoading.value = false));
 
-    mapDrawStore.value = mapDrawStore.value.concat(
+    mapDrawPlace.value = mapDrawPlace.value.concat(
       getInnerMapStore.value.slice(
         LIMIT_PER_PAGE * page.value,
         LIMIT_PER_PAGE * (page.value + 1)

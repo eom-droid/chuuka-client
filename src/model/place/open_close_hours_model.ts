@@ -1,4 +1,4 @@
-import { OpenCloseHourModel } from "@/model/store/open_close_hour_model";
+import { OpenCloseHourModel } from "@/model/place/open_close_hour_model";
 
 export class OpenCloseHoursModel implements IOpenCloseHours {
   public sun: OpenCloseHourModel;

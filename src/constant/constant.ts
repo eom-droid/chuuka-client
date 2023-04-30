@@ -1,10 +1,11 @@
 import { IMapDrawMarker } from "@/model/map_draw_marker_model";
 import { MarkerModel } from "@/model/marker_model";
-import { LocationUrlModel } from "@/model/store/location_url_model";
-import { OpenCloseHourModel } from "@/model/store/open_close_hour_model";
-import { OpenCloseHoursModel } from "@/model/store/open_close_hours_model";
-import { SnsModel } from "@/model/store/sns_model";
-import { StoreModel } from "@/model/store_model";
+import { PlaceCakeModel } from "@/model/place/cake/place_cake_model";
+import { LocationUrlModel } from "@/model/place/location_url_model";
+import { OpenCloseHourModel } from "@/model/place/open_close_hour_model";
+import { OpenCloseHoursModel } from "@/model/place/open_close_hours_model";
+import { SnsModel } from "@/model/place/sns_model";
+import { PlaceModel } from "@/model/place_model";
 import { GeoPoint } from "firebase/firestore";
 
 export const entireRegion = "지역 전체";
@@ -27,7 +28,7 @@ export const TELEPHONE_PREFIEX = "tel:";
 export const LIMIT_PER_PAGE = 8;
 
 export const GUM_BUNG_UH = {
-  store: new StoreModel({
+  place: new PlaceCakeModel({
     id: "1910093167",
     name: "Gumbunguh",
     sns: new SnsModel({
@@ -40,6 +41,7 @@ export const GUM_BUNG_UH = {
     locationUrl: new LocationUrlModel({
       naver: "1910093167",
     }),
+    category: "cake",
     geoCoord: new GeoPoint(37.5617357, 126.9975048),
     openCloseHours: new OpenCloseHoursModel({
       sun: new OpenCloseHourModel({
@@ -82,3 +84,8 @@ export const GUM_BUNG_UH = {
     theDayOrderAble: true,
   }),
 } as IMapDrawMarker;
+
+export const PLACE_CATEGORY = {
+  CAKE: "cake",
+  RESTAURANT: "restaurant",
+};

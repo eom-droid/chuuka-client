@@ -1,5 +1,5 @@
 import { IMarker, MarkerModel } from "@/model/marker_model";
-import { OpenCloseHoursModel } from "@/model/store/open_close_hours_model";
+import { OpenCloseHoursModel } from "@/model/place/open_close_hours_model";
 import { firestore } from "@/plugins/firebase";
 import { Timestamp, doc, getDoc, setDoc } from "firebase/firestore";
 import {
@@ -12,17 +12,16 @@ export class MarkerService {
   private static PATH = "/chuuka2/production";
 
   static async fetchMarkersFromDB(): Promise<Array<MarkerModel>> {
-    console.log("fetchDataFromFirebase");
     const docRef = doc(firestore, this.PATH);
 
     const singleDoc = await getDoc(docRef);
     if (!singleDoc.exists()) return [];
 
-    const markers = singleDoc.data().markers as Array<IMarker>;
+    const markers = singleDoc.data().cakeMarkers as Array<IMarker>;
 
     let result = markers.map((marker) => {
       return new MarkerModel({
-        storeId: marker.storeId,
+        placeId: marker.placeId,
         geoCoord: marker.geoCoord,
         openCloseHours: OpenCloseHoursModel.fromJson(marker.openCloseHours),
       });
@@ -39,7 +38,7 @@ export class MarkerService {
     const markers = JSON.parse(markers_localStorage) as Array<IMarker>;
     let result = markers.map((marker) => {
       return new MarkerModel({
-        storeId: marker.storeId,
+        placeId: marker.placeId,
         geoCoord: marker.geoCoord,
         openCloseHours: OpenCloseHoursModel.fromJson(marker.openCloseHours),
       });
@@ -50,7 +49,7 @@ export class MarkerService {
   static setMarkersToLS(markers: Array<MarkerModel>) {
     let result = markers.map((marker) => {
       return {
-        storeId: marker.storeId,
+        placeId: marker.placeId,
         geoCoord: marker.geoCoord,
         openCloseHours: marker.openCloseHours.toJson(),
       };

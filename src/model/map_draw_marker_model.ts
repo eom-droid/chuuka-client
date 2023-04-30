@@ -1,8 +1,8 @@
 import { MarkerModel } from "@/model/marker_model";
-import { StoreModel } from "@/model/store_model";
+import { PlaceModel } from "@/model/place_model";
 
 export interface IMapDrawMarker {
-  store: StoreModel | null;
+  place: PlaceModel | null;
   naverMarker: naver.maps.Marker;
   marker: MarkerModel;
   // undefined : 정보 없음

@@ -14,8 +14,8 @@
       class="w-full h-[26%] object-center object-cover"
     />
     <div class="">
-      <store_detail_info_card
-        :selected-store="GUM_BUNG_UH"
+      <place_detail_info_card
+        :selected-place="GUM_BUNG_UH"
         :running-status-card-visible="false"
         :scheduleScrollAble="false"
         class="pt-6 px-4 relative"
@@ -25,7 +25,7 @@
             <rounded_sns_btn
               color="bg-phone-call-green"
               :hrefPrefix="TELEPHONE_PREFIEX"
-              :hrefValue="GUM_BUNG_UH.store!.telephone"
+              :hrefValue="GUM_BUNG_UH.place!.telephone"
             >
               <template #icon>
                 <img src="@/assets/img/icon/phone-call.svg" class="m-auto" />
@@ -34,12 +34,12 @@
             <rounded_sns_btn
               color="bg-kakao-yellow"
               :hrefPrefix="KAKAO_URL_PREFIEX"
-              :hrefValue="GUM_BUNG_UH.store!.sns.kakaoTalk"
+              :hrefValue="GUM_BUNG_UH.place!.sns.kakaoTalk"
               class="ml-3"
             >
               <template #icon>
                 <img
-                  :src="GUM_BUNG_UH.store!.sns.kakaoTalk 
+                  :src="GUM_BUNG_UH.place!.sns.kakaoTalk 
                      ? kakaoAvailable
                       :kakaoDisAble"
                   class="ml-2.5 mt-2.5"
@@ -50,13 +50,13 @@
             <rounded_sns_btn
               color="bg-white"
               :hrefPrefix="INSTAGRAM_URL_PREFIX"
-              :hrefValue="GUM_BUNG_UH.store!.sns.instagram"
+              :hrefValue="GUM_BUNG_UH.place!.sns.instagram"
               styleOption="border border-light-gray"
               class="ml-3"
             >
               <template #icon>
                 <img
-                  :src="GUM_BUNG_UH.store!.sns.instagram ? 
+                  :src="GUM_BUNG_UH.place!.sns.instagram ? 
                       instaAvailable:
                         instaDisAble"
                   class="m-auto"
@@ -65,7 +65,7 @@
             </rounded_sns_btn>
           </div>
         </template>
-      </store_detail_info_card>
+      </place_detail_info_card>
     </div>
     <div class="grid grid-cols-3 mt-6 pt-1 mx-4 gap-2">
       <div v-for="ele in imgArray" class="imgRatio">
@@ -81,7 +81,7 @@
         </div>
         <a
           class="absolute w-full h-full left-0 top-0 block bg-black opacity-20 rounded-[5px]"
-          :href="INSTAGRAM_URL_PREFIX + GUM_BUNG_UH.store!.sns.instagram"
+          :href="INSTAGRAM_URL_PREFIX + GUM_BUNG_UH.place!.sns.instagram"
           target="_blank"
         ></a>
       </div>
@@ -100,7 +100,7 @@ import {
 } from "@/constant/constant";
 
 // Components import
-import store_detail_info_card from "@/components/common/store_detail_info_card.vue";
+import place_detail_info_card from "@/components/common/place_detail_info_card.vue";
 
 import rounded_sns_btn from "@/components/common/rounded_sns_btn.vue";
 import top_basic_bar from "@/components/common/top_basic_bar.vue";

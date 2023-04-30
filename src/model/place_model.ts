@@ -1,18 +1,19 @@
 import { GeoPoint, Timestamp } from "firebase/firestore";
-import { OpenCloseHoursModel } from "@/model/store/open_close_hours_model";
-import { LocationUrlModel } from "@/model/store/location_url_model";
-import { SnsModel } from "@/model/store/sns_model";
+import { OpenCloseHoursModel } from "@/model/place/open_close_hours_model";
+import { LocationUrlModel } from "@/model/place/location_url_model";
+import { SnsModel } from "@/model/place/sns_model";
 
-export class StoreModel implements IStore {
+export class PlaceModel implements IPlace {
   public id: string;
   public name: string;
   public sns: SnsModel;
-  public telephone?: string;
+  public telephone: string;
   public address: string;
   public locationUrl: LocationUrlModel;
   public geoCoord: GeoPoint;
   public openCloseHours: OpenCloseHoursModel;
-  public theDayOrderAble?: boolean;
+  public category: string;
+
   public modUser?: string;
   public regDTime?: Timestamp;
   public modDTime?: Timestamp;
@@ -26,11 +27,11 @@ export class StoreModel implements IStore {
     locationUrl,
     geoCoord,
     openCloseHours,
-    theDayOrderAble,
     modUser,
+    category,
     regDTime,
     modDTime,
-  }: IStore) {
+  }: IPlace) {
     this.id = id;
     this.name = name;
     this.sns = sns;
@@ -39,14 +40,14 @@ export class StoreModel implements IStore {
     this.locationUrl = locationUrl;
     this.geoCoord = geoCoord;
     this.openCloseHours = openCloseHours;
-    this.theDayOrderAble = theDayOrderAble;
+    this.category = category;
     this.modUser = modUser;
     this.regDTime = regDTime;
     this.modDTime = modDTime;
   }
 
-  static fromJson(json: IStore): StoreModel {
-    return new StoreModel({
+  static fromJson(json: IPlace): PlaceModel {
+    return new PlaceModel({
       id: json.id,
       name: json.name,
       sns: SnsModel.fromJson(json.sns),
@@ -55,7 +56,7 @@ export class StoreModel implements IStore {
       locationUrl: LocationUrlModel.fromJson(json.locationUrl),
       geoCoord: json.geoCoord,
       openCloseHours: OpenCloseHoursModel.fromJson(json.openCloseHours),
-      theDayOrderAble: json.theDayOrderAble,
+      category: json.category,
       modUser: json.modUser,
       regDTime: json.regDTime,
       modDTime: json.modDTime,
@@ -73,27 +74,26 @@ export class StoreModel implements IStore {
       locationUrl: this.locationUrl.toJson(),
       geoCoord: this.geoCoord,
       openCloseHours: this.openCloseHours.toJson(),
+      category: this.category,
       modUser: this.modUser,
       regDTime: this.regDTime,
       modDTime: this.modDTime,
-    } as IStore;
-    if (this.theDayOrderAble !== undefined) {
-      result.theDayOrderAble = this.theDayOrderAble;
-    }
+    } as IPlace;
+
     return result;
   }
 }
 
-export interface IStore {
+export interface IPlace {
   id: string;
   name: string;
   sns: SnsModel;
-  telephone?: string;
+  telephone: string;
   address: string;
   locationUrl: LocationUrlModel;
   geoCoord: GeoPoint;
   openCloseHours: OpenCloseHoursModel;
-  theDayOrderAble?: boolean;
+  category: string;
   modUser?: string;
   regDTime?: Timestamp;
   modDTime?: Timestamp;

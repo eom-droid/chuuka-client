@@ -13,13 +13,13 @@ import { IMapDrawMarker } from "@/model/map_draw_marker_model";
 //pinia
 import { storeToRefs } from "pinia";
 import { useMarkerStore } from "@/store/marker_store";
-import { useStoreStore } from "@/store/store_store";
+import { usePlaceStore } from "@/store/place_store";
 import { useDefault } from "@/store/default";
 // Components import
 import top_menu_bar from "@/components/common/top_menu_bar.vue";
 import list_btn from "@/components/common/list_btn.vue";
 import home_map_gps_btn from "@/components/home_map_gps_btn.vue";
-import store_detail_info_card from "@/components/common/store_detail_info_card.vue";
+import place_detail_info_card from "@/components/common/place_detail_info_card.vue";
 import rounded_sns_btn from "@/components/common/rounded_sns_btn.vue";
 
 // icon
@@ -33,8 +33,8 @@ import kakaoDisAble from "@/assets/img/icon/kakao_disable.svg";
 import instaAvailable from "@/assets/img/icon/instagram.svg";
 import instaDisAble from "@/assets/img/icon/instagram_disable.svg";
 
-import { OpenCloseHoursModel } from "@/model/store/open_close_hours_model";
-import { OpenCloseHourModel } from "@/model/store/open_close_hour_model";
+import { OpenCloseHoursModel } from "@/model/place/open_close_hours_model";
+import { OpenCloseHourModel } from "@/model/place/open_close_hour_model";
 import { toastCustom } from "@/utils/toast";
 import { router } from "@/router/router";
 
@@ -43,14 +43,14 @@ const gpsState = ref<GPS_STATUS_TYPE>(GPS_STATUS.STOP);
 //pinia part
 const markersStore = useMarkerStore();
 const { getMarkers } = storeToRefs(markersStore);
-const storeStore = useStoreStore();
-const { getStoreByDocId, setInnerMapStore } = storeStore;
+const placeStore = usePlaceStore();
+const { getPlaceByDocId, setInnerMapPlace } = placeStore;
 const defaultStore = useDefault();
 const { getSafeAreaInsets } = defaultStore;
 
 // local variable
 const mapDrawMarker = ref([] as IMapDrawMarker[]);
-const selectedStore = ref<IMapDrawMarker | null>(null);
+const selectedPlace = ref<IMapDrawMarker | null>(null);
 const currentLocMarker = ref<naver.maps.Marker | null>(null);
 const gpsWatchId = ref<number | null>(null);
 
@@ -88,7 +88,7 @@ async function initializeMapDrawMarker() {
   // 각 marker 별 store: null 생성
   // 각 marker 그려줄지 말지 설정
   (await getMarkers.value).map((ele, index) => {
-    const isStoreOpen = isStoreOpenNow(ele.openCloseHours);
+    const isPlaceOpen = isPlaceOpenNow(ele.openCloseHours);
     // 그릴 mapDrawMarker Array에 그릴 마커를 넣어줌
     mapDrawMarker.value.push({
       marker: ele,
@@ -104,12 +104,12 @@ async function initializeMapDrawMarker() {
           ? map.value
           : undefined,
         icon: {
-          url: isStoreOpen ? cakeOpenMarker : cakeClosedMarker,
+          url: isPlaceOpen ? cakeOpenMarker : cakeClosedMarker,
           anchor: new naver.maps.Point(12, 12),
         },
       }),
-      store: null,
-      isOpen: isStoreOpen,
+      place: null,
+      isOpen: isPlaceOpen,
     });
     // 마커가 현재 고객의 mapBounds 안에 있으면 render
     // if (
@@ -176,7 +176,7 @@ function isWorkingNow(openCloseHour: OpenCloseHourModel): boolean | undefined {
   }
 }
 
-function isStoreOpenNow(
+function isPlaceOpenNow(
   openCloseHours: OpenCloseHoursModel
 ): boolean | undefined {
   switch (now.value.getDay()) {
@@ -219,20 +219,20 @@ async function addEachMarkerListener(mapDrawMarker: IMapDrawMarker) {
 
     // 선택된 marker의 store를 fetch해오고 store를 selectedStore에 넣어줌
 
-    if (selectedStore.value !== null) {
-      setMarkerNonSelected(selectedStore.value);
+    if (selectedPlace.value !== null) {
+      setMarkerNonSelected(selectedPlace.value);
     }
     // pointer초기화
-    selectedStore.value = null;
-    selectedStore.value = mapDrawMarker;
-    selectedStore.value.naverMarker.setZIndex(MARKER_SELECTED_Z_INDEX);
-    selectedStore.value.naverMarker.setIcon({
-      url: selectedStore.value.isOpen
+    selectedPlace.value = null;
+    selectedPlace.value = mapDrawMarker;
+    selectedPlace.value.naverMarker.setZIndex(MARKER_SELECTED_Z_INDEX);
+    selectedPlace.value.naverMarker.setIcon({
+      url: selectedPlace.value.isOpen
         ? cakeOpenSelectedMarker
         : cakeClosedSelectedMarker,
       anchor: new naver.maps.Point(20.3, 58.5),
     });
-    mapDrawMarker.store = await getStoreByDocId(mapDrawMarker.marker.storeId);
+    mapDrawMarker.place = await getPlaceByDocId(mapDrawMarker.marker.placeId);
   });
 }
 
@@ -245,10 +245,10 @@ async function addNaverMapListener() {
   // 선택 취소
   // 다른 위치 선택 시
   map.value!.addListener("click", async function () {
-    if (selectedStore.value !== null) {
-      setMarkerNonSelected(selectedStore.value);
+    if (selectedPlace.value !== null) {
+      setMarkerNonSelected(selectedPlace.value);
     }
-    selectedStore.value = null;
+    selectedPlace.value = null;
   });
 }
 
@@ -261,13 +261,13 @@ async function updateMarkers(map: naver.maps.Map, markers: IMapDrawMarker[]) {
     position = marker.getPosition();
 
     if (mapBounds.hasPoint(position)) {
-      if (markers[i].marker.storeId === selectedStore.value?.marker.storeId)
+      if (markers[i].marker.placeId === selectedPlace.value?.marker.placeId)
         continue;
       setMarkerNonSelected(markers[i]);
 
       showMarker(map, marker);
     } else {
-      if (markers[i].store === selectedStore.value?.store) continue;
+      if (markers[i].place === selectedPlace.value?.place) continue;
       hideMarker(map, marker);
     }
   }
@@ -365,7 +365,7 @@ function setCurrentMapPositionCenter(latitude: number, longitude: number) {
 }
 
 function onClickListRouteBtn() {
-  setInnerMapStore(
+  setInnerMapPlace(
     mapDrawMarker.value.filter((ele) => ele.naverMarker.getMap())
   );
   router.replace("/list");
@@ -404,7 +404,7 @@ function onClickListRouteBtn() {
         @on-click="onClickGPSBtn()"
         class="absolute"
         :style="
-          selectedStore === null
+          selectedPlace === null
             ? 'bottom:100px; right:16px'
             : 'bottom:' + (screenHeight / 3 + 16) + 'px; left:16px'
         "
@@ -413,22 +413,22 @@ function onClickListRouteBtn() {
 
       <div
         class="absolute bottom-0 left-0 w-full h-1/3 pt-6 bg-white each-card rounded-t-lg px-4"
-        v-if="selectedStore !== null"
+        v-if="selectedPlace !== null"
         :style="'z-index: ' + CONTENT_Z_INDEX_OVER_MARKER"
       >
         <div
           class="h-full flex rounded-t-lg"
-          v-if="selectedStore.store === null"
+          v-if="selectedPlace.place === null"
         >
           <img src="@/assets/gif/loadingIcon_croped.gif" class="m-auto w-1/6" />
         </div>
-        <store_detail_info_card v-else :selectedStore="selectedStore" class="">
+        <place_detail_info_card v-else :selectedPlace="selectedPlace" class="">
           <template #sns-icon>
             <div class="flex absolute right-4 -top-5">
               <rounded_sns_btn
                 color="bg-phone-call-green"
                 :hrefPrefix="TELEPHONE_PREFIEX"
-                :hrefValue="selectedStore.store!.telephone"
+                :hrefValue="selectedPlace.place!.telephone"
               >
                 <template #icon>
                   <img src="@/assets/img/icon/phone-call.svg" class="m-auto" />
@@ -437,12 +437,12 @@ function onClickListRouteBtn() {
               <rounded_sns_btn
                 color="bg-kakao-yellow"
                 :hrefPrefix="KAKAO_URL_PREFIEX"
-                :hrefValue="selectedStore.store!.sns.kakaoTalk"
+                :hrefValue="selectedPlace.place!.sns.kakaoTalk"
                 class="ml-3"
               >
                 <template #icon>
                   <img
-                    :src="selectedStore.store!.sns.kakaoTalk 
+                    :src="selectedPlace.place!.sns.kakaoTalk 
                      ? kakaoAvailable
                       :kakaoDisAble"
                     class="ml-2.5 mt-2.5"
@@ -453,13 +453,13 @@ function onClickListRouteBtn() {
               <rounded_sns_btn
                 color="bg-white"
                 :hrefPrefix="INSTAGRAM_URL_PREFIX"
-                :hrefValue="selectedStore.store!.sns.instagram"
+                :hrefValue="selectedPlace.place!.sns.instagram"
                 styleOption="border border-light-gray"
                 class="ml-3"
               >
                 <template #icon>
                   <img
-                    :src="selectedStore.store!.sns.instagram ? 
+                    :src="selectedPlace.place!.sns.instagram ? 
                       instaAvailable:
                         instaDisAble"
                     class="m-auto"
@@ -478,7 +478,7 @@ function onClickListRouteBtn() {
               "
             ></div
           ></template>
-        </store_detail_info_card>
+        </place_detail_info_card>
       </div>
     </div>
   </main>
