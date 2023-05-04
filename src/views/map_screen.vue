@@ -23,10 +23,11 @@ import place_detail_info_card from "@/components/common/place_detail_info_card.v
 import rounded_sns_btn from "@/components/common/rounded_sns_btn.vue";
 
 // icon
+// 이이콘에 shadow다 넣어줘야됨 ㅜㅠㅠ 해야될거 많구만
 import cakeClosedMarker from "@/assets/img/icon/marker/cake_closed_marker.svg";
 import cakeOpenMarker from "@/assets/img/icon/marker/cake_open_marker.svg";
-import cakeClosedSelectedMarker from "@/assets/img/icon/marker/cake_closed_selected_marker.png";
-import cakeOpenSelectedMarker from "@/assets/img/icon/marker/cake_open_selected_marker.png";
+import cakeClosedSelectedMarker from "@/assets/img/icon/marker/cake_closed_selected_marker.svg";
+import cakeOpenSelectedMarker from "@/assets/img/icon/marker/cake_open_selected_marker.svg";
 import currentLocIcon from "@/assets/img/icon/current_position.svg";
 import kakaoAvailable from "@/assets/img/icon/kakao.svg";
 import kakaoDisAble from "@/assets/img/icon/kakao_disable.svg";
@@ -238,7 +239,7 @@ async function addEachMarkerListener(mapDrawMarker: IMapDrawMarker) {
       url: selectedPlace.value.isOpen
         ? cakeOpenSelectedMarker
         : cakeClosedSelectedMarker,
-      anchor: new naver.maps.Point(20.3, 58.5),
+      anchor: new naver.maps.Point(23, 56),
     });
 
     mapDrawMarker.place = await getPlaceByDocId(mapDrawMarker.marker.placeId);
