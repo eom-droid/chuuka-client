@@ -1,5 +1,5 @@
 import { MarkerModel } from "@/model/marker_model";
-import { PlaceModel } from "@/model/place_model";
+import { PlaceBaseModel, PlaceModel } from "@/model/place_model";
 import { MarkerService } from "@/service/marker_service";
 import { PlaceService } from "@/service/place_service";
 import { defineStore } from "pinia";
@@ -21,7 +21,7 @@ export const usePlaceStore = defineStore({
     // null 상태를 분류해둔 이유는 사용자가 /list로 바로 접근했을때를 대비함
     // 추후 null일때는 랜덤으로 store를 불러와서 전시할 예정
     _innerMapPlace: null as Array<IMapDrawMarker> | null,
-    _place: new Map<string, PlaceModel>(),
+    _place: new Map<string, PlaceBaseModel>(),
   }),
   getters: {
     getInnerMapStore: (state): Array<IMapDrawMarker> | null => {
@@ -32,15 +32,16 @@ export const usePlaceStore = defineStore({
     setInnerMapPlace(place: Array<IMapDrawMarker>) {
       this._innerMapPlace = place;
     },
-    async getPlaceByDocId(docId: string): Promise<PlaceModel | null> {
+    async getPlaceByDocId(docId: string): Promise<PlaceBaseModel | null> {
       var today = new Date();
-      // 메모리 캐싱 확인
+
+      // 1. 메모리 캐싱 확인
       var piniaPlaceValue = this._place.get(docId);
       if (piniaPlaceValue) {
         return piniaPlaceValue;
       }
-      // localStorage에서 캐싱 확인
 
+      // 2. localStorage에서 캐싱 확인
       var localStorageValue = PlaceService.getSinglePlaceFromLS(docId);
       if (
         localStorageValue != null &&
@@ -50,7 +51,8 @@ export const usePlaceStore = defineStore({
         this._place.set(docId, localStorageValue.place);
         return localStorageValue.place;
       }
-      // firebase에서 가져오기
+
+      // 3. firebase에서 가져오기
       var firebaseValue = await PlaceService.fetchSinglePlaceFromDB(docId);
       if (firebaseValue) {
         PlaceService.setPlaceWithFetchDateToLS({
@@ -66,40 +68,3 @@ export const usePlaceStore = defineStore({
     },
   },
 });
-
-// async function _initialize(): Promise<Array<MarkerModel>> {
-//   const today = new Date();
-//   let result = [] as MarkerModel[];
-//   // localStorage에 저장된 markersFetchDate 값이 있는지 확인합니다.
-//   // 추가적으로 markersFetchDate 값이 하루이상 차이가 나는지 확인합니다.
-
-//   const markersFetchDate = MarkerService.getMarkersFetchDateFromLS();
-//   // markersFetchDate 값이 없다면
-//   if (markersFetchDate === null) {
-//     result = await getMarkersFromFireBaseAndFetchToLocalStorage();
-//   } else {
-//     // markersFetchDate 값이 expired 된다면
-//     if (daysBetween(today, markersFetchDate) >= 1) {
-//       result = await getMarkersFromFireBaseAndFetchToLocalStorage();
-//     } else {
-//       var markerFromLS = await MarkerService.getMarkersFromLS();
-//       if (markerFromLS === null) {
-//         result = await getMarkersFromFireBaseAndFetchToLocalStorage();
-//       } else {
-//         result = markerFromLS;
-//       }
-//     }
-//   }
-//   return result;
-// }
-
-// // async function getMarkersFromFireBaseAndFetchToLocalStorage(): Promise<
-// //   Array<MarkerModel>
-// // > {
-// //   // firebase에서 불러와서
-// //   const result = await MarkerService.fetchDataFromFirebase();
-// //   // localStorage에 저장합니다.
-// //   MarkerService.saveDataToLocalStorage(result);
-// //   MarkerService.saveMarkersFetchDateToLocalStorage();
-// //   return result;
-// // }

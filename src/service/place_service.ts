@@ -3,49 +3,33 @@ import {
   CAKE_PLACE_FETCH_DATE_LS_KEY,
 } from "@/constant/localstorage_constant";
 import { IPlaceWithFetchDate } from "@/model/place_local_storage_model";
-import { PlaceModel, IPlace } from "@/model/place_model";
+import {
+  PlaceBaseModel,
+  IPlaceBase,
+  PlaceArticleModel,
+  IPlaceArticle,
+  IPlaceCake,
+  PlaceCakeModel,
+} from "@/model/place_model";
 import { firestore } from "@/plugins/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { getDateTimeByDate } from "@/utils/moment";
-import { PLACE_CATEGORY } from "@/constant/constant";
-import {
-  IPlaceCake,
-  PlaceCakeModel,
-} from "@/model/place/cake/place_cake_model";
+import { NET, PLACE_CATEGORY } from "@/constant/constant";
 
 export class PlaceService {
-  private static PATH = "/chuuka2/production/place";
-
-  //한번에 불러오는 경우는 없어서 주석처리
-  // static async fetchData(): Promise<Array<PlaceModel>> {
-  //   let result = [] as Array<PlaceModel>;
-  //   const docRef = collection(firestore, this.PATH);
-
-  //   const docs = await getDocs(docRef);
-  //   docs.docs.map((ele) => {
-  //     const data = PlaceModel.fromJson(ele.data() as IPlace);
-  //     data.id = ele.id;
-  //     result.push(data);
-  //   });
-  //   return result;
-  // }
-
-  // static async checkIdExist(docId: string): Promise<boolean> {
-  //   const query = doc(firestore, this.PATH, docId);
-  //   const snapShot = await getDoc(query);
-  //   if (snapShot.exists()) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  private static PATH = `/chuuka2/${NET}/place`;
 
   static async fetchSinglePlaceFromDB(
     docId: string
-  ): Promise<PlaceModel | null> {
+  ): Promise<PlaceBaseModel | null> {
     const query = doc(firestore, this.PATH, docId);
     const snapShot = await getDoc(query);
     if (snapShot.exists()) {
-      var data = PlaceService.checkCategoryAndParse(snapShot.data() as IPlace);
+      //1 check isArticle => PlaceArticleModel
+
+      var data = PlaceService.checkCategoryAndParse(
+        snapShot.data() as IPlaceBase
+      );
       data.id = snapShot.id;
       return data;
     }
@@ -68,7 +52,7 @@ export class PlaceService {
   }
 
   static setPlaceWithFetchDateToLS(placeWithFetchDate: IPlaceWithFetchDate) {
-    let result = placeWithFetchDate.place.toFirebaseJson();
+    let result = placeWithFetchDate.place.toJson();
 
     window.localStorage.setItem(
       CAKE_PLACE_LS_KEY_PREFIX + placeWithFetchDate.place.id,
@@ -78,34 +62,19 @@ export class PlaceService {
       } as IPlaceWithFetchDate)
     );
   }
-  static checkCategoryAndParse(place: IPlace): PlaceModel {
-    var result;
-    if (place.category === PLACE_CATEGORY.CAKE) {
-      result = PlaceCakeModel.fromJson(place);
+  static checkCategoryAndParse(placeBase: IPlaceBase): PlaceBaseModel {
+    // 1. check isArticle => PlaceArticleModel
+    if (placeBase.isArticle) {
+      return PlaceArticleModel.fromJson(placeBase as IPlaceArticle);
     } else {
-      result = PlaceModel.fromJson(place);
+      // 2. check category => PlaceCakeModel
+      if (placeBase.category === PLACE_CATEGORY.CAKE) {
+        return PlaceCakeModel.fromJson(placeBase as IPlaceCake);
+      }
+      // 3. PlaceBaseModel
+      else {
+        return PlaceBaseModel.fromJson(placeBase as PlaceBaseModel);
+      }
     }
-    return result;
   }
-
-  // static async setPlace(place: PlaceModel) {
-  //   const id = place.id;
-  //   const docRef = doc(fireplace, this.PATH, id);
-  //   const now = new Date();
-  //   place.regDTime = Timestamp.fromDate(now);
-  //   place.modDTime = Timestamp.fromDate(now);
-  //   place.modUser = "admin";
-  //   try {
-  //     const result = await setDoc(docRef, place.toFirebaseJson());
-  //     return true;
-  //   } catch (error) {
-  //     console.log(error);
-
-  //     return false;
-  //   }
-  // }
-  // static removeId(place: PlaceModel): any {
-  //   let { id, ...placeInfoRmId } = place;
-  //   return placeInfoRmId;
-  // }
 }

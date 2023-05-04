@@ -1,10 +1,101 @@
+interface IOpenCloseHour {
+  sun: OpenCloseHourDetailModel;
+  mon: OpenCloseHourDetailModel;
+  tue: OpenCloseHourDetailModel;
+  wed: OpenCloseHourDetailModel;
+  thu: OpenCloseHourDetailModel;
+  fri: OpenCloseHourDetailModel;
+  sat: OpenCloseHourDetailModel;
+  description?: string;
+}
 export class OpenCloseHourModel implements IOpenCloseHour {
-  public isClosed?: boolean;
-  public openHour?: string;
-  public closeHour?: string;
-  public startBreakTime?: string;
-  public endBreakTime?: string;
-  public lastOrderTime?: string;
+  sun: OpenCloseHourDetailModel;
+  mon: OpenCloseHourDetailModel;
+  tue: OpenCloseHourDetailModel;
+  wed: OpenCloseHourDetailModel;
+  thu: OpenCloseHourDetailModel;
+  fri: OpenCloseHourDetailModel;
+  sat: OpenCloseHourDetailModel;
+  description?: string;
+
+  constructor({
+    sun,
+    mon,
+    tue,
+    wed,
+    thu,
+    fri,
+    sat,
+    description,
+  }: IOpenCloseHour) {
+    this.sun = sun;
+    this.mon = mon;
+    this.tue = tue;
+    this.wed = wed;
+    this.thu = thu;
+    this.fri = fri;
+    this.sat = sat;
+    this.description = description;
+  }
+
+  static initEmpty() {
+    return new OpenCloseHourModel({
+      sun: new OpenCloseHourDetailModel({}),
+      mon: new OpenCloseHourDetailModel({}),
+      tue: new OpenCloseHourDetailModel({}),
+      wed: new OpenCloseHourDetailModel({}),
+      thu: new OpenCloseHourDetailModel({}),
+      fri: new OpenCloseHourDetailModel({}),
+      sat: new OpenCloseHourDetailModel({}),
+    });
+  }
+
+  static fromJson(json: IOpenCloseHour): OpenCloseHourModel {
+    return new OpenCloseHourModel({
+      sun: OpenCloseHourDetailModel.fromJson(json.sun),
+      mon: OpenCloseHourDetailModel.fromJson(json.mon),
+      tue: OpenCloseHourDetailModel.fromJson(json.tue),
+      wed: OpenCloseHourDetailModel.fromJson(json.wed),
+      thu: OpenCloseHourDetailModel.fromJson(json.thu),
+      fri: OpenCloseHourDetailModel.fromJson(json.fri),
+      sat: OpenCloseHourDetailModel.fromJson(json.sat),
+      description: json.description,
+    });
+  }
+
+  toJson(): Object {
+    return {
+      sun: this.sun.toJson(),
+      mon: this.mon.toJson(),
+      tue: this.tue.toJson(),
+      wed: this.wed.toJson(),
+      thu: this.thu.toJson(),
+      fri: this.fri.toJson(),
+      sat: this.sat.toJson(),
+      description: this.description,
+    };
+  }
+
+  toJsonWithoutDescription(): string {
+    return JSON.stringify({
+      sun: this.sun.toJson(),
+      mon: this.mon.toJson(),
+      tue: this.tue.toJson(),
+      wed: this.wed.toJson(),
+      thu: this.thu.toJson(),
+      fri: this.fri.toJson(),
+      sat: this.sat.toJson(),
+    });
+  }
+}
+
+export class OpenCloseHourDetailModel implements IOpenCloseHourDetail {
+  isClosed?: boolean;
+  openHour?: string;
+  closeHour?: string;
+  startBreakTime?: string;
+  endBreakTime?: string;
+  lastOrderTime?: string;
 
   constructor({
     isClosed,
@@ -13,7 +104,7 @@ export class OpenCloseHourModel implements IOpenCloseHour {
     startBreakTime,
     endBreakTime,
     lastOrderTime,
-  }: IOpenCloseHour) {
+  }: IOpenCloseHourDetail) {
     this.isClosed = isClosed;
     this.openHour = openHour;
     this.closeHour = closeHour;
@@ -23,36 +114,30 @@ export class OpenCloseHourModel implements IOpenCloseHour {
     return this;
   }
 
-  static fromJson(json: IOpenCloseHour) {
-    return new OpenCloseHourModel(json);
+  static fromJson(json: IOpenCloseHourDetail): OpenCloseHourDetailModel {
+    return new OpenCloseHourDetailModel({
+      isClosed: json.isClosed,
+      openHour: json.openHour,
+      closeHour: json.closeHour,
+      startBreakTime: json.startBreakTime,
+      endBreakTime: json.endBreakTime,
+      lastOrderTime: json.lastOrderTime,
+    });
   }
 
-  toJson() {
-    var json: IOpenCloseHour = {};
-    if (this.isClosed !== undefined) {
-      json.isClosed = this.isClosed;
-    }
-    if (this.openHour !== undefined) {
-      json.openHour = this.openHour;
-    }
-    if (this.closeHour !== undefined) {
-      json.closeHour = this.closeHour;
-    }
-    if (this.startBreakTime !== undefined) {
-      json.startBreakTime = this.startBreakTime;
-    }
-    if (this.endBreakTime !== undefined) {
-      json.endBreakTime = this.endBreakTime;
-    }
-    if (this.lastOrderTime !== undefined) {
-      json.lastOrderTime = this.lastOrderTime;
-    }
-
-    return json;
+  toJson(): Object {
+    return {
+      isClosed: this.isClosed,
+      openHour: this.openHour,
+      closeHour: this.closeHour,
+      startBreakTime: this.startBreakTime,
+      endBreakTime: this.endBreakTime,
+      lastOrderTime: this.lastOrderTime,
+    };
   }
 }
 
-interface IOpenCloseHour {
+interface IOpenCloseHourDetail {
   isClosed?: boolean;
   openHour?: string;
   closeHour?: string;

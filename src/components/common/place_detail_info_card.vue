@@ -43,7 +43,7 @@ import open_close_hours_div from "@/components/place_detail_info/open_close_hour
 
 // model
 import { IMapDrawMarker } from "@/model/map_draw_marker_model";
-import { PlaceCakeModel } from "@/model/place/cake/place_cake_model";
+import { PlaceCakeModel } from "@/model/place_model";
 interface Props {
   selectedPlace: IMapDrawMarker;
   hrVisible?: boolean;

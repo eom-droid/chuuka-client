@@ -1,20 +1,21 @@
 import { IMapDrawMarker } from "@/model/map_draw_marker_model";
-import { MarkerModel } from "@/model/marker_model";
-import { PlaceCakeModel } from "@/model/place/cake/place_cake_model";
 import { LocationUrlModel } from "@/model/place/location_url_model";
-import { OpenCloseHourModel } from "@/model/place/open_close_hour_model";
-import { OpenCloseHoursModel } from "@/model/place/open_close_hours_model";
+
+import {
+  OpenCloseHourDetailModel,
+  OpenCloseHourModel,
+} from "@/model/place/open_close_hour_model";
 import { SnsModel } from "@/model/place/sns_model";
-import { PlaceModel } from "@/model/place_model";
+import { PlaceCakeModel } from "@/model/place_model";
 import { GeoPoint } from "firebase/firestore";
 
-export const entireRegion = "지역 전체";
+export const NET = "development";
 
-export const LINKEDLIST_HEAD = "head";
-
-export const newsCardStatus = {
-  EDIT: "edit",
-  DISPLAY: "display",
+export const PLACE_CATEGORY = {
+  RESTAURANT: "restaurant",
+  CAKE: "cake",
+  CAFE: "cafe",
+  ACCOMMODATION: "accommodation",
 };
 
 export const MARKER_Z_INDEX = 20;
@@ -43,38 +44,38 @@ export const GUM_BUNG_UH = {
     }),
     category: "cake",
     geoCoord: new GeoPoint(37.5617357, 126.9975048),
-    openCloseHours: new OpenCloseHoursModel({
-      sun: new OpenCloseHourModel({
+    openCloseHours: new OpenCloseHourModel({
+      sun: new OpenCloseHourDetailModel({
         closeHour: "19:00",
         isClosed: false,
         openHour: "12:00",
       }),
-      mon: new OpenCloseHourModel({
+      mon: new OpenCloseHourDetailModel({
         closeHour: "19:00",
         isClosed: false,
         openHour: "12:00",
       }),
-      tue: new OpenCloseHourModel({
+      tue: new OpenCloseHourDetailModel({
         closeHour: "19:00",
         isClosed: false,
         openHour: "12:00",
       }),
-      wed: new OpenCloseHourModel({
+      wed: new OpenCloseHourDetailModel({
         closeHour: "19:00",
         isClosed: false,
         openHour: "12:00",
       }),
-      thu: new OpenCloseHourModel({
+      thu: new OpenCloseHourDetailModel({
         closeHour: "19:00",
         isClosed: false,
         openHour: "12:00",
       }),
-      fri: new OpenCloseHourModel({
+      fri: new OpenCloseHourDetailModel({
         closeHour: "19:00",
         isClosed: false,
         openHour: "12:00",
       }),
-      sat: new OpenCloseHourModel({
+      sat: new OpenCloseHourDetailModel({
         closeHour: "19:00",
         isClosed: false,
         openHour: "12:00",
@@ -84,8 +85,3 @@ export const GUM_BUNG_UH = {
     theDayOrderAble: true,
   }),
 } as IMapDrawMarker;
-
-export const PLACE_CATEGORY = {
-  CAKE: "cake",
-  RESTAURANT: "restaurant",
-};

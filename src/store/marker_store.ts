@@ -1,4 +1,7 @@
-import { MarkerModel } from "@/model/marker_model";
+import {
+  MarkerBaseModel,
+  MarkersWithUpdateTimeModel,
+} from "@/model/marker_model";
 import { MarkerService } from "@/service/marker_service";
 import { defineStore } from "pinia";
 import { daysBetween } from "@/utils/moment";
@@ -9,7 +12,7 @@ import { CAKE_MARKERS_FETCH_DATE_LIMIT_DAYS } from "@/constant/localstorage_cons
 export const useMarkerStore = defineStore({
   id: "marker",
   state: () => ({
-    _markers: [] as Array<MarkerModel>,
+    _markers: [] as Array<MarkerBaseModel>,
     isInitialized: false,
   }),
 
@@ -32,9 +35,9 @@ export const useMarkerStore = defineStore({
   },
 });
 
-async function _initialize(): Promise<Array<MarkerModel>> {
+async function _initialize(): Promise<Array<MarkerBaseModel>> {
   const today = new Date();
-  let result = [] as MarkerModel[];
+  var result;
   // localStorage에 저장된 markersFetchDate 값이 있는지 확인합니다.
   // 추가적으로 markersFetchDate 값이 하루이상 차이가 나는지 확인합니다.
 
@@ -49,7 +52,7 @@ async function _initialize(): Promise<Array<MarkerModel>> {
     ) {
       result = await getMarkersFromFireBaseAndFetchToLocalStorage();
     } else {
-      var markerFromLS = await MarkerService.getMarkersFromLS();
+      var markerFromLS = await MarkerService.getMarkersWithUpdateTimeFromLS();
       if (markerFromLS === null) {
         result = await getMarkersFromFireBaseAndFetchToLocalStorage();
       } else {
@@ -57,17 +60,35 @@ async function _initialize(): Promise<Array<MarkerModel>> {
       }
     }
   }
+
+  if (result != null) {
+    result = result as MarkersWithUpdateTimeModel;
+    return markersWIthUpdateTimeToMarkers(result);
+  } else {
+    return [];
+  }
+}
+
+async function getMarkersFromFireBaseAndFetchToLocalStorage(): Promise<MarkersWithUpdateTimeModel | null> {
+  let now = new Date();
+  // firebase에서 불러와서
+  const result = await MarkerService.fetchMarkersWithUpdateTimeFromDB();
+  if (result != null) {
+    // localStorage에 저장합니다.
+    MarkerService.setMarkersWithUpdateTimeToLS(result);
+    MarkerService.setMarkersFetchDateToLS(now);
+  }
+
   return result;
 }
 
-async function getMarkersFromFireBaseAndFetchToLocalStorage(): Promise<
-  Array<MarkerModel>
-> {
-  let now = new Date();
-  // firebase에서 불러와서
-  const result = await MarkerService.fetchMarkersFromDB();
-  // localStorage에 저장합니다.
-  MarkerService.setMarkersToLS(result);
-  MarkerService.setMarkersFetchDateToLS(now);
+function markersWIthUpdateTimeToMarkers(
+  markersWithUpdateTime: MarkersWithUpdateTimeModel
+): Array<MarkerBaseModel> {
+  let result = [] as Array<MarkerBaseModel>;
+
+  result = result.concat(markersWithUpdateTime.markers);
+  result = result.concat(markersWithUpdateTime.articleMarkers);
+
   return result;
 }

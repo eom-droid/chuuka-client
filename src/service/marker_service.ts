@@ -1,72 +1,81 @@
-import { IMarker, MarkerModel } from "@/model/marker_model";
-import { OpenCloseHoursModel } from "@/model/place/open_close_hours_model";
+import {
+  IMarkersWithUpdateTime,
+  IMarker,
+  MarkerArticleModel,
+  MarkerModel,
+  MarkersWithUpdateTimeModel,
+} from "@/model/marker_model";
 import { firestore } from "@/plugins/firebase";
 import { Timestamp, doc, getDoc, setDoc } from "firebase/firestore";
 import {
-  CAKE_MARKERS_FETCH_DATE_LS_KEY,
-  CAKE_MARKERS_LS_KEY,
+  MARKERS_FETCH_TIME_LS_KEY,
+  MARKERS_WITH_UPDATE_TIME_LS_KEY,
 } from "@/constant/localstorage_constant";
 import { getDateTimeByDate } from "@/utils/moment";
+import { NET } from "@/constant/constant";
 
 export class MarkerService {
-  private static PATH = "/chuuka2/production";
+  private static PATH = `/chuuka2/${NET}`;
 
-  static async fetchMarkersFromDB(): Promise<Array<MarkerModel>> {
+  static async fetchMarkersWithUpdateTimeFromDB(): Promise<MarkersWithUpdateTimeModel | null> {
     const docRef = doc(firestore, this.PATH);
 
     const singleDoc = await getDoc(docRef);
-    if (!singleDoc.exists()) return [];
+    if (!singleDoc.exists()) return null;
 
-    const markers = singleDoc.data().cakeMarkers as Array<IMarker>;
+    const markerWithUpdateTime = singleDoc.data() as IMarkersWithUpdateTime;
 
-    let result = markers.map((marker) => {
-      return new MarkerModel({
-        placeId: marker.placeId,
-        geoCoord: marker.geoCoord,
-        openCloseHours: OpenCloseHoursModel.fromJson(marker.openCloseHours),
-      });
+    let result = new MarkersWithUpdateTimeModel({
+      markers: markerWithUpdateTime.markers.map((ele) =>
+        MarkerModel.fromJson(ele)
+      ),
+      modDTime: markerWithUpdateTime.modDTime,
+      articleMarkers: markerWithUpdateTime.articleMarkers.map((ele) =>
+        MarkerArticleModel.fromJson(ele)
+      ),
     });
 
     return result;
   }
 
-  static getMarkersFromLS(): Array<MarkerModel> | null {
-    const markers_localStorage =
-      window.localStorage.getItem(CAKE_MARKERS_LS_KEY);
+  static getMarkersWithUpdateTimeFromLS(): MarkersWithUpdateTimeModel | null {
+    const markers_localStorage = window.localStorage.getItem(
+      MARKERS_WITH_UPDATE_TIME_LS_KEY
+    );
     if (markers_localStorage === null) return null;
 
-    const markers = JSON.parse(markers_localStorage) as Array<IMarker>;
-    let result = markers.map((marker) => {
-      return new MarkerModel({
-        placeId: marker.placeId,
-        geoCoord: marker.geoCoord,
-        openCloseHours: OpenCloseHoursModel.fromJson(marker.openCloseHours),
-      });
+    const markerWithUpdateTime = JSON.parse(
+      markers_localStorage
+    ) as IMarkersWithUpdateTime;
+    let result = new MarkersWithUpdateTimeModel({
+      markers: markerWithUpdateTime.markers.map((ele) =>
+        MarkerModel.fromJson(ele)
+      ),
+      modDTime: markerWithUpdateTime.modDTime,
+      articleMarkers: markerWithUpdateTime.articleMarkers.map((ele) =>
+        MarkerArticleModel.fromJson(ele)
+      ),
     });
     return result;
   }
 
-  static setMarkersToLS(markers: Array<MarkerModel>) {
-    let result = markers.map((marker) => {
-      return {
-        placeId: marker.placeId,
-        geoCoord: marker.geoCoord,
-        openCloseHours: marker.openCloseHours.toJson(),
-      };
-    });
-    window.localStorage.setItem(CAKE_MARKERS_LS_KEY, JSON.stringify(result));
+  static setMarkersWithUpdateTimeToLS(markers: MarkersWithUpdateTimeModel) {
+    window.localStorage.setItem(
+      MARKERS_WITH_UPDATE_TIME_LS_KEY,
+      JSON.stringify(markers)
+    );
   }
 
   static setMarkersFetchDateToLS(date: Date): void {
     window.localStorage.setItem(
-      CAKE_MARKERS_FETCH_DATE_LS_KEY,
+      MARKERS_FETCH_TIME_LS_KEY,
       getDateTimeByDate(date)
     );
   }
 
   static getMarkersFetchDateFromLS(): Date | null {
     const markersFetchDate_localStoreage = window.localStorage.getItem(
-      CAKE_MARKERS_FETCH_DATE_LS_KEY
+      MARKERS_FETCH_TIME_LS_KEY
     );
     if (markersFetchDate_localStoreage === null) return null;
     return new Date(markersFetchDate_localStoreage);

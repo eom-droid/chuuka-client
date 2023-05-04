@@ -1,6 +1,6 @@
-import { PlaceModel } from "@/model/place_model";
+import { PlaceBaseModel } from "@/model/place_model";
 
 export interface IPlaceWithFetchDate {
-  place: PlaceModel;
+  place: PlaceBaseModel;
   fetchDate: string;
 }

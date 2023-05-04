@@ -32,11 +32,14 @@ import kakaoAvailable from "@/assets/img/icon/kakao.svg";
 import kakaoDisAble from "@/assets/img/icon/kakao_disable.svg";
 import instaAvailable from "@/assets/img/icon/instagram.svg";
 import instaDisAble from "@/assets/img/icon/instagram_disable.svg";
-
-import { OpenCloseHoursModel } from "@/model/place/open_close_hours_model";
-import { OpenCloseHourModel } from "@/model/place/open_close_hour_model";
+import {
+  OpenCloseHourDetailModel,
+  OpenCloseHourModel,
+} from "@/model/place/open_close_hour_model";
 import { toastCustom } from "@/utils/toast";
 import { router } from "@/router/router";
+import { PlaceBaseModel, PlaceCakeModel } from "@/model/place_model";
+import { MarkerModel } from "@/model/marker_model";
 
 const gpsState = ref<GPS_STATUS_TYPE>(GPS_STATUS.STOP);
 
@@ -88,7 +91,7 @@ async function initializeMapDrawMarker() {
   // 각 marker 별 store: null 생성
   // 각 marker 그려줄지 말지 설정
   (await getMarkers.value).map((ele, index) => {
-    const isPlaceOpen = isPlaceOpenNow(ele.openCloseHours);
+    // const isPlaceOpen = isPlaceOpenNow(ele.openCloseHours);
     // 그릴 mapDrawMarker Array에 그릴 마커를 넣어줌
     mapDrawMarker.value.push({
       marker: ele,
@@ -104,12 +107,15 @@ async function initializeMapDrawMarker() {
           ? map.value
           : undefined,
         icon: {
-          url: isPlaceOpen ? cakeOpenMarker : cakeClosedMarker,
+          url: false ? cakeOpenMarker : cakeClosedMarker,
           anchor: new naver.maps.Point(12, 12),
         },
       }),
       place: null,
-      isOpen: isPlaceOpen,
+      isOpen:
+        ele instanceof MarkerModel
+          ? isPlaceOpenNow(ele.openCloseHours)
+          : undefined,
     });
     // 마커가 현재 고객의 mapBounds 안에 있으면 render
     // if (
@@ -136,7 +142,9 @@ function initTime() {
 }
 
 // 정보 없음에 대해서도 표현해줘야하기 때문에 일단 보류
-function isWorkingNow(openCloseHour: OpenCloseHourModel): boolean | undefined {
+function isWorkingNow(
+  openCloseHour: OpenCloseHourDetailModel
+): boolean | undefined {
   // isCLosed 상태값 확인
   if (openCloseHour.isClosed === undefined) return undefined;
   // isClosded true 면 닫혀있다는 거니까 정기휴무임
@@ -177,7 +185,7 @@ function isWorkingNow(openCloseHour: OpenCloseHourModel): boolean | undefined {
 }
 
 function isPlaceOpenNow(
-  openCloseHours: OpenCloseHoursModel
+  openCloseHours: OpenCloseHourModel
 ): boolean | undefined {
   switch (now.value.getDay()) {
     case 0:
@@ -232,6 +240,7 @@ async function addEachMarkerListener(mapDrawMarker: IMapDrawMarker) {
         : cakeClosedSelectedMarker,
       anchor: new naver.maps.Point(20.3, 58.5),
     });
+
     mapDrawMarker.place = await getPlaceByDocId(mapDrawMarker.marker.placeId);
   });
 }
@@ -422,7 +431,11 @@ function onClickListRouteBtn() {
         >
           <img src="@/assets/gif/loadingIcon_croped.gif" class="m-auto w-1/6" />
         </div>
-        <place_detail_info_card v-else :selectedPlace="selectedPlace" class="">
+        <place_detail_info_card
+          v-else-if="selectedPlace.place instanceof PlaceCakeModel"
+          :selectedPlace="selectedPlace"
+          class=""
+        >
           <template #sns-icon>
             <div class="flex absolute right-4 -top-5">
               <rounded_sns_btn
