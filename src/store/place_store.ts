@@ -5,7 +5,7 @@ import { PlaceService } from "@/service/place_service";
 import { defineStore } from "pinia";
 import { IPlaceWithFetchDate } from "@/model/place_local_storage_model";
 import { daysBetween } from "@/utils/moment";
-import { CAKE_PLACE_FETCH_DATE_LIMIT_DAYS } from "@/constant/localstorage_constant";
+import { PLACE_FETCH_DATE_LIMIT_DAYS } from "@/constant/localstorage_constant";
 import { getDateTimeByDate } from "@/utils/moment";
 import { IMapDrawMarker } from "@/model/map_draw_marker_model";
 import { ref } from "vue";
@@ -46,7 +46,7 @@ export const usePlaceStore = defineStore({
       if (
         localStorageValue != null &&
         daysBetween(today, new Date(localStorageValue.fetchDate)) <=
-          CAKE_PLACE_FETCH_DATE_LIMIT_DAYS
+          PLACE_FETCH_DATE_LIMIT_DAYS
       ) {
         this._place.set(docId, localStorageValue.place);
         return localStorageValue.place;

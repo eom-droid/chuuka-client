@@ -1,8 +1,7 @@
 <template>
   <div class="flex">
-    <img src="@/assets/img/icon/bx-map1.svg" class="w-5" />
     <span
-      class="text-xs ml-2 my-auto text-font-gray text-left"
+      class="text-xs my-auto text-font-gray text-left"
       style="max-width: 80%"
       >{{ props.koreanLoc }}</span
     >

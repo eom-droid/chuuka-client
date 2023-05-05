@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex text-xs cursor-pointer font-normal"
+    class="flex cursor-pointer font-normal text-sm"
     @click="isExpanded = !isExpanded"
     :class="isExpanded ? '' : 'h-1/2'"
   >
@@ -53,16 +53,18 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { OpenCloseHoursModel } from "@/model/place/open_close_hour_model";
 import { getDateTimeByDate } from "@/utils/moment";
-import { OpenCloseHourModel } from "@/model/place/open_close_hour_model";
+import {
+  OpenCloseHourDetailModel,
+  OpenCloseHourModel,
+} from "@/model/place/open_close_hour_model";
 
 interface Props {
-  openCloseHours: OpenCloseHoursModel;
+  openCloseHours: OpenCloseHourModel;
 }
 
 const props = defineProps<Props>();
-const arrangedOpenCloseHourArray = ref([] as OpenCloseHourModel[]);
+const arrangedOpenCloseHourArray = ref([] as OpenCloseHourDetailModel[]);
 const arrangedKorDayOfWeek = ref([] as string[]);
 const isExpanded = ref(false);
 
@@ -87,7 +89,7 @@ function arrangeDayOfWeek() {
       );
     } catch (error) {
       // 해당 경우는 나오지 않을것으로 예상함 하지만 혹시나 모를 오류를 대비해 try catch문을 사용함
-      arrangedOpenCloseHourArray.value.push(new OpenCloseHourModel({}));
+      arrangedOpenCloseHourArray.value.push(new OpenCloseHourDetailModel({}));
     }
   });
 
@@ -96,3 +98,5 @@ function arrangeDayOfWeek() {
     .concat(dayOfWeekKor.slice(0, nowDayOfWeekIndex));
 }
 </script>
+
+<style scoped></style>

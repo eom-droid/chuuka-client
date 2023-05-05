@@ -1,7 +1,4 @@
-import {
-  CAKE_PLACE_LS_KEY_PREFIX,
-  CAKE_PLACE_FETCH_DATE_LS_KEY,
-} from "@/constant/localstorage_constant";
+import { PLACE_LS_KEY_PREFIX } from "@/constant/localstorage_constant";
 import { IPlaceWithFetchDate } from "@/model/place_local_storage_model";
 import {
   PlaceBaseModel,
@@ -38,7 +35,7 @@ export class PlaceService {
 
   static getSinglePlaceFromLS(docId: string): IPlaceWithFetchDate | null {
     const localStorage = window.localStorage.getItem(
-      CAKE_PLACE_LS_KEY_PREFIX + docId
+      PLACE_LS_KEY_PREFIX + docId
     );
     if (localStorage !== null) {
       var parsedLS = JSON.parse(localStorage) as IPlaceWithFetchDate;
@@ -53,9 +50,8 @@ export class PlaceService {
 
   static setPlaceWithFetchDateToLS(placeWithFetchDate: IPlaceWithFetchDate) {
     let result = placeWithFetchDate.place.toJson();
-
     window.localStorage.setItem(
-      CAKE_PLACE_LS_KEY_PREFIX + placeWithFetchDate.place.id,
+      PLACE_LS_KEY_PREFIX + placeWithFetchDate.place.id,
       JSON.stringify({
         place: result,
         fetchDate: placeWithFetchDate.fetchDate,

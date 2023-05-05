@@ -5,7 +5,7 @@ import {
 import { MarkerService } from "@/service/marker_service";
 import { defineStore } from "pinia";
 import { daysBetween } from "@/utils/moment";
-import { CAKE_MARKERS_FETCH_DATE_LIMIT_DAYS } from "@/constant/localstorage_constant";
+import { MARKERS_FETCH_DATE_LIMIT_DAYS } from "@/constant/localstorage_constant";
 
 // 이 부분도 엄청 고민이 길었음
 
@@ -47,9 +47,7 @@ async function _initialize(): Promise<Array<MarkerBaseModel>> {
     result = await getMarkersFromFireBaseAndFetchToLocalStorage();
   } else {
     // markersFetchDate 값이 expired 된다면
-    if (
-      daysBetween(today, markersFetchDate) >= CAKE_MARKERS_FETCH_DATE_LIMIT_DAYS
-    ) {
+    if (daysBetween(today, markersFetchDate) >= MARKERS_FETCH_DATE_LIMIT_DAYS) {
       result = await getMarkersFromFireBaseAndFetchToLocalStorage();
     } else {
       var markerFromLS = await MarkerService.getMarkersWithUpdateTimeFromLS();

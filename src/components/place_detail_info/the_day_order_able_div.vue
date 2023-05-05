@@ -1,9 +1,9 @@
 <template>
-  <div class="flex">
+  <div class="flex text-sm">
     <img src="@/assets/img/icon/bx-cake2.svg" />
     <span class="ml-2 my-auto">당일케이크</span>
     <span
-      class="text-main font-medium ml-2 my-auto"
+      class="font-medium ml-2 my-auto"
       :class="theDayOrderAble ? 'text-main' : 'text-font-gray'"
       >{{
         theDayOrderAble

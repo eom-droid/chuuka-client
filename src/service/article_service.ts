@@ -27,4 +27,28 @@ export class ArticleService {
     }
     return null;
   }
+
+  // 추후 pagination 필요
+  static async fetchArticlesFromDB(): Promise<Array<ArticleModel> | null> {
+    const query = collection(firestore, this.PATH);
+    const snapShots = await getDocs(query);
+
+    var result = snapShots.docs.map((ele) => {
+      var data = ele.data() as IArticle;
+      data.id = ele.id;
+      return ArticleModel.fromJson(data);
+    });
+    return result;
+  }
+
+  // static async getArticlesFromLS(): Promise<Array<ArticleModel> | null> {
+  //   const articles_localStorage = window.localStorage.getItem(
+  //     "articles_localStorage"
+  //   );
+  //   if (articles_localStorage === null) return null;
+
+  //   const articles = JSON.parse(articles_localStorage) as Array<IArticle>;
+  //   let result = articles.map((ele) => ArticleModel.fromJson(ele));
+  //   return result;
+  // }
 }

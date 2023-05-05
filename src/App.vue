@@ -5,6 +5,7 @@ import { storeToRefs } from "pinia";
 import { Device } from "@capacitor/device";
 import { SafeArea } from "capacitor-plugin-safe-area";
 import { useDefault } from "@/store/default";
+import bottom_navigation_bar from "./components/bottom_navigation_bar.vue";
 
 const platform = ref("");
 // const pinia = usePersonalStore();
@@ -43,14 +44,16 @@ SafeArea.getSafeAreaInsets().then(({ insets }) => {
 </script>
 
 <template>
-  <div class="text-left pl-28">{{ platform }}</div>
-  <router-view v-slot="{ Component }" v-if="varIsMobile" class="">
-    <keep-alive :include="['map_screen']" :max="10">
-      <component :is="Component" />
-    </keep-alive>
-  </router-view>
+  <div v-if="varIsMobile" class="h-full flex flex-col">
+    <router-view v-slot="{ Component }">
+      <keep-alive :include="['map_screen']" :max="10">
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
+    <bottom_navigation_bar></bottom_navigation_bar>
+  </div>
   <!-- <router-view v-if="varIsMobile"></router-view> -->
-  <div v-else class="flex w-full h-full relative bg-main">
+  <div v-else class="flex w-full h-full bg-main noScroll">
     <div class="w-1/12 disnone"></div>
     <div class="mx-auto mt-20 disnone">
       <div class="text-xl text-left mb-auto font-semibold">
@@ -64,7 +67,7 @@ SafeArea.getSafeAreaInsets().then(({ insets }) => {
         <div class="flex mt-6">
           <img
             src="@/assets/img/logo/logo_firework_white.svg"
-            class="w-3/4"
+            class="w-3/4 max-w-[150px]"
             alt="chuukaLogo"
           /><span class="my-auto ml-2">해!</span>
         </div>
@@ -96,7 +99,7 @@ SafeArea.getSafeAreaInsets().then(({ insets }) => {
       </div>
     </div>
     <div
-      class="main-view cusShadow w-page-sm bg-white customWidth mx-auto relative h-100v overflow-y-auto noScroll"
+      class="main-view cusShadow w-page-sm bg-white customWidth mx-auto h-full flex flex-col"
       id="mainWrapper"
     >
       <router-view v-slot="{ Component }" class="">
@@ -104,6 +107,7 @@ SafeArea.getSafeAreaInsets().then(({ insets }) => {
           <component :is="Component" />
         </keep-alive>
       </router-view>
+      <bottom_navigation_bar></bottom_navigation_bar>
     </div>
 
     <div class="w-1/12 disnone"></div>
@@ -115,7 +119,7 @@ SafeArea.getSafeAreaInsets().then(({ insets }) => {
   min-width: 480px;
 }
 .cusShadow {
-  /* box-shadow: 0 0 22px -2px rgb(0 0 0 / 75%); */
+  box-shadow: 0 0 22px -2px rgb(0 0 0 / 75%);
 }
 @media (max-width: 950px) {
   .disnone {

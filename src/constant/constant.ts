@@ -1,4 +1,5 @@
 import { IMapDrawMarker } from "@/model/map_draw_marker_model";
+import { MarkerBaseModel } from "@/model/marker_model";
 import { LocationUrlModel } from "@/model/place/location_url_model";
 
 import {
@@ -84,4 +85,14 @@ export const GUM_BUNG_UH = {
     }),
     theDayOrderAble: true,
   }),
+  naverMarker: new naver.maps.Marker({
+    position: new naver.maps.LatLng(37.5617357, 126.9975048),
+  }),
+  marker: new MarkerBaseModel({
+    category: "cake",
+    geoCoord: new GeoPoint(37.5617357, 126.9975048),
+    placeId: "1910093167",
+  }),
 } as IMapDrawMarker;
+
+export const ARTICLE_MAP_BOUND = 350;

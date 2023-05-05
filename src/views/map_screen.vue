@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onActivated, onMounted, ref } from "vue";
 import { GPS_STATUS, GPS_STATUS_TYPE } from "@/constant/gps_state_constant";
 import {
   MARKER_Z_INDEX,
@@ -8,6 +8,7 @@ import {
   INSTAGRAM_URL_PREFIX,
   KAKAO_URL_PREFIEX,
   TELEPHONE_PREFIEX,
+  PLACE_CATEGORY,
 } from "@/constant/constant";
 import { IMapDrawMarker } from "@/model/map_draw_marker_model";
 //pinia
@@ -15,6 +16,7 @@ import { storeToRefs } from "pinia";
 import { useMarkerStore } from "@/store/marker_store";
 import { usePlaceStore } from "@/store/place_store";
 import { useDefault } from "@/store/default";
+import { useArticleStore } from "@/store/article_store";
 // Components import
 import top_menu_bar from "@/components/common/top_menu_bar.vue";
 import list_btn from "@/components/common/list_btn.vue";
@@ -24,10 +26,12 @@ import rounded_sns_btn from "@/components/common/rounded_sns_btn.vue";
 
 // icon
 // 이이콘에 shadow다 넣어줘야됨 ㅜㅠㅠ 해야될거 많구만
-import cakeClosedMarker from "@/assets/img/icon/marker/cake_closed_marker.svg";
-import cakeOpenMarker from "@/assets/img/icon/marker/cake_open_marker.svg";
-import cakeClosedSelectedMarker from "@/assets/img/icon/marker/cake_closed_selected_marker.svg";
-import cakeOpenSelectedMarker from "@/assets/img/icon/marker/cake_open_selected_marker.svg";
+// import cakeClosedMarker from "@/assets/img/icon/marker/cake_closed_marker.svg";
+// import cakeOpenMarker from "@/assets/img/icon/marker/cake_open_marker.svg";
+// import cakeClosedSelectedMarker from "@/assets/img/icon/marker/cake_closed_selected_marker.svg";
+// import cakeOpenSelectedMarker from "@/assets/img/icon/marker/cake_open_selected_marker.svg";
+// import placeArticleMarker from "@/assets/img/icon/marker/place_article_marker.svg";
+// import placeArticleSelectedMarker from "@/assets/img/icon/marker/place_article_selected_marker.svg";
 import currentLocIcon from "@/assets/img/icon/current_position.svg";
 import kakaoAvailable from "@/assets/img/icon/kakao.svg";
 import kakaoDisAble from "@/assets/img/icon/kakao_disable.svg";
@@ -39,13 +43,16 @@ import {
 } from "@/model/place/open_close_hour_model";
 import { toastCustom } from "@/utils/toast";
 import { router } from "@/router/router";
-import { PlaceBaseModel, PlaceCakeModel } from "@/model/place_model";
-import { MarkerModel } from "@/model/marker_model";
+import { PlaceCakeModel } from "@/model/place_model";
+import { MarkerArticleModel, MarkerModel } from "@/model/marker_model";
+import { renderMarker } from "@/utils/marker";
+import { ArticleService } from "@/service/article_service";
 
 const gpsState = ref<GPS_STATUS_TYPE>(GPS_STATUS.STOP);
 
 //pinia part
 const markersStore = useMarkerStore();
+const articlesStore = useArticleStore();
 const { getMarkers } = storeToRefs(markersStore);
 const placeStore = usePlaceStore();
 const { getPlaceByDocId, setInnerMapPlace } = placeStore;
@@ -72,12 +79,35 @@ onMounted(() => {
     mapDataControl: false,
     logoControl: false,
   });
+  setCenterByQuery();
 
   init();
 
   initTime();
 });
 
+onActivated(() => {
+  setCenterByQuery();
+});
+
+function setCenterByQuery() {
+  var latitude = router.currentRoute.value.query.latitude;
+  var longitude = router.currentRoute.value.query.longitude;
+  // var zoomLevel = router.currentRoute.value.query.zoom;
+
+  if (latitude && longitude) {
+    if (typeof latitude === "string" && typeof longitude === "string") {
+      var tempLatitude = parseFloat(latitude);
+      var tempLongitude = parseFloat(longitude);
+      //@ts-ignore
+      if (tempLatitude !== NaN && tempLongitude !== NaN) {
+        map.value!.setCenter(
+          new naver.maps.LatLng(tempLatitude, tempLongitude)
+        );
+      }
+    }
+  }
+}
 async function init() {
   await initializeMapDrawMarker();
   addNaverMapListener();
@@ -92,7 +122,13 @@ async function initializeMapDrawMarker() {
   // 각 marker 별 store: null 생성
   // 각 marker 그려줄지 말지 설정
   (await getMarkers.value).map((ele, index) => {
-    // const isPlaceOpen = isPlaceOpenNow(ele.openCloseHours);
+    var tempIsPlaceOpenNow = null;
+    if (ele instanceof MarkerModel) {
+      tempIsPlaceOpenNow = isPlaceOpenNow(ele.openCloseHours);
+    } else {
+      tempIsPlaceOpenNow = undefined;
+    }
+
     // 그릴 mapDrawMarker Array에 그릴 마커를 넣어줌
     mapDrawMarker.value.push({
       marker: ele,
@@ -107,27 +143,12 @@ async function initializeMapDrawMarker() {
         )
           ? map.value
           : undefined,
-        icon: {
-          url: false ? cakeOpenMarker : cakeClosedMarker,
-          anchor: new naver.maps.Point(12, 12),
-        },
+        icon: renderMarker(ele, tempIsPlaceOpenNow),
       }),
       place: null,
-      isOpen:
-        ele instanceof MarkerModel
-          ? isPlaceOpenNow(ele.openCloseHours)
-          : undefined,
+      isOpen: ele instanceof MarkerModel ? tempIsPlaceOpenNow : undefined,
     });
-    // 마커가 현재 고객의 mapBounds 안에 있으면 render
-    // if (
-    //   mapBounds.hasPoint(mapDrawMarker.value[index].naverMarker.getPosition())
-    // ) {
-    //   showMarker(map.value!, mapDrawMarker.value[index].naverMarker);
-    // } else {
-    //   hideMarker(map.value!, mapDrawMarker.value[index].naverMarker);
-    // }
 
-    // 각 마커에 대한 클릭 이벤트
     addEachMarkerListener(mapDrawMarker.value[index]);
   });
 }
@@ -235,14 +256,20 @@ async function addEachMarkerListener(mapDrawMarker: IMapDrawMarker) {
     selectedPlace.value = null;
     selectedPlace.value = mapDrawMarker;
     selectedPlace.value.naverMarker.setZIndex(MARKER_SELECTED_Z_INDEX);
-    selectedPlace.value.naverMarker.setIcon({
-      url: selectedPlace.value.isOpen
-        ? cakeOpenSelectedMarker
-        : cakeClosedSelectedMarker,
-      anchor: new naver.maps.Point(23, 56),
-    });
-
-    mapDrawMarker.place = await getPlaceByDocId(mapDrawMarker.marker.placeId);
+    selectedPlace.value.naverMarker.setIcon(
+      renderMarker(mapDrawMarker.marker, mapDrawMarker.isOpen, true)
+    );
+    if (mapDrawMarker.place === null) {
+      mapDrawMarker.place = await getPlaceByDocId(mapDrawMarker.marker.placeId);
+    }
+    if (
+      mapDrawMarker.article === undefined &&
+      mapDrawMarker.marker instanceof MarkerArticleModel
+    ) {
+      mapDrawMarker.article = await articlesStore.getArticleByDocId(
+        mapDrawMarker.marker.articleId
+      );
+    }
   });
 }
 
@@ -289,10 +316,7 @@ async function updateMarkers(map: naver.maps.Map, markers: IMapDrawMarker[]) {
 
 function setMarkerNonSelected(marker: IMapDrawMarker) {
   marker.naverMarker.setZIndex(MARKER_Z_INDEX);
-  marker.naverMarker.setIcon({
-    url: marker.isOpen ? cakeOpenMarker : cakeClosedMarker,
-    anchor: new naver.maps.Point(12, 12),
-  });
+  marker.naverMarker.setIcon(renderMarker(marker.marker, marker.isOpen));
 }
 
 function showMarker(map: naver.maps.Map, marker: naver.maps.Marker) {
@@ -378,7 +402,7 @@ function onClickListRouteBtn() {
   setInnerMapPlace(
     mapDrawMarker.value.filter((ele) => ele.naverMarker.getMap())
   );
-  router.replace("/list");
+  router.replace("/home/list");
 }
 </script>
 
@@ -416,83 +440,98 @@ function onClickListRouteBtn() {
         :style="
           selectedPlace === null
             ? 'bottom:100px; right:16px'
-            : 'bottom:' + (screenHeight / 3 + 16) + 'px; left:16px'
+            : 'bottom:' +
+              (screenHeight * 0.22 > 180
+                ? screenHeight * 0.22 + 30
+                : 180 + 30) +
+              'px; left:16px'
         "
       ></home_map_gps_btn>
       <!-- eachStore -->
 
       <div
-        class="absolute bottom-0 left-0 w-full h-1/3 pt-6 bg-white each-card rounded-t-lg px-4"
+        class="absolute bottom-4 left-0 w-full h-[22%] min-h-[180px]"
         v-if="selectedPlace !== null"
         :style="'z-index: ' + CONTENT_Z_INDEX_OVER_MARKER"
       >
-        <div
-          class="h-full flex rounded-t-lg"
-          v-if="selectedPlace.place === null"
-        >
-          <img src="@/assets/gif/loadingIcon_croped.gif" class="m-auto w-1/6" />
+        <div class="mx-4 bg-white pt-6 rounded-[10px] px-4 h-full each-card">
+          <div
+            class="h-full flex rounded-t-lg"
+            v-if="selectedPlace.place === null"
+          >
+            <img
+              src="@/assets/gif/loadingIcon_croped.gif"
+              class="m-auto w-1/6"
+            />
+          </div>
+          <place_detail_info_card v-else :selectedPlace="selectedPlace">
+            <template #sns-icon>
+              <div
+                class="flex absolute right-8 -top-5"
+                v-if="selectedPlace.place instanceof PlaceCakeModel"
+              >
+                <rounded_sns_btn
+                  color="bg-phone-call-green"
+                  :hrefPrefix="TELEPHONE_PREFIEX"
+                  :hrefValue="selectedPlace.place.telephone"
+                >
+                  <template #icon>
+                    <img
+                      src="@/assets/img/icon/phone-call.svg"
+                      class="m-auto"
+                    />
+                  </template>
+                </rounded_sns_btn>
+                <rounded_sns_btn
+                  color="bg-kakao-yellow"
+                  :hrefPrefix="KAKAO_URL_PREFIEX"
+                  :hrefValue="selectedPlace.place.sns.kakaoTalk"
+                  class="ml-3"
+                >
+                  <template #icon>
+                    <img
+                      :src="
+                        selectedPlace.place.sns.kakaoTalk
+                          ? kakaoAvailable
+                          : kakaoDisAble
+                      "
+                      class="ml-2.5 mt-2.5"
+                      style="width: 21.15px; height: 21.15px"
+                    />
+                  </template>
+                </rounded_sns_btn>
+                <rounded_sns_btn
+                  color="bg-white"
+                  :hrefPrefix="INSTAGRAM_URL_PREFIX"
+                  :hrefValue="selectedPlace.place.sns.instagram"
+                  styleOption="border border-light-gray"
+                  class="ml-3"
+                >
+                  <template #icon>
+                    <img
+                      :src="
+                        selectedPlace.place.sns.instagram
+                          ? instaAvailable
+                          : instaDisAble
+                      "
+                      class="m-auto"
+                    />
+                  </template>
+                </rounded_sns_btn>
+              </div>
+            </template>
+            <template #footer
+              ><div
+                class="flex-none"
+                :style="
+                  getSafeAreaInsets.bottom !== 0
+                    ? `height:${getSafeAreaInsets.bottom}px;`
+                    : 'height:12px;'
+                "
+              ></div
+            ></template>
+          </place_detail_info_card>
         </div>
-        <place_detail_info_card
-          v-else-if="selectedPlace.place instanceof PlaceCakeModel"
-          :selectedPlace="selectedPlace"
-          class=""
-        >
-          <template #sns-icon>
-            <div class="flex absolute right-4 -top-5">
-              <rounded_sns_btn
-                color="bg-phone-call-green"
-                :hrefPrefix="TELEPHONE_PREFIEX"
-                :hrefValue="selectedPlace.place!.telephone"
-              >
-                <template #icon>
-                  <img src="@/assets/img/icon/phone-call.svg" class="m-auto" />
-                </template>
-              </rounded_sns_btn>
-              <rounded_sns_btn
-                color="bg-kakao-yellow"
-                :hrefPrefix="KAKAO_URL_PREFIEX"
-                :hrefValue="selectedPlace.place!.sns.kakaoTalk"
-                class="ml-3"
-              >
-                <template #icon>
-                  <img
-                    :src="selectedPlace.place!.sns.kakaoTalk 
-                     ? kakaoAvailable
-                      :kakaoDisAble"
-                    class="ml-2.5 mt-2.5"
-                    style="width: 21.15px; height: 21.15px"
-                  />
-                </template>
-              </rounded_sns_btn>
-              <rounded_sns_btn
-                color="bg-white"
-                :hrefPrefix="INSTAGRAM_URL_PREFIX"
-                :hrefValue="selectedPlace.place!.sns.instagram"
-                styleOption="border border-light-gray"
-                class="ml-3"
-              >
-                <template #icon>
-                  <img
-                    :src="selectedPlace.place!.sns.instagram ? 
-                      instaAvailable:
-                        instaDisAble"
-                    class="m-auto"
-                  />
-                </template>
-              </rounded_sns_btn>
-            </div>
-          </template>
-          <template #footer
-            ><div
-              class="flex-none"
-              :style="
-                getSafeAreaInsets.bottom !== 0
-                  ? `height:${getSafeAreaInsets.bottom}px;`
-                  : 'height:12px;'
-              "
-            ></div
-          ></template>
-        </place_detail_info_card>
       </div>
     </div>
   </main>

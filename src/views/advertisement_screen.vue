@@ -25,7 +25,7 @@
             <rounded_sns_btn
               color="bg-phone-call-green"
               :hrefPrefix="TELEPHONE_PREFIEX"
-              :hrefValue="GUM_BUNG_UH.place!.telephone"
+              :hrefValue="gum_bung_uh.telephone"
             >
               <template #icon>
                 <img src="@/assets/img/icon/phone-call.svg" class="m-auto" />
@@ -34,14 +34,14 @@
             <rounded_sns_btn
               color="bg-kakao-yellow"
               :hrefPrefix="KAKAO_URL_PREFIEX"
-              :hrefValue="GUM_BUNG_UH.place!.sns.kakaoTalk"
+              :hrefValue="gum_bung_uh.sns.kakaoTalk"
               class="ml-3"
             >
               <template #icon>
                 <img
-                  :src="GUM_BUNG_UH.place!.sns.kakaoTalk 
-                     ? kakaoAvailable
-                      :kakaoDisAble"
+                  :src="
+                    gum_bung_uh.sns.kakaoTalk ? kakaoAvailable : kakaoDisAble
+                  "
                   class="ml-2.5 mt-2.5"
                   style="width: 21.15px; height: 21.15px"
                 />
@@ -50,15 +50,15 @@
             <rounded_sns_btn
               color="bg-white"
               :hrefPrefix="INSTAGRAM_URL_PREFIX"
-              :hrefValue="GUM_BUNG_UH.place!.sns.instagram"
+              :hrefValue="gum_bung_uh.sns.instagram"
               styleOption="border border-light-gray"
               class="ml-3"
             >
               <template #icon>
                 <img
-                  :src="GUM_BUNG_UH.place!.sns.instagram ? 
-                      instaAvailable:
-                        instaDisAble"
+                  :src="
+                    gum_bung_uh.sns.instagram ? instaAvailable : instaDisAble
+                  "
                   class="m-auto"
                 />
               </template>
@@ -81,7 +81,7 @@
         </div>
         <a
           class="absolute w-full h-full left-0 top-0 block bg-black opacity-20 rounded-[5px]"
-          :href="INSTAGRAM_URL_PREFIX + GUM_BUNG_UH.place!.sns.instagram"
+          :href="INSTAGRAM_URL_PREFIX + gum_bung_uh.sns.instagram"
           target="_blank"
         ></a>
       </div>
@@ -130,6 +130,7 @@ import instaDisAble from "@/assets/img/icon/instagram_disable.svg";
 import { useDefault } from "@/store/default";
 
 import { router } from "@/router/router";
+import { PlaceCakeModel } from "@/model/place_model";
 
 const imgArray = [
   cake1,
@@ -150,12 +151,13 @@ const imgArray = [
 
 const defaultStore = useDefault();
 const { getSafeAreaInsets } = defaultStore;
+const gum_bung_uh = GUM_BUNG_UH.place as PlaceCakeModel;
 
 function onGoBackClick() {
   if (router.getRoutes().length !== 0) {
     router.back();
   } else {
-    router.replace("/list");
+    router.replace("/home/list");
   }
 }
 </script>

@@ -14,7 +14,7 @@
 import { router } from "@/router/router";
 
 function onClickHome() {
-  router.push({ path: "/map" });
+  router.push({ path: "/home/map" });
 }
 </script>
 <style scoped></style>

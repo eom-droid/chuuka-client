@@ -37,7 +37,13 @@
 
     <div v-else>
       <div v-for="eachStore in mapDrawPlace" :key="eachStore.marker.placeId">
-        <div v-if="eachStore.place !== null" class="h-full w-full">
+        <div
+          v-if="
+            eachStore.place !== null &&
+            eachStore.place instanceof PlaceCakeModel
+          "
+          class="h-full w-full"
+        >
           <place_detail_info_card
             :selectedPlace="eachStore"
             :hrVisible="false"
@@ -114,8 +120,8 @@
       class="w-full fixed"
       :style="
         getSafeAreaInsets.bottom !== 0
-          ? `bottom:${getSafeAreaInsets.bottom * 1.5}px;`
-          : 'bottom:56px;'
+          ? `bottom:${getSafeAreaInsets.bottom * 1.5 + 50}px;`
+          : 'bottom:106px;'
       "
       style="max-width: 480px"
     >
@@ -159,6 +165,7 @@ import telDisAble from "@/assets/img/icon/small-phone-mid-gray.svg";
 
 import { router } from "@/router/router";
 import { IMapDrawMarker } from "@/model/map_draw_marker_model";
+import { PlaceCakeModel } from "@/model/place_model";
 
 //pinia part
 const storeStore = usePlaceStore();
@@ -171,7 +178,7 @@ const mapDrawPlace = ref([] as IMapDrawMarker[]);
 const page = ref(0);
 const isLoading = ref(false);
 function onClickMapRouteBtn() {
-  router.replace("/map");
+  router.replace("/home/map");
 }
 
 const loadMore = async () => {
