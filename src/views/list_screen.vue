@@ -65,6 +65,7 @@
               <template #icon>
                 <img
                   :src="eachStore.place.telephone ? telAvailable : telDisAble"
+                  class="w-[20px] h-[20px]"
                 />
               </template>
             </hr_seperated_sns_btn>
@@ -81,6 +82,7 @@
                       ? kakaoAvailable
                       : kakaoDisAble
                   "
+                  class="w-[20px] h-[21.15px]"
                 />
               </template>
             </hr_seperated_sns_btn>
@@ -98,6 +100,7 @@
                       ? instaAvailable
                       : instaDisAble
                   "
+                  class="w-[20px] h-[20px]"
                 />
               </template>
             </hr_seperated_sns_btn>
@@ -112,7 +115,7 @@
     <div class="h-28 mt-1.5 bg-white flex">
       <img
         src="@/assets/gif/loadingIcon_croped.gif"
-        class="m-auto w-1/6"
+        class="m-auto w-1/12"
         v-show="isLoading"
       />
     </div>

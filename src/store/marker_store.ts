@@ -59,7 +59,6 @@ async function _initialize(): Promise<Array<MarkerBaseModel>> {
   //   }
   // }
   result = await MarkerService.fetchMarkersWithUpdateTimeFromDB();
-  console.log(result);
 
   if (result != null) {
     result = result as MarkersWithUpdateTimeModel;

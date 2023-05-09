@@ -8,7 +8,7 @@
         </div>
       </div>
       <div
-        class="text-usual-black mt-8 text-sm whitespace-pre-wrap"
+        class="text-usual-black mt-8 text-sm whitespace-pre-line"
         style="line-height: 200%"
       >
         {{ content }}

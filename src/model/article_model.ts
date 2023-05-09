@@ -1,8 +1,5 @@
 import { GeoPoint, Timestamp } from "firebase/firestore";
-import { OpenCloseHourModel } from "@/model/place/open_close_hour_model";
-import { LocationUrlModel } from "@/model/place/location_url_model";
-import { SnsModel } from "@/model/place/sns_model";
-import { PlaceArticleModel, PlaceBaseModel, PlaceModel } from "./place_model";
+import { PlaceArticleModel } from "./place_model";
 import { ImageModel } from "./place/image_model";
 
 /**
@@ -12,8 +9,11 @@ import { ImageModel } from "./place/image_model";
 export class ArticleModel implements IArticle {
   id: string;
   title: string;
+  content: string;
+  preface: string;
   hashTags: Array<string>;
   mapCenter: GeoPoint;
+  zoomLevel: number;
   details: Array<ArticleDetailModel>;
 
   modUser?: string;
@@ -23,8 +23,11 @@ export class ArticleModel implements IArticle {
   constructor({
     id,
     title,
+    content,
+    preface,
     hashTags,
     mapCenter,
+    zoomLevel,
     details,
     modUser,
     regDTime,
@@ -32,9 +35,12 @@ export class ArticleModel implements IArticle {
   }: IArticle) {
     this.id = id;
     this.title = title;
+    this.content = content;
+    this.preface = preface;
     this.hashTags = hashTags;
     this.mapCenter = mapCenter;
     this.details = details;
+    this.zoomLevel = zoomLevel;
 
     this.modUser = modUser;
     this.regDTime = regDTime;
@@ -45,6 +51,8 @@ export class ArticleModel implements IArticle {
     return new ArticleModel({
       id: json.id,
       title: json.title,
+      content: json.content,
+      preface: json.preface,
       hashTags: json.hashTags,
       mapCenter: json.mapCenter,
       details:
@@ -53,6 +61,8 @@ export class ArticleModel implements IArticle {
               ArticleDetailModel.fromJson(detail)
             )
           : [],
+
+      zoomLevel: json.zoomLevel,
 
       modUser: json.modUser,
       regDTime: json.regDTime,
@@ -63,8 +73,11 @@ export class ArticleModel implements IArticle {
   toJson(): Object {
     return {
       title: this.title,
+      content: this.content,
+      preface: this.preface,
       hashTags: this.hashTags,
       mapCenter: this.mapCenter,
+      zoomLevel: this.zoomLevel,
       details: this.details.map((detail: ArticleDetailModel) =>
         detail.toJson()
       ),
@@ -79,9 +92,12 @@ export class ArticleModel implements IArticle {
 export interface IArticle {
   id: string;
   title: string;
+  content: string;
+  preface: string;
   hashTags: Array<string>;
   details: Array<ArticleDetailModel>;
   mapCenter: GeoPoint;
+  zoomLevel: number;
   modUser?: string;
   regDTime?: Timestamp;
   modDTime?: Timestamp;
@@ -91,13 +107,13 @@ export class ArticleDetailModel implements IArticleDetail {
   public header: string;
   public content: string;
   public images: Array<ImageModel>;
-  public place: PlaceArticleModel | string; // maybe place_article_model
+  public placeId: string;
 
-  constructor({ header, content, images, place }: IArticleDetail) {
+  constructor({ header, content, images, placeId }: IArticleDetail) {
     this.header = header;
     this.content = content;
     this.images = images;
-    this.place = place;
+    this.placeId = placeId;
   }
 
   static fromJson(json: IArticleDetail): ArticleDetailModel {
@@ -108,10 +124,7 @@ export class ArticleDetailModel implements IArticleDetail {
         json.images != undefined
           ? json.images.map((image: ImageModel) => ImageModel.fromJson(image))
           : [],
-      place:
-        typeof json.place === "string"
-          ? json.place
-          : PlaceArticleModel.fromJson(json.place),
+      placeId: json.placeId,
     });
   }
 
@@ -121,28 +134,24 @@ export class ArticleDetailModel implements IArticleDetail {
       content: this.content,
       images: this.images.map((image: ImageModel) => image.toJson()),
       place: "",
+      placeId: this.placeId,
     };
-    if (typeof this.place === "string") {
-      result.place = this.place;
-    } else {
-      result.place = this.place.id;
-    }
 
     return result;
   }
-  copyWith(): ArticleDetailModel {
-    return new ArticleDetailModel({
-      header: this.header,
-      content: this.content,
-      images: this.images,
-      place: this.place,
-    });
-  }
+  // copyWith(): ArticleDetailModel {
+  //   return new ArticleDetailModel({
+  //     header: this.header,
+  //     content: this.content,
+  //     images: this.images,
+  //     place: this.place,
+  //   });
+  // }
 }
 
 export interface IArticleDetail {
   header: string;
   content: string;
   images: Array<ImageModel>;
-  place: PlaceArticleModel | string; // maybe place_article_model
+  placeId: string; // maybe place_article_model
 }

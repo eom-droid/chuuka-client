@@ -10,7 +10,7 @@ import { SnsModel } from "@/model/place/sns_model";
 import { PlaceCakeModel } from "@/model/place_model";
 import { GeoPoint } from "firebase/firestore";
 
-export const NET = "development";
+export const NET = "production";
 
 export const PLACE_CATEGORY = {
   RESTAURANT: "restaurant",

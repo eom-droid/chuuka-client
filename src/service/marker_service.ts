@@ -38,46 +38,46 @@ export class MarkerService {
     return result;
   }
 
-  static getMarkersWithUpdateTimeFromLS(): MarkersWithUpdateTimeModel | null {
-    const markers_localStorage = window.localStorage.getItem(
-      MARKERS_WITH_UPDATE_TIME_LS_KEY
-    );
-    if (markers_localStorage === null) return null;
+  // static getMarkersWithUpdateTimeFromLS(): MarkersWithUpdateTimeModel | null {
+  //   const markers_localStorage = window.localStorage.getItem(
+  //     MARKERS_WITH_UPDATE_TIME_LS_KEY
+  //   );
+  //   if (markers_localStorage === null) return null;
 
-    const markerWithUpdateTime = JSON.parse(
-      markers_localStorage
-    ) as IMarkersWithUpdateTime;
-    let result = new MarkersWithUpdateTimeModel({
-      markers: markerWithUpdateTime.markers.map((ele) =>
-        MarkerModel.fromJson(ele)
-      ),
-      modDTime: markerWithUpdateTime.modDTime,
-      articleMarkers: markerWithUpdateTime.articleMarkers.map((ele) =>
-        MarkerArticleModel.fromJson(ele)
-      ),
-    });
-    return result;
-  }
+  //   const markerWithUpdateTime = JSON.parse(
+  //     markers_localStorage
+  //   ) as IMarkersWithUpdateTime;
+  //   let result = new MarkersWithUpdateTimeModel({
+  //     markers: markerWithUpdateTime.markers.map((ele) =>
+  //       MarkerModel.fromJson(ele)
+  //     ),
+  //     modDTime: markerWithUpdateTime.modDTime,
+  //     articleMarkers: markerWithUpdateTime.articleMarkers.map((ele) =>
+  //       MarkerArticleModel.fromJson(ele)
+  //     ),
+  //   });
+  //   return result;
+  // }
 
-  static setMarkersWithUpdateTimeToLS(markers: MarkersWithUpdateTimeModel) {
-    window.localStorage.setItem(
-      MARKERS_WITH_UPDATE_TIME_LS_KEY,
-      JSON.stringify(markers)
-    );
-  }
+  // static setMarkersWithUpdateTimeToLS(markers: MarkersWithUpdateTimeModel) {
+  //   window.localStorage.setItem(
+  //     MARKERS_WITH_UPDATE_TIME_LS_KEY,
+  //     JSON.stringify(markers)
+  //   );
+  // }
 
-  static setMarkersFetchDateToLS(date: Date): void {
-    window.localStorage.setItem(
-      MARKERS_FETCH_TIME_LS_KEY,
-      getDateTimeByDate(date)
-    );
-  }
+  // static setMarkersFetchDateToLS(date: Date): void {
+  //   window.localStorage.setItem(
+  //     MARKERS_FETCH_TIME_LS_KEY,
+  //     getDateTimeByDate(date)
+  //   );
+  // }
 
-  static getMarkersFetchDateFromLS(): Date | null {
-    const markersFetchDate_localStoreage = window.localStorage.getItem(
-      MARKERS_FETCH_TIME_LS_KEY
-    );
-    if (markersFetchDate_localStoreage === null) return null;
-    return new Date(markersFetchDate_localStoreage);
-  }
+  // static getMarkersFetchDateFromLS(): Date | null {
+  //   const markersFetchDate_localStoreage = window.localStorage.getItem(
+  //     MARKERS_FETCH_TIME_LS_KEY
+  //   );
+  //   if (markersFetchDate_localStoreage === null) return null;
+  //   return new Date(markersFetchDate_localStoreage);
+  // }
 }

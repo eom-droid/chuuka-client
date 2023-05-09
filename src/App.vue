@@ -67,7 +67,7 @@ SafeArea.getSafeAreaInsets().then(({ insets }) => {
         <div class="flex mt-6">
           <img
             src="@/assets/img/logo/logo_firework_white.svg"
-            class="w-3/4 max-w-[150px]"
+            class="w-3/4 max-w-[250px]"
             alt="chuukaLogo"
           /><span class="my-auto ml-2">해!</span>
         </div>
@@ -84,7 +84,7 @@ SafeArea.getSafeAreaInsets().then(({ insets }) => {
             >입점안내</a
           >
         </div>
-        <div class="text-sub font-light">
+        <div class="text-sub font-light text-xs">
           <div class="mt-3">
             <span>(주)추카</span>
             <span class="ml-3">대표 : 송준호</span>

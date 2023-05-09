@@ -55,7 +55,6 @@ const showRoute = ref(true);
 watch(
   () => route.fullPath,
   () => {
-    console.log(route.fullPath);
     if (route.fullPath === "/home/list") {
       showRoute.value = false;
       return;

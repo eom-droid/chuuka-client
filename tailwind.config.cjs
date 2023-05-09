@@ -16,6 +16,7 @@ module.exports = {
         "url-blue": "#0099FF",
         "phone-call-green": "#65C466",
         "kakao-yellow": "#FFDD00",
+        "picture-red": "#FE6666",
         font: "#000000",
         orange: colors.orange,
         neutral: colors.neutral,

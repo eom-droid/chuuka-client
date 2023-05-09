@@ -45,13 +45,15 @@
               <img :src="getImageFromArticle(props.selectedPlace.article)" />
             </div>
             <div class="text-left ml-4">
-              <p class="font-bold text-sm">
+              <p class="card-title">
                 {{ props.selectedPlace.place.name }}
               </p>
               <p class="text-font-gray text-xs mt-1">
                 {{ props.selectedPlace.place.address }}
               </p>
-              <div class="content-preview whitespace-pre-wrap text-xs mt-4">
+              <div
+                class="content-preview whitespace-pre-line font-medium text-sm mt-4"
+              >
                 {{ getHeaderFromArticle(props.selectedPlace.article) }}
               </div>
             </div>
@@ -110,13 +112,10 @@ function getImageFromArticle(article: ArticleModel): string {
   // 주어진 selectedPlace.article에서
   // place와 selectedPlace.place의 id가 같은
   // article.details의 images[0]을 반환한다.
+
   article.details.find((ele) => {
-    if (typeof ele.place === "string") {
-      if (ele.place === props.selectedPlace.marker.placeId)
-        result = ele.images[0].link;
-    } else {
-      if (ele.place.id === props.selectedPlace.marker.placeId)
-        result = ele.images[0].link;
+    if (ele.placeId === props.selectedPlace.marker.placeId) {
+      result = ele.images[0].link;
     }
   });
 
@@ -132,11 +131,8 @@ function getHeaderFromArticle(article: ArticleModel): string {
   // place와 selectedPlace.place의 id가 같은
   // article.details의 images[0]을 반환한다.
   article.details.find((ele) => {
-    if (typeof ele.place === "string") {
-      if (ele.place === props.selectedPlace.marker.placeId) result = ele.header;
-    } else {
-      if (ele.place.id === props.selectedPlace.marker.placeId)
-        result = ele.header;
+    if (ele.placeId === props.selectedPlace.marker.placeId) {
+      result = ele.header;
     }
   });
   return result;

@@ -1,5 +1,12 @@
 <template>
-  <div class="w-full h-full font-normal overflow-y-auto noScroll flex flex-col">
+  <div
+    class="w-full h-full font-normal overflow-y-auto noScroll flex flex-col"
+    :style="
+      getSafeAreaInsets.top !== 0
+        ? `padding-top:${getSafeAreaInsets.top}px;`
+        : ''
+    "
+  >
     <div v-if="article.id">
       <div>
         <div class="imgRatio">
@@ -26,6 +33,13 @@
               {{ getKoreanDateTime(article.modDTime!.toDate()) }}
             </p>
           </div>
+          <div
+            class="text-sm whitespace-pre-line mt-8"
+            style="line-height: 28px"
+          >
+            <p class="font-bold">{{ article.preface }}</p>
+            {{ article.content }}
+          </div>
           <div v-for="articleDeatil in article.details">
             <article_detail_card
               :header="articleDeatil.header"
@@ -50,10 +64,11 @@
                   article.mapCenter.latitude +
                   '&longitude=' +
                   article.mapCenter.longitude +
-                  '&zoom=15'
+                  '&zoom=' +
+                  article.zoomLevel
                 "
-                class="block w-full bg-light-gray rounded-b-[10px] text-center py-3.5 font-bold text-xs"
-                >지도로 바로기가</router-link
+                class="block w-full bg-light-gray text-text-gray rounded-b-[10px] text-center py-3.5 font-normal text-xs"
+                >지도로 바로가기</router-link
               >
             </div>
             <div class="mt-8 mb-8">
@@ -84,6 +99,7 @@
 <script setup lang="ts">
 import cake_mini_open_marker from "@/assets/img/icon/marker/cake_mini_open_marker.svg";
 import place_article_marker from "@/assets/img/icon/marker/place_article_marker.svg";
+import article_map_marker_tail from "@/assets/img/icon/marker/article_map_marker_tail.svg";
 import hash_tag from "@/components/common/hash_tag.vue";
 import cake_place_card from "@/components/magazine/cake_place_card.vue";
 import article_detail_card from "@/components/magazine/article_detail_card.vue";
@@ -100,15 +116,24 @@ import { storeToRefs } from "pinia";
 import { IMapDrawMarker } from "@/model/map_draw_marker_model";
 import { ARTICLE_MAP_BOUND, PLACE_CATEGORY } from "@/constant/constant";
 import { toastCustom } from "@/utils/toast";
+import { useDefault } from "@/store/default";
 
 function articlePlaceMarker(name: string) {
   return [
-    "<div style='width:200px; text-align: center;'>",
-    `<img src='${place_article_marker}' style='margin:auto;'/>`,
-    `<div class='text-xs mx-auto font-bold bg-black w-fit' style='color: #FE6666;'>${name}</div>`,
-    "</div>",
+    `<div style='width:300px; text-align: center;'>
+      <div class='bg-white w-fit mx-auto rounded-[50px] flex border border-picture-red' style='filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1));'>
+        <div class='text-xs m-auto font-bold w-fit pl-1.5 pr-2.5 py-1.5 flex'>
+          <img src='${place_article_marker}' style='margin:auto;'/>
+          <span class='my-auto ml-1'>${name}</span>
+        </div>
+      </div>
+      <img src='${article_map_marker_tail}' class='mx-auto -mt-[1px]'/>
+    </div>`,
   ].join("");
 }
+
+const defaultStore = useDefault();
+const { getSafeAreaInsets } = defaultStore;
 
 const articlesStore = useArticleStore();
 const placesStore = usePlaceStore();
@@ -155,18 +180,18 @@ async function initArticle() {
       article.value = tempArticle;
     }
   }
-  // article detail place init
-  for (var articleDetail of article.value.details) {
-    if (typeof articleDetail.place === "string") {
-      var place = await getPlaceByDocId(articleDetail.place);
-      if (place !== null) articleDetail.place = place as PlaceArticleModel;
-    }
-  }
+  // // article detail place init
+  // article.value.details.map(async (articleDetail) => {
+  //   if (typeof articleDetail.placeId === "string") {
+  //     var place = await getPlaceByDocId(articleDetail.place);
+  //     if (place !== null) articleDetail.place = place as PlaceArticleModel;
+  //   }
+  // });
 }
 
 async function initArticleMap() {
   map.value = new naver.maps.Map("article-map", {
-    zoom: 15,
+    zoom: article.value.zoomLevel,
     scaleControl: false,
     mapDataControl: false,
     logoControl: false,
@@ -178,6 +203,32 @@ async function initArticleMap() {
       article.value.mapCenter.longitude
     )
   );
+
+  article.value.details.map(async (detail) => {
+    var markers = await getMarkers.value;
+    var foundMarker = markers.find((e) => e.placeId === detail.placeId);
+    if (foundMarker) {
+      var placeInfo = await getPlaceByDocId(foundMarker.placeId);
+      if (placeInfo) {
+        mapDrawMarker.value.push({
+          marker: foundMarker,
+          naverMarker: new naver.maps.Marker({
+            position: new naver.maps.LatLng(
+              foundMarker.geoCoord.latitude,
+              foundMarker.geoCoord.longitude
+            ),
+            zIndex: 20,
+            map: map.value,
+            icon: {
+              content: articlePlaceMarker(placeInfo.name),
+              anchor: new naver.maps.Point(150, 41),
+            },
+          }),
+          place: placeInfo,
+        });
+      }
+    }
+  });
 
   (await getMarkers.value).map(async (ele) => {
     const mapBounds = map.value!.getBounds();
@@ -193,28 +244,24 @@ async function initArticleMap() {
     ) {
       var placeInfo = await getPlaceByDocId(ele.placeId);
       if (placeInfo != null) {
-        mapDrawMarker.value.push({
-          marker: ele,
-          naverMarker: new naver.maps.Marker({
-            position: new naver.maps.LatLng(
-              ele.geoCoord.latitude,
-              ele.geoCoord.longitude
-            ),
-            zIndex: 20,
-            map: map.value,
-            icon:
-              ele.category === PLACE_CATEGORY.CAKE
-                ? {
-                    url: cake_mini_open_marker,
-                    anchor: new naver.maps.Point(8, 8),
-                  }
-                : {
-                    content: articlePlaceMarker(placeInfo.name),
-                    anchor: new naver.maps.Point(100, 12),
-                  },
-          }),
-          place: placeInfo,
-        });
+        if (ele.category === PLACE_CATEGORY.CAKE) {
+          mapDrawMarker.value.push({
+            marker: ele,
+            naverMarker: new naver.maps.Marker({
+              position: new naver.maps.LatLng(
+                ele.geoCoord.latitude,
+                ele.geoCoord.longitude
+              ),
+              zIndex: 20,
+              map: map.value,
+              icon: {
+                url: cake_mini_open_marker,
+                anchor: new naver.maps.Point(8, 8),
+              },
+            }),
+            place: placeInfo,
+          });
+        }
       }
     }
   });
@@ -269,5 +316,29 @@ function getDistance(point1: GeoPoint, point2: GeoPoint) {
 
 .title-text {
   @apply font-bold text-lg;
+}
+.triangle {
+  width: 0;
+  height: 0;
+  position: relative;
+
+  border-bottom: solid 50px transparent;
+  border-top: solid 50px black;
+  border-left: solid 50px transparent;
+  border-right: solid 50px transparent;
+}
+
+.triangle:before {
+  content: "";
+  width: 0;
+  height: 0;
+
+  position: absolute;
+  border-bottom: solid 48px transparent;
+  border-top: solid 48px white;
+  border-left: solid 48px transparent;
+  border-right: solid 48px transparent;
+  top: -49px;
+  left: -48px;
 }
 </style>

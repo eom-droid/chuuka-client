@@ -10,7 +10,7 @@
       <hash_tag :hash-tags="props.hashTag" class="mt-1.5"></hash_tag>
       <!-- content-preview -->
       <div
-        class="content-preview text-sm font-normal text-font-gray mt-3 whitespace-pre-wrap"
+        class="content-preview text-sm font-normal text-font-gray mt-3 whitespace-pre-line"
       >
         {{ props.content }}
       </div>

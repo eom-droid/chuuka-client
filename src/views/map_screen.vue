@@ -87,16 +87,21 @@ onMounted(() => {
 });
 
 onActivated(() => {
+  window.scrollTo(0, 0);
   setCenterByQuery();
 });
 
 function setCenterByQuery() {
   var latitude = router.currentRoute.value.query.latitude;
   var longitude = router.currentRoute.value.query.longitude;
-  // var zoomLevel = router.currentRoute.value.query.zoom;
+  var zoomLevel = router.currentRoute.value.query.zoom;
 
   if (latitude && longitude) {
-    if (typeof latitude === "string" && typeof longitude === "string") {
+    if (
+      typeof latitude === "string" &&
+      typeof longitude === "string" &&
+      typeof zoomLevel === "string"
+    ) {
       var tempLatitude = parseFloat(latitude);
       var tempLongitude = parseFloat(longitude);
       //@ts-ignore
@@ -104,6 +109,10 @@ function setCenterByQuery() {
         map.value!.setCenter(
           new naver.maps.LatLng(tempLatitude, tempLongitude)
         );
+        //@ts-ignore
+        if (parseInt(zoomLevel) !== NaN) {
+          map.value?.setZoom(parseInt(zoomLevel));
+        }
       }
     }
   }
@@ -252,6 +261,7 @@ async function addEachMarkerListener(mapDrawMarker: IMapDrawMarker) {
     if (selectedPlace.value !== null) {
       setMarkerNonSelected(selectedPlace.value);
     }
+
     // pointer초기화
     selectedPlace.value = null;
     selectedPlace.value = mapDrawMarker;
@@ -259,6 +269,7 @@ async function addEachMarkerListener(mapDrawMarker: IMapDrawMarker) {
     selectedPlace.value.naverMarker.setIcon(
       renderMarker(mapDrawMarker.marker, mapDrawMarker.isOpen, true)
     );
+
     if (mapDrawMarker.place === null) {
       mapDrawMarker.place = await getPlaceByDocId(mapDrawMarker.marker.placeId);
     }
@@ -461,7 +472,7 @@ function onClickListRouteBtn() {
           >
             <img
               src="@/assets/gif/loadingIcon_croped.gif"
-              class="m-auto w-1/6"
+              class="m-auto w-1/12"
             />
           </div>
           <place_detail_info_card v-else :selectedPlace="selectedPlace">
@@ -521,14 +532,7 @@ function onClickListRouteBtn() {
               </div>
             </template>
             <template #footer
-              ><div
-                class="flex-none"
-                :style="
-                  getSafeAreaInsets.bottom !== 0
-                    ? `height:${getSafeAreaInsets.bottom}px;`
-                    : 'height:12px;'
-                "
-              ></div
+              ><div class="flex-none" style="height: 12px"></div
             ></template>
           </place_detail_info_card>
         </div>
