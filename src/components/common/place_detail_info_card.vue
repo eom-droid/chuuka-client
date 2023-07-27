@@ -114,7 +114,7 @@ function getImageFromArticle(article: ArticleModel): string {
   // article.details의 images[0]을 반환한다.
 
   article.details.find((ele) => {
-    if (ele.placeId === props.selectedPlace.marker.placeId) {
+    if (ele.place === props.selectedPlace.marker.placeId) {
       result = ele.images[0].link;
     }
   });
@@ -131,7 +131,7 @@ function getHeaderFromArticle(article: ArticleModel): string {
   // place와 selectedPlace.place의 id가 같은
   // article.details의 images[0]을 반환한다.
   article.details.find((ele) => {
-    if (ele.placeId === props.selectedPlace.marker.placeId) {
+    if (ele.place === props.selectedPlace.marker.placeId) {
       result = ele.header;
     }
   });

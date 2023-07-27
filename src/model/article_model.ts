@@ -107,13 +107,13 @@ export class ArticleDetailModel implements IArticleDetail {
   public header: string;
   public content: string;
   public images: Array<ImageModel>;
-  public placeId: string;
+  public place: string;
 
-  constructor({ header, content, images, placeId }: IArticleDetail) {
+  constructor({ header, content, images, place: placeId }: IArticleDetail) {
     this.header = header;
     this.content = content;
     this.images = images;
-    this.placeId = placeId;
+    this.place = placeId;
   }
 
   static fromJson(json: IArticleDetail): ArticleDetailModel {
@@ -124,7 +124,7 @@ export class ArticleDetailModel implements IArticleDetail {
         json.images != undefined
           ? json.images.map((image: ImageModel) => ImageModel.fromJson(image))
           : [],
-      placeId: json.placeId,
+      place: json.place,
     });
   }
 
@@ -134,7 +134,7 @@ export class ArticleDetailModel implements IArticleDetail {
       content: this.content,
       images: this.images.map((image: ImageModel) => image.toJson()),
       place: "",
-      placeId: this.placeId,
+      placeId: this.place,
     };
 
     return result;
@@ -153,5 +153,5 @@ export interface IArticleDetail {
   header: string;
   content: string;
   images: Array<ImageModel>;
-  placeId: string; // maybe place_article_model
+  place: string; // maybe place_article_model
 }

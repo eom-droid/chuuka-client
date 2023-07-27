@@ -203,12 +203,14 @@ async function initArticleMap() {
       article.value.mapCenter.longitude
     )
   );
+  console.log(article.value);
 
   article.value.details.map(async (detail) => {
     var markers = await getMarkers.value;
-    var foundMarker = markers.find((e) => e.placeId === detail.placeId);
+    var foundMarker = markers.find((e) => e.placeId === detail.place);
     if (foundMarker) {
       var placeInfo = await getPlaceByDocId(foundMarker.placeId);
+      console.log(placeInfo);
       if (placeInfo) {
         mapDrawMarker.value.push({
           marker: foundMarker,
